@@ -21,7 +21,7 @@ Astral「Ruff だけあればいいでしょ」
 
 * ルールを再実装し、800超えをカバー [#ruff-rules-doc]_
 
-.. [#ruff-rules-doc] 「*Ruff supports over 800 lint rules,*」https://docs.astral.sh/ruff/rules/
+.. [#ruff-rules-doc] 「*Ruff supports over 800 lint rules,*」 https://docs.astral.sh/ruff/rules/
 
 .. 使い方例 コマンド
 .. https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands
@@ -105,7 +105,7 @@ typed_parameter の直下の type
    :lines: 3-8
    :emphasize-lines: 5-6
 
-ASTは実はtree-sitterによる
+ast-grepは実はtree-sitterによる
 --------------------------------------------------
 
     ast-grep's core is an algorithm to search and replace code based on abstract syntax tree produced by tree-sitter. 

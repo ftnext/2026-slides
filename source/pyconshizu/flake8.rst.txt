@@ -57,7 +57,7 @@ ASTを表示 [#ast.dump]_
 
 .. [#ast.dump] https://docs.python.org/ja/3/library/ast.html#ast.dump
 
-``print("Hello")`` のASTを読む
+``print("静岡")`` のASTを読む
 --------------------------------------------------
 
 * `ast.Module <https://docs.python.org/ja/3/library/ast.html#ast.Module>`__ の ``body`` には `文 <https://docs.python.org/ja/3/library/ast.html#ast-statements>`__ が来る
@@ -210,7 +210,7 @@ flake8プラグインのインターフェース
     
 * ``run()`` メソッド: 4-tuple ``(行番号, 列番号, メッセージ, 型)`` を ``yield``
 
-flale8のインターフェースに合わせた実装
+flake8のインターフェースに合わせた実装
 --------------------------------------------------
 
 .. code-block:: python
