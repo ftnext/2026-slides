@@ -1,0 +1,157 @@
+flake8 プラグインとしてルールを追加する
+=======================================
+
+前提知識：AST（抽象構文木）
+---------------------------
+
+* ソースコードを木構造のデータとして表現したもの
+* Python標準ライブラリの ``ast`` モジュールで扱える
+
+``ast`` モジュールの使い方
+--------------------------
+
+* ``ast.parse()`` でソースコードをASTに変換
+* ``ast.dump()`` でASTの中身を確認できる
+* ``python -m ast`` コマンドでも確認可能
+
+ASTを体験する： ``print("Hello")``
+------------------------------------
+
+.. code-block:: pycon
+
+    >>> import ast
+    >>> tree = ast.parse('print("Hello")')
+    >>> print(ast.dump(tree, indent=2))
+    Module(
+      body=[
+        Expr(
+          value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+              Constant(value='Hello')]))])
+
+``print("Hello")`` のASTを読む
+-------------------------------
+
+* ``print("Hello")`` は関数呼び出し（ ``ast.Call`` ）
+* ソースコードの構造がデータとしてプログラムから扱える！
+
+前提知識：Visitor パターン
+--------------------------
+
+* デザインパターンのひとつ
+* データ構造の各要素は訪問者（Visitor）を **受け入れる** （accept）
+* 操作の詳細はVisitor側に書く → データ構造を変えずに新しい操作を追加できる
+
+``ast.NodeVisitor``
+-------------------
+
+* ASTの各ノードを巡回するための基底クラス
+* ``visit_XXX`` メソッドでノードの種類ごとに処理を分岐
+
+  * 例: ``visit_Name`` は ``ast.Name`` ノードが見つかるたびに呼ばれる
+
+* ``generic_visit`` で子ノードを再帰的に辿る
+
+Visitorを体験する
+------------------
+
+.. code-block:: python
+
+    import ast
+
+    class PrintFinder(ast.NodeVisitor):
+        def visit_Name(self, node):
+            if node.id == "print":
+                print(f"Found print at line {node.lineno}, col {node.col_offset}")
+            self.generic_visit(node)
+
+    source = 'print("Hello")'
+    tree = ast.parse(source)
+    PrintFinder().visit(tree)
+
+* 実行すると ``Found print at line 1, col 0`` と出力される
+* ASTのノードを巡回し、特定の条件にマッチするものを見つける — これがリントルールの基本
+
+``ast.arg.annotation`` の4パターン
+------------------------------------
+
+* ``None``: 型ヒントなし（ ``def func(a)`` ）
+* ``ast.Name``: 単純な型（ ``def func(b: int)`` ）
+
+``ast.arg.annotation`` の4パターン（続）
+-----------------------------------------
+
+* ``ast.Subscript``: ジェネリック型（ ``def func(d: list[str])`` ） ← ターゲット
+* ``ast.Attribute``: 修飾名（ ``def func(tree: ast.AST)`` ）
+* すべてのパターンを考慮する必要がある
+
+型ヒントのルールチェッカー
+--------------------------
+
+.. code-block:: python
+
+    class ArgumentConcreteTypeHintChecker(ast.NodeVisitor):
+        def visit_arg(self, node):
+            annotation = node.annotation
+            if annotation.value.id == "list":
+                print(f"Fix at {node.lineno}:{node.col_offset}")
+                print(ast.dump(node))
+            self.generic_visit(node)
+
+* ``ast.Subscript`` のケース（ ``list[int]`` ）を扱う
+* 4パターンすべてを考慮した完成版に発展させる
+
+flake8 プラグインのインターフェース
+------------------------------------
+
+* AST型プラグイン：flake8がパース済みの ``ast.AST`` を渡してくれる
+* ``__init__(self, tree: ast.AST)``: ASTを受け取る
+* ``run()`` メソッド: 4-tuple ``(行番号, 列番号, メッセージ, 型)`` を ``yield``
+
+プラグインクラスの実装
+----------------------
+
+.. code-block:: python
+
+    class Flake8KotohaPlugin:
+        def run(self) -> Generator[
+            tuple[int, int, str, Type[Any]], None, None
+        ]:
+            checker = ArgumentConcreteTypeHintChecker()
+            checker.visit(self._tree)
+
+            for lineno, col_offset, message in checker.errors:
+                yield (lineno, col_offset, message, type(self))
+
+* ``print()`` → ``self.errors`` リストへの蓄積に変更
+* プラグインクラスが ``self.errors`` を ``yield``
+
+パッケージングと配布
+--------------------
+
+.. code-block:: toml
+
+    [project]
+    dependencies = ["flake8"]
+
+    [project.entry-points."flake8.extension"]
+    KTH = "kotoha.plugins:Flake8KotohaPlugin"
+
+* ``flake8.extension`` にプラグインを登録する
+* エラーコードのプレフィックス規約（例: ``KTH``）
+
+実行
+----
+
+.. code-block:: console
+
+    $ flake8 --select KTH examples/use_iterable.py
+
+* 公開パッケージ: `flake8-kotoha <https://pypi.org/project/flake8-kotoha/>`_
+
+pylint でもプラグインとして書ける
+---------------------------------
+
+* pylint にもプラグイン機構がある
+* flake8 と同様に、pylint プラグインとしてルールを追加できる
