@@ -1,0 +1,148 @@
+[
+    FunctionDef(
+        StmtFunctionDef {
+            range: 1..86,
+            name: Identifier(
+                "plus_one_ng",
+            ),
+            args: Arguments {
+                range: (),
+                posonlyargs: [],
+                args: [
+                    ArgWithDefault {
+                        range: (),
+                        def: Arg {
+                            range: 17..35,
+                            arg: Identifier(
+                                "numbers",
+                            ),
+                            annotation: Some(
+                                Subscript(
+                                    ExprSubscript {
+                                        range: 26..35,
+                                        value: Name(
+                                            ExprName {
+                                                range: 26..30,
+                                                id: Identifier(
+                                                    "list",
+                                                ),
+                                                ctx: Load,
+                                            },
+                                        ),
+                                        slice: Name(
+                                            ExprName {
+                                                range: 31..34,
+                                                id: Identifier(
+                                                    "int",
+                                                ),
+                                                ctx: Load,
+                                            },
+                                        ),
+                                        ctx: Load,
+                                    },
+                                ),
+                            ),
+                            type_comment: None,
+                        },
+                        default: None,
+                    },
+                ],
+                vararg: None,
+                kwonlyargs: [],
+                kwarg: None,
+            },
+            body: [
+                Return(
+                    StmtReturn {
+                        range: 55..86,
+                        value: Some(
+                            ListComp(
+                                ExprListComp {
+                                    range: 62..86,
+                                    elt: BinOp(
+                                        ExprBinOp {
+                                            range: 63..68,
+                                            left: Name(
+                                                ExprName {
+                                                    range: 63..64,
+                                                    id: Identifier(
+                                                        "n",
+                                                    ),
+                                                    ctx: Load,
+                                                },
+                                            ),
+                                            op: Add,
+                                            right: Constant(
+                                                ExprConstant {
+                                                    range: 67..68,
+                                                    value: Int(
+                                                        1,
+                                                    ),
+                                                    kind: None,
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    generators: [
+                                        Comprehension {
+                                            range: (),
+                                            target: Name(
+                                                ExprName {
+                                                    range: 73..74,
+                                                    id: Identifier(
+                                                        "n",
+                                                    ),
+                                                    ctx: Store,
+                                                },
+                                            ),
+                                            iter: Name(
+                                                ExprName {
+                                                    range: 78..85,
+                                                    id: Identifier(
+                                                        "numbers",
+                                                    ),
+                                                    ctx: Load,
+                                                },
+                                            ),
+                                            ifs: [],
+                                            is_async: false,
+                                        },
+                                    ],
+                                },
+                            ),
+                        ),
+                    },
+                ),
+            ],
+            decorator_list: [],
+            returns: Some(
+                Subscript(
+                    ExprSubscript {
+                        range: 40..49,
+                        value: Name(
+                            ExprName {
+                                range: 40..44,
+                                id: Identifier(
+                                    "list",
+                                ),
+                                ctx: Load,
+                            },
+                        ),
+                        slice: Name(
+                            ExprName {
+                                range: 45..48,
+                                id: Identifier(
+                                    "int",
+                                ),
+                                ctx: Load,
+                            },
+                        ),
+                        ctx: Load,
+                    },
+                ),
+            ),
+            type_comment: None,
+            type_params: [],
+        },
+    ),
+]

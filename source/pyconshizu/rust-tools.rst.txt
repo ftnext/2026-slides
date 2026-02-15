@@ -1,4 +1,4 @@
-Rust 製リンタにルールをどう追加するか
+Rust製リンタにルールをどう追加するか
 ==================================================
 
 Ruff
@@ -27,7 +27,7 @@ Astral「Ruff だけあればいいでしょ」
 .. https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands
 .. https://gihyo.jp/article/2023/03/monthly-python-2303
 
-Ruff にはプラグイン機構が無い🈚️
+Ruffにはプラグイン機構が無い🈚️
 --------------------------------------------------
 
 * `Meta issue: plugin system #283 <https://github.com/astral-sh/ruff/issues/283>`__ (2023/09 2年半以上オープン。*放置*？)
@@ -121,39 +121,88 @@ tree-sitter クエリの例
 .. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.scm
    :language: scheme
 
-発展：Rust で書く
+発展：Rustで書く
 ==================================================
 
-* この部分だけ Rust の知識を前提にします
+* この部分だけRustの知識を前提にします
 * 雰囲気だけ掴んでいただければ！
 
-RustPython/Parser とは
+RustPython/Parser
 --------------------------------------------------
 
-* RustPython や Ruff が内部で使う Python パーサー（Rust製）
-* Ruff は 0.4.10 頃から自前パーサーに切り替えたが、一旦こちらを使う
-* Ruff のルールも、同じ概念のパーサーが生成する AST を扱っている
+* https://github.com/RustPython/Parser
+* RustPythonが使うPythonパーサ（Rust製）
+* Ruffもかつて使っていた [#ruff-040-blog]_
 
-Rust 環境の最小限セットアップ
+.. [#ruff-040-blog] https://astral.sh/blog/ruff-v0.4.0
+
+Rust環境セットアップ
 --------------------------------------------------
 
-* ``rustup`` で Rust 環境を導入
-* ``cargo`` は Python でいう ``uv`` のようなもの（``pip`` + ``venv`` に相当）
-* ``cargo init`` でプロジェクト作成
-* ``cargo add rustpython-parser`` で依存追加
+* `rustup <https://rustup.rs/>`__ でRust環境を導入
+* :command:`cargo` でRustのプロジェクトを管理
 
-Python コードを Rust でパースする
+    * AstralはPythonにおけるcargoとしてuvを提案している
+
+PythonコードをRustでパース
 --------------------------------------------------
 
-* Python 側: ``ast.dump(ast.parse(source))``
-* Rust 側: ``parse(source, Mode::Module)`` + ``println!("{:#?}", ast)``
+.. code-block:: rust
 
-AST 表現の比較
+    use rustpython_parser::{Parse, ast};
+
+    fn main() {
+        let python_source = r#"
+    def plus_one_ng(numbers: list[int]) -> list[int]:
+        return [n + 1 for n in numbers]
+    "#;
+        let ast = ast::Suite::parse(python_source, "<embedded>");
+        assert!(ast.is_ok());
+        println!("{:#?}", ast.unwrap());
+    }
+
+RustPython/ParserのAST
 --------------------------------------------------
 
-* Python の AST と Rust の AST は同じ概念を異なる表現で持つ
+.. literalinclude:: ../../samplecode/write-python-linter-rules/lint-targets/rustpython-parser-output
+   :lines: 3-49
 
-  * Python: ``FunctionDef``, ``arg``, ``Subscript``
-  * Rust: ``StmtFunctionDef``, ``Parameter``, ``Expr::Subscript``
+rustpython-astのvisitor feature
+--------------------------------------------------
 
-* この AST を辿って、Python版と同様の判定ロジックを Rust で書ける
+.. code-block:: rust
+
+    use rustpython_ast::{Arguments, Visitor};
+
+    struct KotohaVisitor<'a> {
+        source: &'a str,
+    }
+
+    impl Visitor for KotohaVisitor<'_> {
+        fn visit_arguments(&mut self, node: Arguments) {
+            // ここに処理を書く
+        }
+    }
+
+Python実装と同様の指摘
+--------------------------------------------------
+
+.. code-block:: python
+
+    def plus_one_ng(numbers: list[int]) -> list[int]:
+        return [n + 1 for n in numbers]
+
+    def plus_one_ok(numbers: Iterable[int]) -> list[int]:
+        return [n + 1 for n in numbers]
+
+.. code-block:: console
+
+    % cargo run -q
+    Fix type hint `numbers: list[int]` at 2:17
+
+小まとめ🥟 Rust製リンタにルールをどう追加するか
+--------------------------------------------------
+
+* プラグインがないRuffをカスタムルールと一緒に動かしたい
+* ast-grep：Rust製ツールで、YAMLでルールを書く
+* RustPython/Parserを使ってRustも書いてみた（生成AIサポート）
