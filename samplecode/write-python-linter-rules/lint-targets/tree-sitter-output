@@ -1,0 +1,20 @@
+(module [0, 0] - [0, 54]
+  (function_definition [0, 0] - [0, 54]
+    name: (identifier [0, 4] - [0, 15])
+    parameters: (parameters [0, 15] - [0, 35]
+      (typed_parameter [0, 16] - [0, 34]
+        (identifier [0, 16] - [0, 23])
+        type: (type [0, 25] - [0, 34]
+          (generic_type [0, 25] - [0, 34]
+            (identifier [0, 25] - [0, 29])
+            (type_parameter [0, 29] - [0, 34]
+              (type [0, 30] - [0, 33]
+                (identifier [0, 30] - [0, 33])))))))
+    return_type: (type [0, 39] - [0, 48]
+      (generic_type [0, 39] - [0, 48]
+        (identifier [0, 39] - [0, 43])
+        (type_parameter [0, 43] - [0, 48]
+          (type [0, 44] - [0, 47]
+            (identifier [0, 44] - [0, 47])))))
+    body: (block [0, 50] - [0, 54]
+      (pass_statement [0, 50] - [0, 54]))))
