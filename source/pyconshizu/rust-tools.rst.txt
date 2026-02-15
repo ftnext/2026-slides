@@ -1,157 +1,155 @@
-Ruff ではどうするか
-===================
+Rust 製リンタにルールをどう追加するか
+==================================================
 
-Ruff の強みと普及
------------------
+Ruff
+--------------------------------------------------
 
-* Rust製で高速
-* flake8, isort, autoflakeなどを1つのツールに統合
-* ``ruff check`` で多くの既存ルールをカバー
+* https://github.com/astral-sh/ruff
 
-Ruff にはプラグイン機構がない
------------------------------
+    An extremely fast Python linter and code formatter, written in Rust.
 
-* 2025年12月時点で、Ruffにユーザがプラグインを追加する仕組みがない
-* 前章で作った flake8 プラグインは Ruff では使えない
+* flake8 や pylint と比べて圧倒的に **速い**
 
-flake8 との併用は速度を損なう
------------------------------
+.. バイナリ vs インタプリタ：この違いが速さの一因
 
-* カスタムルールのために flake8 を併用する選択肢
+Astral「Ruff だけあればいいでしょ」
+--------------------------------------------------
 
-  * Ruff の「高速さ」というメリットが薄れる
-  * CIの実行時間増加
+* 数々のリンタ・フォーマッタを Ruff に統合
 
-* **高速さを損なわずにカスタムルールを書く方法が求められる**
+    Ruff can be used to replace Flake8 (plus dozens of plugins), Black, isort, pydocstyle, pyupgrade, autoflake, and more,
 
-代替手段
---------
+* ルールを再実装し、800超えをカバー [#ruff-rules-doc]_
 
-* ast-grep: tree-sitter ベースで高速、YAML でルール定義
-* Rust で直接書く: RustPython/Parser を使う
+.. [#ruff-rules-doc] 「*Ruff supports over 800 lint rules,*」https://docs.astral.sh/ruff/rules/
 
-Rust製ツール ast-grep
-=====================
+.. 使い方例 コマンド
+.. https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands
+.. https://gihyo.jp/article/2023/03/monthly-python-2303
 
-ast-grep とは
--------------
+Ruff にはプラグイン機構が無い🈚️
+--------------------------------------------------
 
-* tree-sitter ベースの構造検索・リントツール（Rust製で高速）
-* YAML でルールを定義できる
-* インストール: ``uvx --from ast-grep-cli ast-grep``
+* `Meta issue: plugin system #283 <https://github.com/astral-sh/ruff/issues/283>`__ (2023/09 2年半以上オープン。*放置*？)
+* 自分に必要なルールを手元で追加できない（いきなり本家へのプルリクエストになる）
+* 率直に困りませんか？速さを優先すると、機能の豊かさを失う（RuffやAstralはもっとうまく立ち回れるはず）
 
-tree-sitter の AST は Python の AST と異なる
---------------------------------------------
+.. https://github.com/astral-sh/ruff/issues/283#issuecomment-2354996290
 
-* Python ``ast`` モジュール: ``ast.arg`` → ``annotation`` → ``ast.Subscript``
-* tree-sitter: ``typed_parameter`` → ``type`` → ``generic_type``
-* ノードの種類名・階層構造が異なる
+.. https://nikkie-ftnext.hatenablog.com/entry/is-ruff-superset-of-flake8-my-answer-is-no-202501
 
-YAML ルールの構造
------------------
+Ruff + カスタムルール をどう実現するか？
+--------------------------------------------------
 
-.. code-block:: yaml
+* flake8（やpylint）との併用はない。せっかくの速さを失う
+* **高速さを損なわずにカスタムルールを書く方法が求められる** （アイデア募集。廊下希望）
 
-    id: do-not-use-list-as-typed-parameter
-    language: Python
-    rule:
-      pattern:
-        context: 'a: list[$TYPE]'
-        selector: type
-      inside:
-        kind: typed_parameter
-    fix: Iterable[$TYPE]
+IMO：代替手段
+--------------------------------------------------
 
-YAML ルールを読み解く（1）
---------------------------
+* ast-grep: Rust製ツール、カスタムルールをYAMLで書く
+* Rust で直接書いてみる: RustPython/Parser
 
-* ``pattern`` + ``context``: コード片によるパターンマッチ
+ast-grep
+==================================================
 
-  * ``$TYPE`` はメタ変数（ ``int`` などにマッチ）
+* https://github.com/ast-grep/ast-grep
 
-* ``selector``: マッチさせたいノード種類（ ``type`` ）
+    ast-grep is an abstract syntax tree based tool to search code by pattern code.
 
-YAML ルールを読み解く（2）
---------------------------
+* **ASTでgrep** できる！
 
-* ``inside``: 親ノードの条件（ ``typed_parameter`` ）
-
-  * **注意**: ``inside`` は直接の親のみを見る（祖先全体ではない）
-
-* ``fix``: 自動修正 → flake8 プラグインにはなかった強み
-
-実行
-----
+使い方（一例）
+--------------------------------------------------
 
 .. code-block:: console
 
-    $ ast-grep scan --rule rule.yaml examples/use_iterable.py
+    $ uvx --from ast-grep-cli ast-grep scan --rule ast-grep-kotoha.yaml examples.py
 
-デバッグのコツ
---------------
+https://pypi.org/project/ast-grep-cli/
 
-* ast-grep Playground の活用
+YAMLでルールを書く
+--------------------------------------------------
 
-  * https://ast-grep.github.io/playground.html
+.. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.yaml
+   :language: yaml
 
-* AI モデルはいずれも正しい ast-grep ルールを生成できなかった
+ast-grepにおけるAST
+--------------------------------------------------
 
-  * ツールを人間が理解する価値がここにある
+.. code-block:: python
 
-補足：tree-sitter
------------------
+    def plus_one_ng(numbers: list[str]) -> list[int]: pass
 
-* ast-grep の裏側にあるパーサーライブラリ
-* 多言語対応、インクリメンタルパース
-* ast-grep の YAML ルールは、裏で tree-sitter クエリとして動いている
+.. literalinclude:: ../../samplecode/write-python-linter-rules/lint-targets/tree-sitter-output
+   :lines: 2-12
+
+https://ast-grep.github.io/playground.html
+
+``list[]`` という型ヒントにマッチ
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.yaml
+   :language: yaml
+   :lines: 3-6
+
+.. https://ast-grep.github.io/guide/rule-config.html
+
+親ノードの指定を追加
+--------------------------------------------------
+
+typed_parameter の直下の type
+
+.. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.yaml
+   :language: yaml
+   :lines: 3-8
+   :emphasize-lines: 5-6
+
+ASTは実はtree-sitterによる
+--------------------------------------------------
+
+    ast-grep's core is an algorithm to search and replace code based on abstract syntax tree produced by tree-sitter. 
+
+* tree-sitter は多言語対応
+* https://tree-sitter.github.io/tree-sitter/
+
+.. https://nikkie-ftnext.hatenablog.com/entry/tree-sitter-python-query-like-flake8-kotoha
 
 tree-sitter クエリの例
-----------------------
+--------------------------------------------------
 
-.. code-block:: scheme
-
-    (typed_parameter
-      (identifier) @param_name
-      type: (type
-        (generic_type
-          (identifier) @type_name
-          (type_parameter
-            (type
-              (identifier) @inner_type))))
-      (#eq? @type_name "list"))
-
-* ast-grep を使うだけなら直接書く必要はない
-* ルールのデバッグやノード構造の理解に役立つ
+.. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.scm
+   :language: scheme
 
 発展：Rust で書く
-=================
+==================================================
 
-この部分だけ Rust の知識を前提にします
----------------------------------------
-
+* この部分だけ Rust の知識を前提にします
 * 雰囲気だけ掴んでいただければ！
 
 RustPython/Parser とは
-----------------------
+--------------------------------------------------
 
 * RustPython や Ruff が内部で使う Python パーサー（Rust製）
-* Ruff のルールも、このパーサーが生成する AST を扱っている
+* Ruff は 0.4.10 頃から自前パーサーに切り替えたが、一旦こちらを使う
+* Ruff のルールも、同じ概念のパーサーが生成する AST を扱っている
 
 Rust 環境の最小限セットアップ
------------------------------
+--------------------------------------------------
 
-* ``cargo`` は Python でいう ``pip`` + ``venv`` に相当
+* ``rustup`` で Rust 環境を導入
+* ``cargo`` は Python でいう ``uv`` のようなもの（``pip`` + ``venv`` に相当）
 * ``cargo init`` でプロジェクト作成
 * ``cargo add rustpython-parser`` で依存追加
 
 Python コードを Rust でパースする
----------------------------------
+--------------------------------------------------
 
 * Python 側: ``ast.dump(ast.parse(source))``
 * Rust 側: ``parse(source, Mode::Module)`` + ``println!("{:#?}", ast)``
 
 AST 表現の比較
---------------
+--------------------------------------------------
 
 * Python の AST と Rust の AST は同じ概念を異なる表現で持つ
 
