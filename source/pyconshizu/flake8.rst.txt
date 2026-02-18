@@ -138,7 +138,7 @@ ASTのノードを巡回して、特定の条件のノードを見つけられ�
 
 .. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.py
     :language: python
-    :pyobject: ArgumentConcreteTypeHintChecker
+    :pyobject: ArgumentListTypeHintChecker
 
 関数定義のAST（抜粋）
 --------------------------------------------------
@@ -220,7 +220,7 @@ flake8のインターフェースに合わせた実装
             self._tree = tree
 
         def run(self) -> Generator[tuple[int, int, str, Type[Any]], None, None]:
-            checker = ArgumentConcreteTypeHintChecker()
+            checker = ArgumentListTypeHintChecker()
             checker.visit(self._tree)
 
             for lineno, col_offset, message in checker.errors:

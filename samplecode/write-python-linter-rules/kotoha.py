@@ -1,7 +1,7 @@
 import ast
 
 
-class ArgumentConcreteTypeHintChecker(ast.NodeVisitor):
+class ArgumentListTypeHintChecker(ast.NodeVisitor):
     def visit_arg(self, node):
         annotation = node.annotation
         if annotation.value.id == "list":
@@ -23,4 +23,4 @@ def plus_one_ok(numbers: Iterable[int]) -> list[int]:
 """
 tree = ast.parse(source)
 # print(ast.dump(tree, indent=2))
-ArgumentConcreteTypeHintChecker().visit(tree)
+ArgumentListTypeHintChecker().visit(tree)
