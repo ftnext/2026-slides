@@ -1,3 +1,9 @@
+:ogp_title: 2026年、倒したい誰かがいる
+:ogp_event_name: saikyo-dev2
+:ogp_slide_name: vs-astral
+:ogp_description: 埼京.dev #2【2026年の野望LT】
+:ogp_image_name: saikyo-dev2
+
 ==================================================
 2026年、倒したい誰かがいる
 ==================================================
