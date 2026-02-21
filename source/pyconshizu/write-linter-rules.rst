@@ -8,8 +8,10 @@ Pythonのリンタを作ろう
 訂正：リンタの **ルール** を作ろう
 ==================================================
 
-* プロポーザルのタイトルが本文を反映していませんでした。ごめんなさい
+* プロポーザルのタイトルが本文を反映していませんでした。ごめんなさい [#build-python-linter-first-step]_
 * 主張：Pythonのリンタの **ルールを書ける** ようになって、より使いこなしていきましょう
+
+.. [#build-python-linter-first-step] せめてものお詫びとして `flake8 を観察して作る、小さな Python リンタ（一歩目）  <https://nikkie-ftnext.hatenablog.com/entry/my-first-python-linter-based-on-flake8-observation-first-step>`__
 
 皆さまお使いのリンタは？
 --------------------------------------------------
@@ -25,7 +27,7 @@ Pythonのリンタを作ろう
 お前、誰よ
 ==================================================
 
-* nikkie（にっきー） ／ :fab:`github` `@ftnext <https://github.com/ftnext>`__ / Python歴8年
+* nikkie（にっきー）・Python歴8年・`ブログ <https://nikkie-ftnext.hatenablog.com/>`__ 連続1100日突破
 * 機械学習エンジニア。 `Speeda AI Agent <https://jp.ub-speeda.com/news/speeda-promotion-gallery/>`__ 開発（`We're hiring! <https://hrmos.co/pages/uzabase/jobs/1829077236709650481>`__）
 
 .. image:: ../_static/uzabase-white-logo.png
@@ -35,7 +37,7 @@ Pythonのリンタを作ろう
 **拡張** できるものが好き
 --------------------------------------------------
 
-* 公開している flake8 プラグイン
+* 公開している flake8 プラグイン :fab:`github` `@ftnext <https://github.com/ftnext>`__
 
   * `flake8-kotoha`_
   * `happy-python-logging <https://pypi.org/project/happy-python-logging/>`__
@@ -50,7 +52,15 @@ Pythonのリンタを作ろう
 スタイルガイド `PEP 8`_
 --------------------------------------------------
 
-「このように書いてはいけません（代わりにこう書きましょう）」
+* 見た目について（例：演算子と半角スペース） [#formatter]_
+* このようなPythonを **書いてはいけません** （代わりにこう書きましょう）
+
+    * このトークでリンタが指しているのはこちら
+
+.. [#formatter] フォーマッタと呼ばれるツールの出番ですね
+
+例「このように書いてはいけません」 [#B012]_
+--------------------------------------------------
 
 .. code-block:: python
     :caption: ぶっぶーですわ🙅‍♀️
@@ -61,12 +71,10 @@ Pythonのリンタを作ろう
         finally:
             return 42
 
-.. https://nikkie-ftnext.hatenablog.com/entry/whatsnew-python-314-pep-765-syntaxwarning-finally-return
+.. [#B012] `jump-statement-in-finally (B012) <https://docs.astral.sh/ruff/rules/jump-statement-in-finally/>`__ （`「What's new in Python 3.14」より finally 節での return（や continue・break）は SyntaxWarning で警告されるようになりました（PEP 765） <https://nikkie-ftnext.hatenablog.com/entry/whatsnew-python-314-pep-765-syntaxwarning-finally-return>`__）
 
-PEP 8 以外の「このように書いてはいけません」
---------------------------------------------------
-
-ログメッセージにf-stringはいけません
+PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
+----------------------------------------------------------------------
 
 .. code-block:: python
     :caption: ぶっぶーですわ🙅‍♀️
@@ -74,17 +82,19 @@ PEP 8 以外の「このように書いてはいけません」
     logger.info(f"{user} - Something happened")
 
 .. code-block:: python
-    :caption: ロギングでは **%-format**
+    :caption: ロギングでは **%演算子による書式化**
 
     logger.info("%s - Something happened", user)
 
-.. https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages
+.. （ロギングって中で%してるのか！）
+
+.. [#G004] `logging-f-string (G004) <https://docs.astral.sh/ruff/rules/logging-f-string/>`__ （`Pythonのログメッセージにf-stringはいけません。そこのClaude、私はあなたに言っているんですよ <https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages>`__）
 
 スタイルガイドはリンタにチェックさせよう
 --------------------------------------------------
 
 * 人間は全てのルールを覚えていられない
-* **スタイルの指摘をリンタに任せる**
+* 書いてはいけないPythonの **指摘をリンタに任せる**
 * 効能：コードレビューの焦点がスタイルから本質的なロジックへ
 
 .. 人間が勉強のためにルールを確認するのは大事
@@ -93,10 +103,13 @@ PEP 8 以外の「このように書いてはいけません」
 コーディングエージェントにリンタを持たせる
 --------------------------------------------------
 
-* IMO：コーディングエージェントは（性能向上は甚だしいが）Pythonを十分には理解していない（例：先のログメッセージのf-string）
-* **フック機能でリンタを組み込み** スタイルガイドを強制する
+* IMO：LLMは（性能向上は甚だしいが）Pythonを十分には理解していない
 
-.. YAPCスライド
+    * 例：先のログメッセージのf-string
+
+* **フック機能でリンタを組み込み** スタイルガイドを強制する [#yapc-fukuoka-lt]_
+
+.. [#yapc-fukuoka-lt] YAPCでのLT🏅 `Pythonを"理解"しているコーディングエージェントが欲しい！！ <https://ftnext.github.io/2025-slides/yapc-fukuoka/lt-agent-who-understand-python.html#/2>`__
 
 「指摘したいルールが誰にも公開されていない」問題
 ------------------------------------------------
@@ -104,21 +117,42 @@ PEP 8 以外の「このように書いてはいけません」
 * リントルールは 800 以上あるが、自分が欲しいルールが存在しないことがある
 
 .. code-block:: python
-    :caption: 引数の型ヒントをlistにしてはいけません
+    :caption: この型ヒントには伸びしろがある
 
     def plus_one_ng(numbers: list[int]) -> list[int]:
         return [n + 1 for n in numbers]
 
-`flake8-kotoha`_ 自作
+.. _typing.List: https://docs.python.org/ja/3/library/typing.html#typing.List
+
+`typing.List`_ のドキュメントより
 --------------------------------------------------
 
-    Note that to annotate arguments, it is preferred to use an abstract collection type such as ``Sequence`` or ``Iterable`` rather than to use ``list`` or ``typing.List``. [#typing_List]_
+    Note that to annotate arguments, it is preferred to use an abstract collection type such as ``Sequence`` or ``Iterable`` rather than to use ``list`` or ``typing.List``.
 
-代わりに ``collections.abc.Iterable`` や ``collections.abc.Sequence`` を使いましょう
+引数の型ヒントをlistにしてはいけません
+--------------------------------------------------
 
-TODO 指摘しているエラーメッセージ
+.. code-block:: python
+    :caption: list以外を渡しても動きます
 
-.. [#typing_List] https://docs.python.org/ja/3/library/typing.html#typing.List
+    plus_one_ng((1, 2, 3))  # collections.abc.Sequence
+    plus_one_ng(range(3))   # collections.abc.Iterable
+
+より抽象的な型で型ヒントしましょう
+
+`flake8-kotoha`_ を自作しました
+--------------------------------------------------
+
+.. code-block:: console
+
+    $ uvx --with flake8-kotoha flake8 lint-targets/use_iterable.py
+    lint-targets/use_iterable.py:6:17: KTH101 Type hint with abstract type `collections.abc.Iterable` or `collections.abc.Sequence`, instead of concrete type `list`
+
+.. code-block:: python
+    :caption: こうしましょう
+
+    def plus_one_ok(numbers: Iterable[int]) -> list[int]:
+        return [n + 1 for n in numbers]
 
 ルールを書きたくなってきましたよね？
 --------------------------------------------------
