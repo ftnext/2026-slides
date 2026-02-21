@@ -3,26 +3,23 @@ Rust製リンタにルールをどう追加するか
 
 Pythonでルールを追加できるようになったものの...
 
-Ruff
+Ruff（図はREADMEより）
 --------------------------------------------------
 
 * https://github.com/astral-sh/ruff
 
     An extremely fast Python linter and code formatter, written in Rust.
 
-Ruffは圧倒的に **速い**
---------------------------------------------------
-
 .. image:: https://user-images.githubusercontent.com/1309177/232603514-c95e9b0f-6b31-43de-9a80-9e844173fd6a.svg
 
-Ruffの `README <https://github.com/astral-sh/ruff/blob/main/README.md>`__ の図 (発表時 0.15.2)
+.. Ruffの `README <https://github.com/astral-sh/ruff/blob/main/README.md>`__ の図 (発表時 0.15.2)
 
 .. バイナリ vs インタプリタ：この違いが速さの一因
 
 Astral「Ruff だけあればいいでしょ」
 --------------------------------------------------
 
-* 数々のリンタ・フォーマッタを Ruff に統合
+* 数々のリンタ・フォーマッタをRuffに **統合**
 
     Ruff can be used to replace Flake8 (plus dozens of plugins), Black, isort, pydocstyle, pyupgrade, autoflake, and more,
 
@@ -30,7 +27,19 @@ Astral「Ruff だけあればいいでしょ」
 
 .. [#ruff-rules-doc] 「*Ruff supports over 800 lint rules,*」 https://docs.astral.sh/ruff/rules/
 
-.. 使い方例 コマンド
+コマンド例
+--------------------------------------------------
+
+.. code-block:: console
+
+    uvx ruff format
+    uvx ruff check --fix --extend-select I
+    # または uv format  # >= 0.8.13
+
+昨日の `Ruff 0.15.2 <https://github.com/astral-sh/ruff/releases/tag/0.15.2>`__ からデフォルトルールが **爆増** してます
+
+.. https://github.com/astral-sh/uv/releases/tag/0.8.13
+
 .. https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands
 .. https://gihyo.jp/article/2023/03/monthly-python-2303
 
@@ -39,32 +48,30 @@ Ruffにはプラグイン機構が無い🈚️
 
 * ルールの追加は、本家へのプルリクエストが案内される（`CONTRIBUTING.md <https://github.com/astral-sh/ruff/blob/main/CONTRIBUTING.md>`__）
 * `Meta issue: plugin system #283 <https://github.com/astral-sh/ruff/issues/283>`__ (2023/09 2年半以上オープン。*放置*？)
-* 自分に必要なルールを手元でRuffに追加できない状態
+* 自分に必要なルールを **手元でRuffに追加できない** 状態
 
 Why Astral?
 --------------------------------------------------
 
 * 高速ツールに最大級の感謝を示しつつも、率直に言って困ってます
-* 「flake8の *上位互換* のRuff使おうぜ」とプルリクエストが届くなど
+* 拙ブログ `RuffはFlake8の全ての要素を含んでいる、のでしょうか？ <https://nikkie-ftnext.hatenablog.com/entry/is-ruff-superset-of-flake8-my-answer-is-no-202501>`__ ― 否（互換でない）
 * **速さを優先すると、機能の豊かさを失う** （RuffやAstralはもっとうまく立ち回れるはず）
 
 .. https://github.com/astral-sh/ruff/issues/283#issuecomment-2354996290
-
-.. https://nikkie-ftnext.hatenablog.com/entry/is-ruff-superset-of-flake8-my-answer-is-no-202501
 
 Ruff + カスタムルール をどう実現するか？
 --------------------------------------------------
 
 * flake8（やpylint）との併用はない。せっかくの速さを失う
-* **高速さを損なわずにカスタムルールを書く方法が求められる** （アイデア募集。廊下希望）
+* **高速さを損なわずにカスタムルールを書く方法** を求めてます（アイデア募集。廊下希望）
 
 IMO：代替手段
 --------------------------------------------------
 
-* ast-grep: Rust製ツール、カスタムルールをYAMLで書く
-* Rust で直接書いてみる: RustPython/Parser
+A. ast-grep: Rust製ツール、カスタムルールを **YAML** で書く
+B. **Rust** で直接書いてみる: RustPython/Parser
 
-ast-grep
+🅰️ ast-grep
 ==================================================
 
 * https://github.com/ast-grep/ast-grep
@@ -123,7 +130,7 @@ typed_parameter の直下の type
 
 .. image:: ../_static/pyconshizu/ast-grep-playground-list-typed-parameter.png
 
-ast-grepは実はtree-sitterによる 🏃‍♂️
+ast-grepは実は **tree-sitter** による 🏃‍♂️
 --------------------------------------------------
 
     ast-grep's core is an algorithm to search and replace code based on abstract syntax tree produced by tree-sitter. 
@@ -139,7 +146,7 @@ tree-sitter クエリの例 🏃‍♂️
 .. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.scm
    :language: scheme
 
-発展：Rustで書く
+🅱️ 発展：Rustで書く
 ==================================================
 
 * この部分だけRustの知識を前提にします
@@ -222,5 +229,5 @@ Python実装と同様の指摘
 --------------------------------------------------
 
 * プラグインがないRuffをカスタムルールと一緒に動かしたい
-* ast-grep：Rust製ツールで、YAMLでルールを書く
-* RustPython/Parserを使ってRustも書いてみた（生成AIサポート）
+* **ast-grep**：Rust製ツールで、YAMLでルールを書く
+* RustPython/Parserを使って **Rustも書いてみた** （生成AIサポート）

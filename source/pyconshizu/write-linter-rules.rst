@@ -9,7 +9,7 @@ Pythonのリンタを作ろう
 ==================================================
 
 * プロポーザルのタイトルが本文を反映していませんでした。ごめんなさい [#build-python-linter-first-step]_
-* 主張：Pythonのリンタの **ルールを書ける** ようになって、より使いこなしていきましょう
+* 主張：Pythonのリンタの **ルールを書ける** ようになって、より使いこなしていきましょう（:fab:`github` `サンプルコード <https://github.com/ftnext/2026-slides/tree/main/samplecode/write-python-linter-rules>`__）
 
 .. [#build-python-linter-first-step] せめてものお詫びとして `flake8 を観察して作る、小さな Python リンタ（一歩目）  <https://nikkie-ftnext.hatenablog.com/entry/my-first-python-linter-based-on-flake8-observation-first-step>`__
 
@@ -21,8 +21,6 @@ Pythonのリンタを作ろう
 * pylint
 
 対象：仕組みは分からないが、1つでも **動かしたことがある**
-
-.. TODO どのツールも初見の方向けに一言説明があったほうがよいだろう
 
 お前、誰よ
 ==================================================
@@ -124,11 +122,6 @@ PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
 
 .. _typing.List: https://docs.python.org/ja/3/library/typing.html#typing.List
 
-`typing.List`_ のドキュメントより
---------------------------------------------------
-
-    Note that to annotate arguments, it is preferred to use an abstract collection type such as ``Sequence`` or ``Iterable`` rather than to use ``list`` or ``typing.List``.
-
 引数の型ヒントをlistにしてはいけません
 --------------------------------------------------
 
@@ -138,7 +131,12 @@ PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
     plus_one_ng((1, 2, 3))  # collections.abc.Sequence
     plus_one_ng(range(3))   # collections.abc.Iterable
 
-より抽象的な型で型ヒントしましょう
+`typing.List`_ のドキュメントより
+--------------------------------------------------
+
+    Note that to annotate arguments, it is preferred to use an abstract collection type such as ``Sequence`` or ``Iterable`` rather than to use ``list`` or ``typing.List``.
+
+``collections.abc.Sequence`` や ``collections.abc.Iterable`` などの **抽象** 型が好ましい
 
 `flake8-kotoha`_ を自作しました
 --------------------------------------------------
@@ -170,21 +168,21 @@ PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
 ==================================================
 
 * Pythonコードのスタイルの指摘はリンタに任せよう
-* 自分が欲しいルールが見つからないときは自分で書こう
+* 自分が欲しいルールが見つからないときは **自分で書こう**
 
 Pythonでリンタのルールを書く
 --------------------------------------------------
 
-* 標準ライブラリ ast + Visitor パターン
+* 標準ライブラリastで抽象構文木を見ながら **指摘したいPythonノードの処理をvisitorに追加**
 * 既存のリンタのプラグインにしてルール追加
-* サードパーティにはもっと楽ができるライブラリがあるそうです
+* ルールが1つ書けたら、CLIからのファイルの読み込みなどを足していけばリンタ
 
 Ruff + カスタムルール
 --------------------------------------------------
 
-* ast-grep（YAMLでルールを書く）
+* ast-grep（**YAML** でルールを書く）
 * この機会にRustを書いちゃおう！
-* Astralはさすがにそろそろプラグインを追加してください
+* Astralはさすがにそろそろプラグインを追加してください🙏（私も挑みます）
 
 ご清聴ありがとうございました！
 --------------------------------------------------
