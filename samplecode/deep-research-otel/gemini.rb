@@ -1,5 +1,12 @@
 require "faraday"
 require "json"
+require "opentelemetry/sdk"
+require "opentelemetry/instrumentation/faraday"
+
+ENV["OTEL_TRACES_EXPORTER"] = "console"
+OpenTelemetry::SDK.configure do |c|
+  c.use 'OpenTelemetry::Instrumentation::Faraday'
+end
 
 api_key = ENV["GEMINI_API_KEY"]
 conn = Faraday.new(
