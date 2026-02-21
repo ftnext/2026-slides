@@ -1,0 +1,7 @@
+Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])

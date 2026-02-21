@@ -6,12 +6,20 @@
 * 抽象構文木（*AST*: Abstract Syntax Tree）
 * GoF のデザインパターンの *Visitor*
 
+「このように書いてはいけません」の実装
+--------------------------------------------------
+
+* 「書いてはいけないパターン」をASTで表現
+* それを Visitor パターンで見つける
+
 準備1️⃣ AST
 ==================================================
 
 * ソースコードを **木構造** のデータとして表現したもの
-* ソースコードをトークンに分ける
+* ソースコードをトークンに分ける [#python-lexical-analysis]_
 * トークンを構文を表す構造（木）に変換する
+
+.. [#python-lexical-analysis] 字句解析 https://docs.python.org/ja/3/reference/lexical_analysis.html
 
 .. https://scrapbox.io/nikkie-memos/%E6%A7%8B%E6%96%87%E8%A7%A3%E6%9E%90%EF%BC%88%E3%80%8E%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E7%90%86%E8%AB%96%E3%81%A8%E5%AE%9F%E8%A3%85%E3%80%8F%EF%BC%89
 
@@ -20,18 +28,18 @@
 
 .. code-block::
 
-    % echo 'print("静岡")' | python -m ast
+    $ echo 'print("静岡")' | python -m ast
     Module(
-    body=[
-        Expr(
-            value=Call(
+       body=[
+          Expr(
+             value=Call(
                 func=Name(id='print', ctx=Load()),
                 args=[
-                Constant(value='静岡')]))])
+                   Constant(value='静岡')]))])
 
 .. [#ast-m] https://docs.python.org/ja/3/library/ast.html#command-line-usage
 
-ソースコードをASTに変換 [#ast.parse]_
+ソースコードをASTに変換 [#ast.parse]_ 🏃‍♂️
 --------------------------------------------------
 
 .. code-block:: pycon
@@ -41,35 +49,53 @@
 
 .. [#ast.parse] https://docs.python.org/ja/3/library/ast.html#ast.parse
 
-ASTを表示 [#ast.dump]_
+ASTを表示 [#ast.dump]_ 🏃‍♂️
 --------------------------------------------------
 
 .. code-block:: pycon
 
-    >>> print(ast.dump(tree, indent=2))
+    >>> print(ast.dump(tree, indent=3))
     Module(
-      body=[
-        Expr(
-          value=Call(
-            func=Name(id='print', ctx=Load()),
-            args=[
-              Constant(value='静岡')]))])
+       body=[
+          Expr(
+             value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                   Constant(value='静岡')]))])
 
 .. [#ast.dump] https://docs.python.org/ja/3/library/ast.html#ast.dump
 
 ``print("静岡")`` のASTを読む
 --------------------------------------------------
 
-* `ast.Module <https://docs.python.org/ja/3/library/ast.html#ast.Module>`__ の ``body`` には `文 <https://docs.python.org/ja/3/library/ast.html#ast-statements>`__ が来る
+.. literalinclude:: print-shizuoka-ast
+    :emphasize-lines: 1
+
+.. _ast.Module: https://docs.python.org/ja/3/library/ast.html#ast.Module
+
+`ast.Module`_
+--------------------------------------------------
+
+* Pythonは文があるプログラミング言語 [#python-statements]_
+* ``body`` には `文 <https://docs.python.org/ja/3/library/ast.html#ast-statements>`__ が来る
 
     関数呼び出しのような式がそれ自身で文となり、（`ast.Expr <https://docs.python.org/ja/3/library/ast.html#ast.Expr>`__）
 
-.. revealjs-break::
+.. [#python-statements] `単純文 <https://docs.python.org/ja/3/reference/simple_stmts.html>`__・`複合文 <https://docs.python.org/ja/3/reference/compound_stmts.html>`__
 
-* `ast.Call <https://docs.python.org/ja/3/library/ast.html#ast.Call>`__：関数呼び出し
+どんな式（文）か
+--------------------------------------------------
 
-    * ``func`` に組み込み関数の ``print``
-    * ``args`` に位置引数
+.. literalinclude:: print-shizuoka-ast
+    :emphasize-lines: 4-7
+
+.. _ast.Call: https://docs.python.org/ja/3/library/ast.html#ast.Call
+
+`ast.Call`_：関数呼び出し
+--------------------------------------------------
+
+* ``func`` に組み込み関数の ``print``
+* ``args`` に位置引数
 
 .. https://docs.python.org/ja/3/library/ast.html#ast.Name
 .. https://docs.python.org/ja/3/library/ast.html#ast.Constant
@@ -80,10 +106,12 @@ ASTを表示 [#ast.dump]_
 ==================================================
 
 * やりたいこと：木の中の特定のノードを見つけたい（例：``print`` 関数）
-* 操作をデータ構造に書かない
-* 操作を **訪問者** （Visitor）に書き、データ構造は訪問者を受け入れる（操作を追加しやすくなる）
+* 操作を **訪問者** （Visitor）に書き、データ構造は訪問者を受け入れる
+* （データ構造に操作を書くのと比べて、操作を追加しやすくなる）
 
 .. https://nikkie-ftnext.hatenablog.com/entry/the-transcendent-book-chapter8-design-patterns-visitor
+
+.. Effective Python に詳しいらしい
 
 .. _ast.NodeVisitor: https://docs.python.org/ja/3/library/ast.html#ast.NodeVisitor
 
@@ -94,42 +122,58 @@ ASTを表示 [#ast.dump]_
 
 **継承** したクラスを実装する
 
-``print`` を見つける
+例：``print`` を見つける
 --------------------------------------------------
 
 .. literalinclude:: ../../samplecode/write-python-linter-rules/print_finder.py
     :language: python
     :pyobject: PrintFinder
 
-``NodeVisitor`` を継承した ``PrintFinder``
---------------------------------------------------
-
-* ``generic_visit``：子ノードの ``visit`` メソッド呼び出し（再帰）
-* ``visit`` はノードのクラス名から ``visit_クラス名`` を呼び出す
-
-  * ``visit_Call`` で関数呼び出しノード（``ast.Call``）の処理を実装
-
 実行結果
 --------------------------------------------------
 
-.. code-block:: python
-
-    print("静岡")
-    len("静岡")
-    print("最高")
+.. literalinclude:: ../../samplecode/write-python-linter-rules/print_finder.py
+    :language: python
+    :lines: 12-17,19
 
 .. code-block:: txt
 
     Found print at line 1, args ['静岡']
     Found print at line 3, args ['最高']
 
-.. print関数の呼び出しの指摘は練習問題として？
+``PrintFinder.visit()``
+--------------------------------------------------
+
+* 親クラス ``NodeVisitor`` で定義されている
+* ``visit`` はノードのクラス名から ``visit_クラス名`` を呼び出す
+* 今回は関数呼び出しノードに対する **visit_Callを追加** した
+
+その ``Call`` は ``print`` 関数呼び出し？
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/write-python-linter-rules/print_finder.py
+    :language: python
+    :pyobject: PrintFinder
+    :emphasize-lines: 3
+
+.. literalinclude:: print-shizuoka-ast
+    :emphasize-lines: 4-7
+
+再帰的にvisit
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/write-python-linter-rules/print_finder.py
+    :language: python
+    :pyobject: PrintFinder
+    :emphasize-lines: 6
+
+* ``generic_visit``：子ノードの ``visit`` メソッド呼び出し
 
 ルールを書く準備、OK？
 ==================================================
 
 :抽象構文木: ``ast`` モジュール 
-:Visitorパターン: ``ast.NodeVisitor`` を継承して ``visit_ノードのクラス名`` を実装
+:Visitorパターン: ``ast.NodeVisitor`` を継承。``visit_ノードのクラス名`` を実装
 
 ASTのノードを巡回して、特定の条件のノードを見つけられます！
 
@@ -143,33 +187,26 @@ ASTのノードを巡回して、特定の条件のノードを見つけられ�
 関数定義のAST（抜粋）
 --------------------------------------------------
 
-.. code-block::
+.. literalinclude:: list-annotation-ast
 
-    FunctionDef(
-      name='plus_one_ng',
-      args=arguments(
-        args=[
-          arg(
-            arg='numbers',
-            annotation=Subscript(
-              value=Name(id='list', ctx=Load()),
-              slice=Name(id='int', ctx=Load()),
-              ctx=Load()))]),
+.. python -m ast use_iterable.py
 
-.. revealjs-break::
+.. _ast.FunctionDef: https://docs.python.org/ja/3/library/ast.html#ast.FunctionDef
 
-* `ast.FunctionDef <https://docs.python.org/ja/3/library/ast.html#ast.FunctionDef>`__
+`ast.FunctionDef`_
+--------------------------------------------------
+
 * ``ast.arguments`` （関数の引数）の1つ1つの引数 `ast.arg <https://docs.python.org/ja/3/library/ast.html#ast.arg>`__
 
     * ``annotation`` に型ヒント
 
-``ast.arg.annotation`` のパターン
+``ast.arg`` の ``annotation``
 --------------------------------------------------
 
-* ``None``: 型ヒントなし（ ``def func(a)`` ）
-* ``ast.Name``: 単純な型（ ``def func(b: int)`` ）
-* **ast.Subscript**: ジェネリック型（ ``def func(d: list[str])`` ）
-* ``ast.Attribute``: 修飾名（ ``def func(tree: ast.AST)`` ）
+.. literalinclude:: list-annotation-ast
+    :emphasize-lines: 7
+
+* **ast.Subscript**: ジェネリック型（ ``def func(d: list[int])`` ）
 
 実行結果🙌
 --------------------------------------------------
@@ -186,6 +223,13 @@ ASTのノードを巡回して、特定の条件のノードを見つけられ�
 
     Fix type hint `numbers: list[int]` at 1:16
 
+``annotation`` のパターン 🏃‍♂️
+--------------------------------------------------
+
+* ``None``: 型ヒントなし（ ``def func(a)`` ）
+* ``ast.Name``: 単純な型（ ``def func(b: int)`` ）
+* ``ast.Attribute``: 修飾名（ ``def func(tree: ast.AST)`` ）
+
 小まとめ🥟 リンタのルールをPythonで書く
 --------------------------------------------------
 
@@ -196,6 +240,7 @@ ASTのノードを巡回して、特定の条件のノードを見つけられ�
 flake8にルールを追加する
 ==================================================
 
+* Python製リンタ https://github.com/PyCQA/flake8
 * 先の実装をflake8のインターフェースに合わせるだけ
 * Pythonパッケージとしてメタデータを書く
 
@@ -220,7 +265,7 @@ flake8のインターフェースに合わせた実装
             self._tree = tree
 
         def run(self) -> Generator[tuple[int, int, str, Type[Any]], None, None]:
-            checker = ArgumentListTypeHintChecker()
+            checker = ArgumentListTypeHintChecker()  # ast.NodeVisitor継承クラス
             checker.visit(self._tree)
 
             for lineno, col_offset, message in checker.errors:
@@ -252,8 +297,16 @@ flake8のインターフェースに合わせた実装
     $ uvx --with flake8-kotoha flake8 .
     example.py:1:14: KTH101 Type hint with abstract type `collections.abc.Iterable` or `collections.abc.Sequence`, instead of concrete type `list`
 
-pylint でもプラグインとして書ける
+pylint でもプラグインとして書ける 🏃‍♂️
 --------------------------------------------------
 
-* pylint にもプラグイン機構がある
-* flake8 と同様に、pylint プラグインとしてルールを追加できる（TODO 要確認）
+* https://github.com/pylint-dev/pylint
+* 標準ライブラリastでなく **astroid** を使って AST を表現 [#pylint-kotoha]_
+
+.. code-block:: console
+
+    $ pylint --load_plugins kotoha_plugin use_iterable.py
+
+.. [#pylint-kotoha] `pylint を使った琴葉ちゃん「引数の型ヒントを list にしてはいけません」 <https://nikkie-ftnext.hatenablog.com/entry/flake8-kotoha-experiment-pylint-checker-implementation>`__
+
+.. flake8へのprint関数の呼び出しの指摘は練習問題として？

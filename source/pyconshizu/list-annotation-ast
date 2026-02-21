@@ -1,0 +1,10 @@
+FunctionDef(
+   name='plus_one_ng',
+   args=arguments(
+      args=[
+         arg(
+            arg='numbers',
+            annotation=Subscript(
+               value=Name(id='list', ctx=Load()),
+               slice=Name(id='int', ctx=Load()),
+               ctx=Load()))]),
