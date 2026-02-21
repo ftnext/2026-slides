@@ -1,6 +1,8 @@
 Rust製リンタにルールをどう追加するか
 ==================================================
 
+Pythonでルールを追加できるようになったものの...
+
 Ruff
 --------------------------------------------------
 
@@ -8,7 +10,12 @@ Ruff
 
     An extremely fast Python linter and code formatter, written in Rust.
 
-* flake8 や pylint と比べて圧倒的に **速い**
+Ruffは圧倒的に **速い**
+--------------------------------------------------
+
+.. image:: https://user-images.githubusercontent.com/1309177/232603514-c95e9b0f-6b31-43de-9a80-9e844173fd6a.svg
+
+Ruffの `README <https://github.com/astral-sh/ruff/blob/main/README.md>`__ の図 (発表時 0.15.2)
 
 .. バイナリ vs インタプリタ：この違いが速さの一因
 
@@ -30,9 +37,16 @@ Astral「Ruff だけあればいいでしょ」
 Ruffにはプラグイン機構が無い🈚️
 --------------------------------------------------
 
+* ルールの追加は、本家へのプルリクエストが案内される（`CONTRIBUTING.md <https://github.com/astral-sh/ruff/blob/main/CONTRIBUTING.md>`__）
 * `Meta issue: plugin system #283 <https://github.com/astral-sh/ruff/issues/283>`__ (2023/09 2年半以上オープン。*放置*？)
-* 自分に必要なルールを手元で追加できない（いきなり本家へのプルリクエストになる）
-* 率直に困りませんか？速さを優先すると、機能の豊かさを失う（RuffやAstralはもっとうまく立ち回れるはず）
+* 自分に必要なルールを手元でRuffに追加できない状態
+
+Why Astral?
+--------------------------------------------------
+
+* 高速ツールに最大級の感謝を示しつつも、率直に言って困ってます
+* 「flake8の *上位互換* のRuff使おうぜ」とプルリクエストが届くなど
+* **速さを優先すると、機能の豊かさを失う** （RuffやAstralはもっとうまく立ち回れるはず）
 
 .. https://github.com/astral-sh/ruff/issues/283#issuecomment-2354996290
 
@@ -93,6 +107,8 @@ https://ast-grep.github.io/playground.html
    :language: yaml
    :lines: 3-6
 
+.. image:: ../_static/pyconshizu/ast-grep-playground-list-type-hint.png
+
 .. https://ast-grep.github.io/guide/rule-config.html
 
 親ノードの指定を追加
@@ -105,7 +121,9 @@ typed_parameter の直下の type
    :lines: 3-8
    :emphasize-lines: 5-6
 
-ast-grepは実はtree-sitterによる
+.. image:: ../_static/pyconshizu/ast-grep-playground-list-typed-parameter.png
+
+ast-grepは実はtree-sitterによる 🏃‍♂️
 --------------------------------------------------
 
     ast-grep's core is an algorithm to search and replace code based on abstract syntax tree produced by tree-sitter. 
@@ -115,7 +133,7 @@ ast-grepは実はtree-sitterによる
 
 .. https://nikkie-ftnext.hatenablog.com/entry/tree-sitter-python-query-like-flake8-kotoha
 
-tree-sitter クエリの例
+tree-sitter クエリの例 🏃‍♂️
 --------------------------------------------------
 
 .. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.scm
@@ -197,7 +215,7 @@ Python実装と同様の指摘
 
 .. code-block:: console
 
-    % cargo run -q
+    $ cargo run -q
     Fix type hint `numbers: list[int]` at 2:17
 
 小まとめ🥟 Rust製リンタにルールをどう追加するか
