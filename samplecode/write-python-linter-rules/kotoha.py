@@ -4,7 +4,7 @@ import ast
 class ArgumentListTypeHintChecker(ast.NodeVisitor):
     def visit_arg(self, node):
         annotation = node.annotation
-        if annotation.value.id == "list":
+        if isinstance(annotation, ast.Subscript) and annotation.value.id == "list":
             as_is = f"{node.arg}: {annotation.value.id}[{annotation.slice.id}]"
             print(f"Fix type hint `{as_is}` at {node.lineno}:{node.col_offset}")
         self.generic_visit(node)
