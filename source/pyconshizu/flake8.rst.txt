@@ -120,9 +120,7 @@ ASTを表示 [#ast.dump]_ 🏃‍♂️
 * やりたいこと：木の中の特定のノードを見つけたい（例：``print`` 関数）
 * 操作を **訪問者** （Visitor）に書き、データ構造は訪問者を受け入れる [#gof-visitor-pattern]_
 
-.. [#gof-visitor-pattern] データ構造に操作を書くのと比べて、操作を追加しやすくなる
-
-.. https://nikkie-ftnext.hatenablog.com/entry/the-transcendent-book-chapter8-design-patterns-visitor
+.. [#gof-visitor-pattern] データ構造に操作を書くのと比べて、操作を追加しやすくなります。拙ブログ `読書&写経ログ | #ちょうぜつ本 第8章 Visitorパターン <https://nikkie-ftnext.hatenablog.com/entry/the-transcendent-book-chapter8-design-patterns-visitor>`__
 
 .. 『エキスパートPythonプログラミング』に詳しいらしい
 
@@ -280,7 +278,7 @@ flake8にルールを追加する
 
 .. https://flake8.pycqa.org/en/latest/plugin-development/index.html
 
-(1) flake8プラグインのインターフェース
+(1)flake8プラグインのインターフェース
 --------------------------------------------------
 
 * AST型プラグイン：flake8がパース済みの ``ast.AST`` を渡してくれる
@@ -299,7 +297,7 @@ flake8にルールを追加する
 
 .. https://github.com/ftnext/kotoha-python-linter/blob/v0.1.1/src/kotoha/plugins.py
 
-(2) パッケージング（メタデータの書き方）
+(2)パッケージング（メタデータの書き方）
 --------------------------------------------------
 
 .. literalinclude:: ../../samplecode/write-python-linter-rules/flake8_plugin_example/pyproject.toml
@@ -317,7 +315,7 @@ pylint でもプラグインとして書ける 🏃‍♂️
 
     $ pylint --load_plugins kotoha_plugin use_iterable.py
 
-.. [#pylint-kotoha] `pylint を使った琴葉ちゃん「引数の型ヒントを list にしてはいけません」 <https://nikkie-ftnext.hatenablog.com/entry/flake8-kotoha-experiment-pylint-checker-implementation>`__
+.. [#pylint-kotoha] 拙ブログ `pylint を使った琴葉ちゃん「引数の型ヒントを list にしてはいけません」 <https://nikkie-ftnext.hatenablog.com/entry/flake8-kotoha-experiment-pylint-checker-implementation>`__
 
 .. flake8へのprint関数の呼び出しの指摘は練習問題として？
 

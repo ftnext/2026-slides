@@ -11,7 +11,7 @@ Pythonのリンタを作ろう
 * プロポーザルのタイトルが本文を反映していませんでした。ごめんなさい [#build-python-linter-first-step]_
 * 主張：Pythonのリンタの **ルールを書ける** ようになって、より使いこなしていきましょう（:fab:`github` `サンプルコード <https://github.com/ftnext/2026-slides/tree/main/samplecode/write-python-linter-rules>`__）
 
-.. [#build-python-linter-first-step] せめてものお詫びとして `flake8 を観察して作る、小さな Python リンタ（一歩目）  <https://nikkie-ftnext.hatenablog.com/entry/my-first-python-linter-based-on-flake8-observation-first-step>`__
+.. [#build-python-linter-first-step] せめてものお詫びとして拙ブログ `flake8 を観察して作る、小さな Python リンタ（一歩目）  <https://nikkie-ftnext.hatenablog.com/entry/my-first-python-linter-based-on-flake8-observation-first-step>`__
 
 皆さまお使いのリンタは？
 --------------------------------------------------
@@ -69,7 +69,7 @@ Pythonのリンタを作ろう
         finally:
             return 42
 
-.. [#B012] `jump-statement-in-finally (B012) <https://docs.astral.sh/ruff/rules/jump-statement-in-finally/>`__ （`「What's new in Python 3.14」より finally 節での return（や continue・break）は SyntaxWarning で警告されるようになりました（PEP 765） <https://nikkie-ftnext.hatenablog.com/entry/whatsnew-python-314-pep-765-syntaxwarning-finally-return>`__）
+.. [#B012] `jump-statement-in-finally (B012) <https://docs.astral.sh/ruff/rules/jump-statement-in-finally/>`__ （拙ブログ `「What's new in Python 3.14」より finally 節での return（や continue・break）は SyntaxWarning で警告されるようになりました（PEP 765） <https://nikkie-ftnext.hatenablog.com/entry/whatsnew-python-314-pep-765-syntaxwarning-finally-return>`__）
 
 PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
 ----------------------------------------------------------------------
@@ -86,7 +86,7 @@ PEP 8 以外の例：ログメッセージにf-stringはいけません [#G004]_
 
 .. （ロギングって中で%してるのか！）
 
-.. [#G004] `logging-f-string (G004) <https://docs.astral.sh/ruff/rules/logging-f-string/>`__ （`Pythonのログメッセージにf-stringはいけません。そこのClaude、私はあなたに言っているんですよ <https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages>`__）
+.. [#G004] `logging-f-string (G004) <https://docs.astral.sh/ruff/rules/logging-f-string/>`__ （拙ブログ `Pythonのログメッセージにf-stringはいけません。そこのClaude、私はあなたに言っているんですよ <https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages>`__）
 
 スタイルガイドはリンタにチェックさせよう
 --------------------------------------------------
@@ -175,13 +175,13 @@ Pythonでリンタのルールを書く
 
 * 標準ライブラリastで抽象構文木を見ながら **指摘したいPythonノードの処理をvisitorに追加**
 * 既存のリンタのプラグインにしてルール追加
-* ルールが1つ書けたら、CLIからのファイルの読み込みなどを足していけばリンタ
+* 💡ルールが書けたら、CLIからのファイルの読み込みなどを足していけばリンタが作れるじゃん！
 
 Ruff + カスタムルール
 --------------------------------------------------
 
 * ast-grep（**YAML** でルールを書く）
-* この機会にRustを書いちゃおう！
+* この機会にRustを書いちゃおう🌟
 * Astralはさすがにそろそろプラグインを追加してください🙏（私も挑みます）
 
 ご清聴ありがとうございました！

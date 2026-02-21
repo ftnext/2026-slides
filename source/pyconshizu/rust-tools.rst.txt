@@ -27,7 +27,7 @@ Astral「Ruff だけあればいいでしょ」
 
 .. [#ruff-rules-doc] 「*Ruff supports over 800 lint rules,*」 https://docs.astral.sh/ruff/rules/
 
-コマンド例
+コマンド例 [#ruff-command-article]_
 --------------------------------------------------
 
 .. code-block:: console
@@ -40,7 +40,8 @@ Astral「Ruff だけあればいいでしょ」
 
 .. https://github.com/astral-sh/uv/releases/tag/0.8.13
 
-.. https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands
+.. [#ruff-command-article] 拙ブログ `Ruffは format と check --fix の2つのコマンドでフォーマットする <https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands>`__
+
 .. https://gihyo.jp/article/2023/03/monthly-python-2303
 
 Ruffにはプラグイン機構が無い🈚️
@@ -138,13 +139,13 @@ ast-grepは実は **tree-sitter** による 🏃‍♂️
 * tree-sitter は多言語対応
 * https://tree-sitter.github.io/tree-sitter/
 
-.. https://nikkie-ftnext.hatenablog.com/entry/tree-sitter-python-query-like-flake8-kotoha
-
-tree-sitter クエリの例 🏃‍♂️
---------------------------------------------------
+tree-sitter クエリの例 [#tree-sitter-blog]_ 🏃‍♂️
+------------------------------------------------------------
 
 .. literalinclude:: ../../samplecode/write-python-linter-rules/kotoha.scm
    :language: scheme
+
+.. [#tree-sitter-blog] 拙ブログ `tree-sitterで、関数の引数をlistで型ヒントしているPythonコードをクエリする🔍 <https://nikkie-ftnext.hatenablog.com/entry/tree-sitter-python-query-like-flake8-kotoha>`__
 
 🅱️ 発展：Rustで書く
 ==================================================
