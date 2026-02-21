@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flake8-kotoha"
+version = "0.0.1"
+dependencies = ["flake8"]
+
+[project.entry-points."flake8.extension"]
+KTH = "kotoha_plugin:Flake8KotohaPlugin"
+
+[tool.setuptools]
+py-modules = ["kotoha_plugin"]
