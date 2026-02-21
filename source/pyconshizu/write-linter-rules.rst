@@ -1,3 +1,9 @@
+:ogp_title: Pythonのリンタを作ろう
+:ogp_event_name: pyconshizu
+:ogp_slide_name: write-linter-rules
+:ogp_description: PyCon mini Shizuoka 2026
+:ogp_image_name: pyconshizu
+
 ==================================================
 Pythonのリンタを作ろう
 ==================================================
