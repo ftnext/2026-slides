@@ -12,6 +12,15 @@
 * 「書いてはいけないパターン」をASTで表現
 * それを Visitor パターンで見つける
 
+.. _Lint Night #1: https://www.youtube.com/watch?v=gKCB6rQxFBU
+
+おすすめ：LintオタクによるLint解説（`Lint Night #1`_） 🏃‍♂️
+------------------------------------------------------------
+
+.. raw:: html
+
+    <iframe class="speakerdeck-iframe" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/ffeacc49800f47a29172d5d11eecc210" title="LintオタクによるLint解説 / Introduction to Lints" allowfullscreen="true" data-ratio="1.7777777777777777"></iframe>
+
 準備1️⃣ AST
 ==================================================
 
@@ -310,3 +319,12 @@ pylint でもプラグインとして書ける 🏃‍♂️
 .. [#pylint-kotoha] `pylint を使った琴葉ちゃん「引数の型ヒントを list にしてはいけません」 <https://nikkie-ftnext.hatenablog.com/entry/flake8-kotoha-experiment-pylint-checker-implementation>`__
 
 .. flake8へのprint関数の呼び出しの指摘は練習問題として？
+
+.. _コーディング規約自動化 Pylintのカスタムルールを作ろう: https://2022.pycon.jp/timetable/?id=CNFPPT
+
+おすすめ：`コーディング規約自動化 Pylintのカスタムルールを作ろう`_ 🏃‍♂️
+--------------------------------------------------------------------------------
+
+.. raw:: html
+
+    <iframe class="speakerdeck-iframe" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/dd2b52803bf14bd7a5d1b0cb67315cfb" title="PyCon JP 2022/コーディング規約自動化 Pylintのカスタムルールを作ろう」" allowfullscreen="true" data-ratio="1.7777777777777777"></iframe>
