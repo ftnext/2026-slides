@@ -2,12 +2,37 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "google-genai>=1.65.0",
+#     "opentelemetry-instrumentation-google-genai>=0.7b0",
+#     "opentelemetry-sdk>=1.39.1",
 # ]
 # ///
 import argparse
 import asyncio
+import os
+
+from opentelemetry._logs import set_logger_provider
+from opentelemetry.instrumentation.google_genai import GoogleGenAiSdkInstrumentor
+from opentelemetry.sdk._logs import LoggerProvider
+from opentelemetry.sdk._logs.export import (
+    BatchLogRecordProcessor,
+    ConsoleLogRecordExporter,
+)
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.trace import get_tracer_provider, set_tracer_provider
 
 from deep_research_lib import Config, ResearchAgent
+
+os.environ["OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT"] = "true"
+
+set_tracer_provider(TracerProvider())
+get_tracer_provider().add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+
+provider = LoggerProvider()
+provider.add_log_record_processor(BatchLogRecordProcessor(ConsoleLogRecordExporter()))
+set_logger_provider(provider)
+
+GoogleGenAiSdkInstrumentor().instrument()
 
 
 async def main() -> int:
