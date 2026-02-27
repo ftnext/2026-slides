@@ -1,5 +1,14 @@
 # https://github.com/anthropics/anthropic-sdk-ruby/blob/main/examples/web_search.rb
 require "anthropic"
+require "opentelemetry/sdk"
+require "opentelemetry/instrumentation/anthropic"
+require "opentelemetry/instrumentation/net/http"
+
+ENV["OTEL_TRACES_EXPORTER"] = "console"
+OpenTelemetry::SDK.configure do |c|
+  c.use "OpenTelemetry::Instrumentation::Net::HTTP"
+  c.use 'OpenTelemetry::Instrumentation::Anthropic'
+end
 
 anthropic = Anthropic::Client.new
 
