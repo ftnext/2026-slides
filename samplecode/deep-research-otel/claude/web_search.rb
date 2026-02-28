@@ -7,7 +7,7 @@ require "opentelemetry/instrumentation/net/http"
 ENV["OTEL_TRACES_EXPORTER"] = "console"
 OpenTelemetry::SDK.configure do |c|
   c.use "OpenTelemetry::Instrumentation::Net::HTTP"
-  c.use 'OpenTelemetry::Instrumentation::Anthropic'
+  c.use "OpenTelemetry::Instrumentation::Anthropic"
 end
 
 anthropic = Anthropic::Client.new
@@ -16,12 +16,7 @@ message = anthropic.messages.create(
   model: "claude-haiku-4-5-20251001",
   max_tokens: 1024,
   messages: [{role: :user, content: "What's the weather in New York?"}],
-  tools: [
-    {
-      name: "web_search",
-      type: "web_search_20250305",
-    }
-  ]
+  tools: [{name: "web_search", type: "web_search_20250305"}],
 )
 
 message
