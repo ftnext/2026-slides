@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'faraday', '~> 2.0'
+gem 'opentelemetry-api', '~> 1.4'
+gem 'opentelemetry-sdk', '~> 1.4'
