@@ -1,3 +1,9 @@
+:ogp_title: deep researchのブラックボックスをOTelで覗く
+:ogp_event_name: fukuokark05
+:ogp_slide_name: otel_deep_research
+:ogp_description: 福岡Rubyist会議05
+:ogp_image_name: fukuokark05
+
 ==================================================
 deep researchの ブラックボックスを OTelで覗く
 ==================================================
