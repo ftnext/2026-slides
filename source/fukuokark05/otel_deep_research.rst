@@ -1,9 +1,9 @@
 ==================================================
-deep research のブラックボックスを OTel で覗く
+deep researchの ブラックボックスを OTelで覗く
 ==================================================
 
 :Event: 福岡Rubyist会議05
-:Presented: 2026/02/28 nikkie
+:Presented: 2026/02/28 nikkie（`サンプルコード <https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel>`__）
 
 お前、誰よ（Python使いの自己紹介）
 ==================================================
@@ -20,7 +20,7 @@ deep research のブラックボックスを OTel で覗く
 
 * コマンドラインから `llm-deep-research <https://github.com/ftnext/llm-deep-research>`__ [#simonw-llm-plugin]_
 * `Python Meetup Fukuoka <https://www.youtube.com/@lycorptech_jp/search?query=Python%20Meetup>`__ が熱くて🔥たびたび参加（`次回3/4 <https://lycorptech-fukuoka.connpass.com/event/380867/>`__）
-* 今回の発表を機に、Rubyは5年以上ぶり
+* 今回の発表を機に、Rubyは5年以上ぶり（PythonをLLMで変換）
 
 .. [#simonw-llm-plugin] Simon Willisonさんの `llm <https://pypi.org/project/llm/>`__ のプラグイン
 
@@ -30,24 +30,24 @@ deep research のブラックボックスを OTel で覗く
 * テーマ："最近、何してる？"
 * https://regional.rubykaigi.org/fukuoka05/
 
-deep research💫
+deep research💫 [#in-depth-tips]_
 ==================================================
 
 2025/02/02 OpenAI `Introducing deep research <https://openai.com/index/introducing-deep-research/>`__
 
 .. 日本語 https://openai.com/ja-JP/index/introducing-deep-research/
 
-.. in-depth: 徹底的な
+.. [#in-depth-tips] in-depth: 徹底的な
 
 皆さん使ってますか？🙋
 --------------------------------------------------
 
 * GPT (OpenAI)
-* Gemini・Claudeなどなど [#deep-research-services]_
+* `Gemini <https://gemini.google/overview/deep-research/>`__ ・ `Claude <https://claude.com/blog/research>`__ などなど [#deep-research-services]_
 * 公開実装を動かした
 * 自作している
 
-.. [#deep-research-services] X (Grok)・Perplexity
+.. [#deep-research-services] X (`Grok <https://x.ai/news/grok-3>`__)・ `Perplexity <https://www.perplexity.ai/ja/hub/blog/introducing-perplexity-deep-research>`__ などなど
 
 .. 網羅するより代表例を1つずつ紹介してみる
 
@@ -62,7 +62,7 @@ OpenAI deep research
 1. 人間が調査を依頼
 2. LLMから追加で質問 [#202602-deep-research-update]_
 3. 人間から回答
-4. LLMが調査（10分程度）
+4. **LLMがWebを調査** （10分程度）
 5. 詳細なレポート
 
 .. [#202602-deep-research-update] 2026/02にアップデートが入りました（`Deep research in ChatGPT <https://help.openai.com/en/articles/10500283-deep-research-in-chatgpt>`__）
@@ -71,16 +71,16 @@ OpenAI deep research
 --------------------------------------------------
 
 * 調査計画
-* Web検索
+* Web検索 [#deep-research-supplement]_
 * Webブラウジング
 
-.. 手元のファイル指定も可
+.. [#deep-research-supplement] 手元のファイル指定も可
 
 LLMに **道具を渡して** 再現させよう！
 --------------------------------------------------
 
 * OpenAIは *専用モデル* で実現 [#deep-research-model]_
-* OpenAIのように専用モデルは開発できずとも
+* GPTのような規模のモデルは開発できずとも
 * LLMは道具が使える（tool use = function calling）
 
 .. [#deep-research-model] 「*The deep research model is powered by an early version of OpenAI o3 that is optimized for web browsing.*」 `Deep Research System Card <https://openai.com/index/deep-research-system-card/>`__
@@ -102,9 +102,11 @@ LLMに **道具を渡して** 再現させよう！
     :notitle:
 
 1. LLMにプロンプトとtool一覧を送る
-2. LLM「このtoolをこれこれの引数で呼び出したい」（JSON）
-3. アプリケーションでtoolを呼び出し、結果をLLMに返す
+2. LLM「このtoolをこれこれの引数で呼び出したい」（JSON） [#mcp-tools]_
+3. **アプリケーションでtoolを呼び出し、結果をLLMに返す**
 4. LLMがtoolの結果を元に（必要であればさらにtool呼び出し）回答
+
+.. [#mcp-tools] MCP（Model Control Protocol）はtool呼び出しを統一するものでした
 
 .. _Open-source DeepResearch: https://huggingface.co/blog/open-deep-research
 
@@ -122,19 +124,17 @@ Hugging Face製deep researchの工夫
 --------------------------------------------------
 
 * テキストブラウザ（*an extremely simple text-based web browser*）
-* CodeAct [#codeact-paper]_ ：計画をコード（Python）で表現
+* *CodeAct* [#codeact-paper]_ ：計画をコード（Python）で表現
 
 .. [#codeact-paper] `[2402.01030] Executable Code Actions Elicit Better LLM Agents <https://arxiv.org/abs/2402.01030>`__
 
-公開実装が次々に登場
+例えば、フレームワークにはだいたい公開実装あり
 --------------------------------------------------
 
-.. TODO Pydantic AI、Strands
-
-* 企業：LangChainなど
-* コミュニティ
-
-本気で探せば100以上？
+* `Pydantic AI <https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/flight_booking.py>`__
+* `Agent Development Kit <https://github.com/google/adk-samples/tree/main/python/agents/deep-search>`__ (Google)
+* `Strands Agents <https://github.com/strands-agents/samples/tree/main/02-samples/14-research-agent>`__ (AWS)
+* `Agent Framework <https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents>`__ (Microsoft)
 
 私は工夫を知りたい
 --------------------------------------------------
@@ -171,11 +171,7 @@ LLMへの入力を全部分かりたい（束縛系）
 
 .. image:: ../_static/fukuokark05/otel-docs-context-propagation-example.svg
 
-.. マイクロサービスアーキテクチャで便利
-
-.. リクエストにIDを付与して分散トレース
-
-.. [#otel-context-propagation] https://opentelemetry.io/ja/docs/concepts/context-propagation/#traces
+.. [#otel-context-propagation] 図は https://opentelemetry.io/ja/docs/concepts/context-propagation/#traces より（マイクロサービスアーキテクチャで分散トレーシング）
 
 トレース例🏃‍♂️
 --------------------------------------------------
@@ -228,7 +224,7 @@ LLMへの入力を全部分かりたい（束縛系）
 --------------------------------------------------
 
 * https://opentelemetry.io/docs/specs/semconv/
-* LLMアプリケーション向けのセマンティック規約策定が **現在進行系**
+* LLMアプリケーション向けのセマンティック規約策定が **現在進行系** 🔥
 
     * https://opentelemetry.io/docs/specs/semconv/gen-ai/
 
@@ -236,9 +232,12 @@ LLMへの入力を全部分かりたい（束縛系）
 --------------------------------------------------
 
 * Pythonでは `google-genai <https://pypi.org/project/google-genai/>`__ SDK
-* OTelライブラリが `opentelemetry-instrumentation-google-genai <https://pypi.org/project/opentelemetry-instrumentation-google-genai/>`__ で *計装* を提供
+* `opentelemetry-instrumentation-google-genai <https://pypi.org/project/opentelemetry-instrumentation-google-genai/>`__ で *計装* を提供
+* 無料。ただし、入力データはGoogleのモデルの訓練に使われる [#google-gemini-api]_
 
-悩まされていたブラックボックス
+.. [#google-gemini-api] DeepMindによるGemini APIが無料。本番利用向けにGoogle CloudのVertex AIもあります
+
+悩まされていたブラックボックス📦
 --------------------------------------------------
 
 .. code-block:: python
@@ -247,8 +246,8 @@ LLMへの入力を全部分かりたい（束縛系）
 
     result = ResearchAgent().run(query)
 
-google-genaiを計装（簡略版）
---------------------------------------------------
+google-genaiを計装（簡略版）🈳 [#research-python-impl]_
+------------------------------------------------------------
 
 .. code-block:: python
     :emphasize-lines: 2,4
@@ -259,7 +258,7 @@ google-genaiを計装（簡略版）
     GoogleGenAiSdkInstrumentor().instrument()
     result = ResearchAgent().run(query)
 
-https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/python
+.. [#research-python-impl] https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/python （``uvx --with llm-deep-research llm -m genai-processors-research QUERY`` も提供してます）
 
 .. Geminiへの入力が見られた
 
@@ -267,7 +266,7 @@ https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/py
 ==================================================
 
 * deep researchの実装を見つける
-* OpenTelemetryを有効にして動かす（鑑賞）
+* **OpenTelemetryを有効にして動かす** （鑑賞）
 * 気になる箇所のソースを読み理解深める（自分の実装に活かす）
 
 これを **Ruby** でやることを考えます
@@ -275,16 +274,20 @@ https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/py
 
 https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel
 
-今回のdeep research
---------------------------------------------------
+今回のdeep research [#genai-processors-research]_
+------------------------------------------------------------
 
 1. topic_generator
 2. topic_researcher
 3. research_synthesizer
 
-.. uvx --with llm-deep-research llm -m genai-processors-research 'Research the best things about owning dalmatians!'
+.. [#genai-processors-research] Googleの `genai-processors <https://pypi.org/project/genai-processors/>`__ の `Research Agent Example <https://github.com/google-gemini/genai-processors/tree/main/examples/research>`__ （Web検索のみでブラウジングがないところが伸びしろ）
 
-.. TODO 図
+.. revealjs-break::
+    :notitle:
+
+.. image:: ../_static/fukuokark05/genai-processor-research.drawio.png
+  :scale: 200%
 
 Gemini APIのリクエストにFaraday
 --------------------------------------------------
@@ -341,6 +344,7 @@ Workaround: faradayのMiddleware（イメージ）
 
   class OtelBodyCaptureMiddleware < Faraday::Middleware
     def call(env)
+      # 詳しくは次スライド
       # span.set_attribute("http.request.body", body_str)
     end
   end
@@ -352,7 +356,30 @@ Workaround: faradayのMiddleware（イメージ）
     )
   end
 
-google-genaiを計装する体験をしたい！
+.. revealjs-break::
+    :notitle:
+
+.. code-block:: ruby
+
+    class OtelBodyCaptureMiddleware < Faraday::Middleware
+      def call(env)
+        span = OpenTelemetry::Trace.current_span
+        if span&.recording?
+          body = env.body
+          body_str = body.is_a?(String) ? body : JSON.generate(body)
+          span.set_attribute("http.request.body", body_str)
+        end
+
+        response = @app.call(env)
+
+        if span&.recording?
+          span.set_attribute("http.response.body", response.body.to_s)
+        end
+        response
+      end
+    end
+
+google-genaiを計装するのと同じ体験をしたい！
 ==================================================
 
 .. code-block:: python
@@ -375,7 +402,7 @@ google-genaiを計装する体験をしたい！
     MyGoogleGenai::Instrumentation::Instrumentor.new.instrument
     result = ResearchAgent.new(api_key: api_key, config: config).run(USER_QUERY)
 
-.. v2へのリンク
+https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/ruby-v2
 
 LLMへの入力、全部分かる！🙌
 --------------------------------------------------
@@ -395,12 +422,34 @@ LLMへの入力、全部分かる！🙌
 最後に：deep researchを作ってみたくなった方へ
 ==================================================
 
-* 自作以外に：Googleはinteractions APIとしてdeep researchを提供しています
-* 自作する場合：コーディングエージェントのハーネスを使う（Claude Code SDKなど）
+* 自作以外に：Googleは `interactions API <https://ai.google.dev/gemini-api/docs/interactions?hl=ja>`__ としてdeep researchを提供しています
+* 自作する場合：コーディングエージェントのハーネスを使う（`Claude Agent SDK <https://pypi.org/project/claude-agent-sdk/>`__ など） [#claude-code-oneliner-research]_
+
+.. [#claude-code-oneliner-research] `The one-liner research agent <https://platform.claude.com/cookbook/claude-agent-sdk-00-the-one-liner-research-agent>`__
 
 ご清聴ありがとうございました
 --------------------------------------------------
 
 deep research のブラックボックスを OTel で覗く
 
-.. サーバサイドtool use
+Appendix
+==================================================
+
+なぜGemini？
+--------------------------------------------------
+
+* `anthropic-sdk-ruby <https://github.com/anthropics/anthropic-sdk-ruby>`__ と `opentelemetry-instrumentation-anthropic <https://github.com/open-telemetry/opentelemetry-ruby-contrib/tree/main/instrumentation/anthropic>`__ を知った
+* Pythonのgoogle-genaiとその計装ライブラリとの関係とはどうやら違うよう [#anthropic-sdk-ruby-practice]_
+* 無料で使えるGemini（入力は学習利用される点には注意）
+
+.. [#anthropic-sdk-ruby-practice] https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/claude
+
+検索ツールの呼び出し
+--------------------------------------------------
+
+* GeminiにGoogle検索させる箇所
+* クライアントサイドでなく **サーバサイド**
+* Geminiがサーバサイドで検索して、その結果を元に返答しています
+
+EOF
+===
