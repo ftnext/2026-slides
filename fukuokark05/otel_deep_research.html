@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>deep researchの ブラックボックスを OTelで覗く</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=b04cc698" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/fukuokark05/otel_deep_research.html">
+    <meta property="og:title" content="deep researchのブラックボックスをOTelで覗く">
+    <meta property="og:description" content="福岡Rubyist会議05">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/fukuokark05.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">deep researchの ブラックボックスを OTelで覗く</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>福岡Rubyist会議05</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/02/28 nikkie（<a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel" rel="noreferrer" target="_blank">サンプルコード</a>）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ（Python使いの自己紹介）</h2>
+<ul class="simple">
+<li><p>東京在住。機械学習エンジニア</p></li>
+<li><p><a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（deep research 機能含む） <a class="footnote-reference brackets" href="#hiring" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hiring" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id1" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">もう少し自己紹介</h3>
+<ul class="simple">
+<li><p>コマンドラインから <a class="reference external" href="https://github.com/ftnext/llm-deep-research" rel="noreferrer" target="_blank">llm-deep-research</a> <a class="footnote-reference brackets" href="#simonw-llm-plugin" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/@lycorptech_jp/search?query=Python%20Meetup" rel="noreferrer" target="_blank">Python Meetup Fukuoka</a> が熱くて🔥たびたび参加（<a class="reference external" href="https://lycorptech-fukuoka.connpass.com/event/380867/" rel="noreferrer" target="_blank">次回3/4</a>）</p></li>
+<li><p>今回の発表を機に、Rubyは5年以上ぶり（PythonをLLMで変換）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="simonw-llm-plugin" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>Simon Willisonさんの <a class="reference external" href="https://pypi.org/project/llm/" rel="noreferrer" target="_blank">llm</a> のプラグイン</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">この一年、何をしていましたか？</h2>
+<ul class="simple">
+<li><p>テーマ："最近、何してる？"</p></li>
+<li><p><a class="reference external" href="https://regional.rubykaigi.org/fukuoka05/" rel="noreferrer" target="_blank">https://regional.rubykaigi.org/fukuoka05/</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">deep research💫 <a class="footnote-reference brackets" href="#in-depth-tips" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></h2>
+<p>2025/02/02 OpenAI <a class="reference external" href="https://openai.com/index/introducing-deep-research/" rel="noreferrer" target="_blank">Introducing deep research</a></p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="in-depth-tips" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>in-depth: 徹底的な</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">皆さん使ってますか？🙋</h3>
+<ul class="simple">
+<li><p>GPT (OpenAI)</p></li>
+<li><p><a class="reference external" href="https://gemini.google/overview/deep-research/" rel="noreferrer" target="_blank">Gemini</a> ・ <a class="reference external" href="https://claude.com/blog/research" rel="noreferrer" target="_blank">Claude</a> などなど <a class="footnote-reference brackets" href="#deep-research-services" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+<li><p>公開実装を動かした</p></li>
+<li><p>自作している</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="deep-research-services" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>X (<a class="reference external" href="https://x.ai/news/grok-3" rel="noreferrer" target="_blank">Grok</a>)・ <a class="reference external" href="https://www.perplexity.ai/ja/hub/blog/introducing-perplexity-deep-research" rel="noreferrer" target="_blank">Perplexity</a> などなど</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAI deep research</h3>
+<img alt="../_images/openai-deep-research-example.png" src="../_images/openai-deep-research-example.png"/>
+</section>
+<section>
+<ol class="arabic simple">
+<li><p>人間が調査を依頼</p></li>
+<li><p>LLMから追加で質問 <a class="footnote-reference brackets" href="#deep-research-update" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+<li><p>人間から回答</p></li>
+<li><p><strong>LLMがWebを調査</strong> （10分程度）</p></li>
+<li><p>詳細なレポート</p></li>
+</ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="deep-research-update" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>2026/02にアップデートが入りました（<a class="reference external" href="https://help.openai.com/en/articles/10500283-deep-research-in-chatgpt" rel="noreferrer" target="_blank">Deep research in ChatGPT</a>）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私の <strong>代わりにWebを調査</strong> してきてくれる！</h3>
+<ul class="simple">
+<li><p>調査計画</p></li>
+<li><p>Web検索 <a class="footnote-reference brackets" href="#deep-research-supplement" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+<li><p>Webブラウジング</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="deep-research-supplement" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p>手元のファイル指定も可</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">LLMに <strong>道具を渡して</strong> 再現させよう！</h3>
+<ul class="simple">
+<li><p>OpenAIは <em>専用モデル</em> で実現 <a class="footnote-reference brackets" href="#deep-research-model" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p></li>
+<li><p>GPTのような規模のモデルは開発できずとも</p></li>
+<li><p>LLMは道具が使える（tool use = function calling）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="deep-research-model" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p>「<em>The deep research model is powered by an early version of OpenAI o3 that is optimized for web browsing.</em>」 <a class="reference external" href="https://openai.com/index/deep-research-system-card/" rel="noreferrer" target="_blank">Deep Research System Card</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<iframe allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/f912a0d061334d5aaf2fbf09ace3888c?slide=11" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="AIエージェントとは（UB Tech vol.21）"></iframe></section>
+<section>
+<ol class="arabic simple">
+<li><p>LLMにプロンプトとtool一覧を送る</p></li>
+<li><p>LLM「このtoolをこれこれの引数で呼び出したい」（JSON） <a class="footnote-reference brackets" href="#mcp-tools" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p></li>
+<li><p><strong>アプリケーションでtoolを呼び出し、結果をLLMに返す</strong></p></li>
+<li><p>LLMがtoolの結果を元に（必要であればさらにtool呼び出し）回答</p></li>
+</ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="mcp-tools" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id11" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p>MCP（Model Control Protocol）はtool呼び出しを統一するものでした</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://huggingface.co/blog/open-deep-research" rel="noreferrer" target="_blank">Open-source DeepResearch</a></h2>
+<ul>
+<li><p>OpenAIの発表を受けて、Hugging Faceが24時間再現チャレンジ</p></li>
+<li><p><a class="reference external" href="https://github.com/huggingface/smolagents/tree/main/examples/open_deep_research" rel="noreferrer" target="_blank">https://github.com/huggingface/smolagents/tree/main/examples/open_deep_research</a></p>
+<blockquote>
+<div><p>This agent achieves <strong>55% pass@1</strong> on the GAIA <a class="footnote-reference brackets" href="#gaia-paper" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a> validation set, compared to <strong>67%</strong> for the original Deep Research.</p>
+</div></blockquote>
+</li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="gaia-paper" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id13" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://arxiv.org/abs/2311.12983" rel="noreferrer" target="_blank">[2311.12983] GAIA: a benchmark for General AI Assistants</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Hugging Face製deep researchの工夫</h3>
+<ul class="simple">
+<li><p>テキストブラウザ（<em>an extremely simple text-based web browser</em>）</p></li>
+<li><p><em>CodeAct</em> <a class="footnote-reference brackets" href="#codeact-paper" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a> ：計画をコード（Python）で表現</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codeact-paper" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">10</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://arxiv.org/abs/2402.01030" rel="noreferrer" target="_blank">[2402.01030] Executable Code Actions Elicit Better LLM Agents</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例えば、フレームワークにはだいたい公開実装あり</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pydantic/pydantic-ai/blob/main/examples/pydantic_ai_examples/flight_booking.py" rel="noreferrer" target="_blank">Pydantic AI</a></p></li>
+<li><p><a class="reference external" href="https://github.com/google/adk-samples/tree/main/python/agents/deep-search" rel="noreferrer" target="_blank">Agent Development Kit</a> (Google)</p></li>
+<li><p><a class="reference external" href="https://github.com/strands-agents/samples/tree/main/02-samples/14-research-agent" rel="noreferrer" target="_blank">Strands Agents</a> (AWS)</p></li>
+<li><p><a class="reference external" href="https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents" rel="noreferrer" target="_blank">Agent Framework</a> (Microsoft)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私は工夫を知りたい</h3>
+<ul class="simple">
+<li><p>自作の参考にするために公開実装を動かす</p></li>
+<li><p>作者ではないので、内部の動きが手に取るようにはわからない（<strong>ブラックボックス</strong>）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">LLMへの入力を全部分かりたい（束縛系）</h3>
+<ul class="simple">
+<li><p>LLMアプリケーション開発における私の信念</p></li>
+<li><p>deep researchを依頼された <strong>LLMのように考える</strong> <a class="footnote-reference brackets" href="#think-like-agents" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a></p></li>
+<li><p>改善案を出しやすい（LLMより前は数学の理解が必要だった）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="think-like-agents" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id18" role="doc-backlink">11</a><span class="fn-bracket">]</span></span>
+<p>「<em>Think like your agents</em>」 Anthropic <a class="reference external" href="https://www.anthropic.com/engineering/built-multi-agent-research-system" rel="noreferrer" target="_blank">How we built our multi-agent research system</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><strong>OpenTelemetry</strong> (OTel) に目をつけた！</h2>
+<ul>
+<li><p>テレメトリ（トレース・メトリクス・ログ）から <strong>可観測性</strong> を得る手段</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>システムの出力から内部状態を理解する</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>ベンダーやツールのロックインなし</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コンテキスト伝播🏃‍♂️ <a class="footnote-reference brackets" href="#otel-context-propagation" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a></h3>
+<img alt="../_images/otel-docs-context-propagation-example.svg" src="../_images/otel-docs-context-propagation-example.svg"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="otel-context-propagation" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id19" role="doc-backlink">12</a><span class="fn-bracket">]</span></span>
+<p>図は <a class="reference external" href="https://opentelemetry.io/ja/docs/concepts/context-propagation/#traces" rel="noreferrer" target="_blank">https://opentelemetry.io/ja/docs/concepts/context-propagation/#traces</a> より（マイクロサービスアーキテクチャで分散トレーシング）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">トレース例🏃‍♂️</h3>
+<pre data-id="id21"><code class="json" data-noescape="" data-trim="">{
+    "name": "GET /",
+    "context": {
+        "trace_id": "0x9591b67e3eb9f91ecadc84aec50e79f0",
+        "span_id": "0x9bf997b809109fa3",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.SERVER",
+    "parent_id": "0x119f828276ebd665",
+    "start_time": "2026-02-27T10:57:22.142571Z",
+    "end_time": "2026-02-27T10:57:22.143700Z",
+    "status": {
+        "status_code": "UNSET"
+    },
+    "attributes": {
+        "http.scheme": "http",
+        "http.host": "127.0.0.1:8000",
+        "net.host.port": 8000,
+        "http.flavor": "1.1",
+        "http.target": "/",
+        "http.url": "http://127.0.0.1:8000/",
+        "http.method": "GET",
+        "http.server_name": "localhost:8000",
+        "http.user_agent": "Faraday v2.14.1",
+        "net.peer.ip": "127.0.0.1",
+        "net.peer.port": 62375,
+        "http.route": "/",
+        "http.status_code": 200
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "telemetry.sdk.language": "python",
+            "telemetry.sdk.name": "opentelemetry",
+            "telemetry.sdk.version": "1.35.0",
+            "service.name": "unknown_service"
+        },
+        "schema_url": ""
+    }
+}</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">フィールド名：Semantic conventions🏃‍♂️</h3>
+<ul>
+<li><p><a class="reference external" href="https://opentelemetry.io/docs/specs/semconv/" rel="noreferrer" target="_blank">https://opentelemetry.io/docs/specs/semconv/</a></p></li>
+<li><p>LLMアプリケーション向けのセマンティック規約策定が <strong>現在進行系</strong> 🔥</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" rel="noreferrer" target="_blank">https://opentelemetry.io/docs/specs/semconv/gen-ai/</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例えば Gemini</h3>
+<ul class="simple">
+<li><p>Pythonでは <a class="reference external" href="https://pypi.org/project/google-genai/" rel="noreferrer" target="_blank">google-genai</a> SDK</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/opentelemetry-instrumentation-google-genai/" rel="noreferrer" target="_blank">opentelemetry-instrumentation-google-genai</a> で <em>計装</em> を提供</p></li>
+<li><p>無料。ただし、入力データはGoogleのモデルの訓練に使われる <a class="footnote-reference brackets" href="#google-gemini-api" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="google-gemini-api" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id22" role="doc-backlink">13</a><span class="fn-bracket">]</span></span>
+<p>DeepMindによるGemini APIが無料。本番利用向けにGoogle CloudのVertex AIもあります</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">悩まされていたブラックボックス📦</h3>
+<pre data-id="id23"><code class="python" data-noescape="" data-trim="">from deep_research_lib import ResearchAgent  # Geminiを使ったdeep research
+
+result = ResearchAgent().run(query)</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">google-genaiを計装（簡略版）🈳 <a class="footnote-reference brackets" href="#research-python-impl" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a></h3>
+<pre data-id="google-genai"><code class="python" data-line-numbers="2,4" data-noescape="" data-trim="">from deep_research_lib import ResearchAgent
+from opentelemetry.instrumentation.google_genai import GoogleGenAiSdkInstrumentor
+
+GoogleGenAiSdkInstrumentor().instrument()
+result = ResearchAgent().run(query)</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="research-python-impl" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id24" role="doc-backlink">14</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/python" rel="noreferrer" target="_blank">https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/python</a> （<code class="docutils literal notranslate"><span class="pre">uvx</span> <span class="pre">--with</span> <span class="pre">llm-deep-research</span> <span class="pre">llm</span> <span class="pre">-m</span> <span class="pre">genai-processors-research</span> <span class="pre">QUERY</span></code> も提供してます）</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">回答：この一年、何をしていましたか？</h2>
+<ul class="simple">
+<li><p>deep researchの実装を見つける</p></li>
+<li><p><strong>OpenTelemetryを有効にして動かす</strong> （鑑賞）</p></li>
+<li><p>気になる箇所のソースを読み理解深める（自分の実装に活かす）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">これを <strong>Ruby</strong> でやることを考えます</h2>
+<p><a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel" rel="noreferrer" target="_blank">https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">今回のdeep research <a class="footnote-reference brackets" href="#genai-processors-research" id="id26" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a></h3>
+<ol class="arabic simple">
+<li><p>topic_generator</p></li>
+<li><p>topic_researcher</p></li>
+<li><p>research_synthesizer</p></li>
+</ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="genai-processors-research" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id26" role="doc-backlink">15</a><span class="fn-bracket">]</span></span>
+<p>Googleの <a class="reference external" href="https://pypi.org/project/genai-processors/" rel="noreferrer" target="_blank">genai-processors</a> の <a class="reference external" href="https://github.com/google-gemini/genai-processors/tree/main/examples/research" rel="noreferrer" target="_blank">Research Agent Example</a> （Web検索のみでブラウジングがないところが伸びしろ）</p>
+</aside>
+</aside>
+</section>
+<section>
+<a class="reference internal image-reference" href="../_images/genai-processor-research.drawio.png"><img alt="../_images/genai-processor-research.drawio.png" height="582" src="../_images/genai-processor-research.drawio.png" width="722"/>
+</a>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Gemini APIのリクエストにFaraday</h3>
+<pre data-id="gemini-apifaraday"><code class="ruby" data-noescape="" data-trim="">conn = Faraday.new(
+  url: "https://generativelanguage.googleapis.com"
+)
+response = conn.post(
+  "/v1beta/models/gemini-3-flash-preview:generateContent"
+) do |req|
+  req.headers["Content-type"] = "application/json"
+  req.headers["x-goog-api-key"] = api_key
+  req.body = {
+    contents: [
+      {
+        parts: [
+          { text: "What's a good name for a flower shop that specializes in selling bouquets of dried flowers?" }
+        ]
+      }
+    ]
+  }.to_json
+end</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">opentelemetry-instrumentation-faraday</h3>
+<pre data-id="opentelemetry-instrumentation-faraday"><code class="ruby" data-noescape="" data-trim="">ENV["OTEL_TRACES_EXPORTER"] = "console"
+OpenTelemetry::SDK.configure do |c|
+  c.use 'OpenTelemetry::Instrumentation::Faraday'
+end</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">限界：Gemini APIへのリクエストが不明</h3>
+<div class="literal-block-wrapper docutils container" id="id37">
+<div class="code-block-caption"><span class="caption-text">リクエストボディは記録されない</span></div>
+<pre><code class="ruby" data-noescape="" data-trim="">ENV["OTEL_TRACES_EXPORTER"] = "console"
+OpenTelemetry::SDK.configure do |c|
+  c.use 'OpenTelemetry::Instrumentation::Faraday'
+end
+
+agent = ResearchAgent.new(api_key: api_key, config: config)
+result = agent.run(USER_QUERY)</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Workaround: faradayのMiddleware（イメージ）</h3>
+<pre data-id="workaround-faradaymiddleware"><code class="ruby" data-noescape="" data-trim="">class OtelBodyCaptureMiddleware &lt; Faraday::Middleware
+  def call(env)
+    # 詳しくは次スライド
+    # span.set_attribute("http.request.body", body_str)
+  end
+end
+
+agent = ResearchAgent.new(api_key: api_key, config: config) do |conn|
+  conn.builder.insert_after(
+    OpenTelemetry::Instrumentation::Faraday::Middlewares::Old::TracerMiddleware,
+    OtelBodyCaptureMiddleware
+  )
+end</code></pre>
+</section>
+<section>
+<pre data-id="workaround-faradaymiddleware"><code class="ruby" data-noescape="" data-trim="">class OtelBodyCaptureMiddleware &lt; Faraday::Middleware
+  def call(env)
+    span = OpenTelemetry::Trace.current_span
+    if span&amp;.recording?
+      body = env.body
+      body_str = body.is_a?(String) ? body : JSON.generate(body)
+      span.set_attribute("http.request.body", body_str)
+    end
+
+    response = @app.call(env)
+
+    if span&amp;.recording?
+      span.set_attribute("http.response.body", response.body.to_s)
+    end
+    response
+  end
+end</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">google-genaiを計装するのと同じ体験をしたい！</h2>
+<pre data-id="id28"><code class="python" data-line-numbers="2,4" data-noescape="" data-trim="">from deep_research_lib import ResearchAgent
+from opentelemetry.instrumentation.google_genai import GoogleGenAiSdkInstrumentor
+
+GoogleGenAiSdkInstrumentor().instrument()
+result = ResearchAgent().run(query)</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スコープを絞って自作</h3>
+<pre data-id="id29"><code class="ruby" data-noescape="" data-trim="">require_relative './deep_research_lib'
+require_relative './instrumentor'
+
+MyGoogleGenai::Instrumentation::Instrumentor.new.instrument
+result = ResearchAgent.new(api_key: api_key, config: config).run(USER_QUERY)</code></pre>
+<p><a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/ruby-v2" rel="noreferrer" target="_blank">https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/ruby-v2</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">LLMへの入力、全部分かる！🙌</h3>
+<pre data-id="id30"><code class="txt" data-noescape="" data-trim="">events=
+ [#&lt;struct OpenTelemetry::SDK::Trace::Event
+   name="gen_ai.user.message",
+   attributes=
+    {"content" =&gt;
+      "You are an expert at generating topics for research, based on the user's content.\n" +
+      "\n" +
+      "Your first task is to devise a number of concrete research areas needed to address the user's content.\n" +
+      "\n" +</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">最後に：deep researchを作ってみたくなった方へ</h2>
+<ul class="simple">
+<li><p>自作以外に：Googleは <a class="reference external" href="https://ai.google.dev/gemini-api/docs/interactions?hl=ja" rel="noreferrer" target="_blank">interactions API</a> としてdeep researchを提供しています</p></li>
+<li><p>自作する場合：コーディングエージェントのハーネスを使う（<a class="reference external" href="https://pypi.org/project/claude-agent-sdk/" rel="noreferrer" target="_blank">Claude Agent SDK</a> など） <a class="footnote-reference brackets" href="#claude-code-oneliner-research" id="id32" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="claude-code-oneliner-research" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id32" role="doc-backlink">16</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://platform.claude.com/cookbook/claude-agent-sdk-00-the-one-liner-research-agent" rel="noreferrer" target="_blank">The one-liner research agent</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>deep research のブラックボックスを OTel で覗く</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Appendix</h2>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">なぜGemini？</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/anthropics/anthropic-sdk-ruby" rel="noreferrer" target="_blank">anthropic-sdk-ruby</a> と <a class="reference external" href="https://github.com/open-telemetry/opentelemetry-ruby-contrib/tree/main/instrumentation/anthropic" rel="noreferrer" target="_blank">opentelemetry-instrumentation-anthropic</a> を知った</p></li>
+<li><p>Pythonのgoogle-genaiとその計装ライブラリとの関係とはどうやら違うよう <a class="footnote-reference brackets" href="#anthropic-sdk-ruby-practice" id="id35" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a></p></li>
+<li><p>無料で使えるGemini（入力は学習利用される点には注意）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="anthropic-sdk-ruby-practice" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id35" role="doc-backlink">17</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/claude" rel="noreferrer" target="_blank">https://github.com/ftnext/2026-slides/tree/main/samplecode/deep-research-otel/claude</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">検索ツールの呼び出し</h3>
+<ul class="simple">
+<li><p>GeminiにGoogle検索させる箇所</p></li>
+<li><p>クライアントサイドでなく <strong>サーバサイド</strong></p></li>
+<li><p>Geminiがサーバサイドで検索して、その結果を元に返答しています</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h2>
+</section>
+</section>
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

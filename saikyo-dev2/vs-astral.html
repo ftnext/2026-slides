@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>2026年、倒したい誰かがいる</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=b04cc698" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/saikyo-dev2/vs-astral.html">
+    <meta property="og:title" content="2026年、倒したい誰かがいる">
+    <meta property="og:description" content="埼京.dev #2【2026年の野望LT】">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/saikyo-dev2.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">2026年、倒したい誰かがいる</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>埼京.dev #2【2026年の野望LT】</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/02/19 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">願いは口にしないと叶わない <a class="footnote-reference brackets" href="#kumiko" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></h2>
+<p>野望も口にしないと叶わない</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="kumiko" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://dic.pixiv.net/a/%E9%BB%84%E5%89%8D%E4%B9%85%E7%BE%8E%E5%AD%90" rel="noreferrer" target="_blank">黄前久美子（ピクシブ百科事典）</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">2026年、倒したい <strong>誰か</strong> がいる</h3>
+<p><a class="reference external" href="[https://youtu.be/t62NiZIvrZQ?si=gk2UEXY3VsH_86sU&amp;t=53](https://youtu.be/t62NiZIvrZQ?si=gk2UEXY3VsH_86sU&amp;t=53)" rel="noreferrer" target="_blank">今、話したい誰かがいる</a> から（心が叫びたがってるんだ。）</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><strong>Astral</strong></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://astral.sh/about" rel="noreferrer" target="_blank">https://astral.sh/about</a></p></li>
+<li><p>PythonツールチェインOSSを開発する企業</p></li>
+<li><p>Rust製なので爆速 + 簡単（<strong>大感謝</strong>）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">いつも大変お世話になっております</h3>
+<ul class="simple">
+<li><p>Ruff（リンタ・フォーマッタ）</p></li>
+<li><p>uv（Pythonプロジェクト管理）</p></li>
+<li><p>ty（型チェッカ）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>Ruffだけ</strong> あればいい</h3>
+<ul class="simple">
+<li><p>以前：Flake8・Blackなど複数のリンタ・フォーマッタを組合せる環境</p></li>
+</ul>
+<pre data-id="ruff"><code class="shell" data-noescape="" data-trim="">uvx ruff format
+uvx ruff check --fix --extend-select I
+# または uv format</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uv、PythonにおけるCargo</h3>
+<ul class="simple">
+<li><p>「Python環境構築、大変じゃないですか？」</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code> するだけでPythonも自動インストール、超簡単</p></li>
+</ul>
+<pre data-id="uvpythoncargo"><code class="shell" data-noescape="" data-trim="">uv sync</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">しかし納得できていないところも</h2>
+<p>一例：Ruffにプラグインがない</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Ruffにはプラグインが望まれているが、まだない</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/astral-sh/ruff/issues/283" rel="noreferrer" target="_blank">Meta issue: plugin system #283</a> (2023/09 2年半以上オープン。<em>放置</em>？)</p></li>
+<li><p>本家へルールのプルリクという道だけっぽい（送れないルールは？）</p></li>
+<li><p>速くなる。しかし、既存のリンタでできていたことができない（困ってます。 <strong>なぜ両立しない</strong>？） <a class="footnote-reference brackets" href="#why-ruff-no-plugin-article" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="why-ruff-no-plugin-article" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/is-ruff-superset-of-flake8-my-answer-is-no-202501" rel="noreferrer" target="_blank">RuffはFlake8の全ての要素を含んでいる、のでしょうか？</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私は、納得したい</h3>
+<ul class="simple">
+<li><p><strong>高速 &amp; 既存リンタの機能を全カバー</strong> なら、使わない理由がない</p></li>
+<li><p>なぜトレードオフを迫るのか（私がAstralにいたら、もっとうまくやれるのに）</p></li>
+<li><p>怠慢？それとも本当に難しい？→手を動かして確認する</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2026年の野望：Rust製Pythonツール</h2>
+<ul class="simple">
+<li><p><em>俺はRustが書けねぇんだ コノヤロー!!!</em> → 生成AIでカバーする</p></li>
+<li><p>「高速 &amp; 既存リンタの機能全カバー」から始めてみる</p></li>
+<li><p>なお、uv（やty）にも思うところはある <a class="footnote-reference brackets" href="#to-astral-article" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="to-astral-article" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>「<em>コミュニティの要望が高い機能が放置されている</em>」ように映ってます。<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/thoughts-astral-take-stewardship-python-build-standalone#%E3%83%A2%E3%83%A4%E3%83%83%E3%81%A8%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88%E7%AE%A1%E7%90%86%E3%81%99%E3%82%8B%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E5%85%A8%E9%83%A8%E8%A6%81%E6%9C%9B%E3%81%AB%E5%BF%9C%E3%81%88%E7%B6%9A%E3%81%91%E3%82%89%E3%82%8C%E3%82%8B" rel="noreferrer" target="_blank">python-build-standaloneのAstral社移管に思うこと</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python使い・<span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a>・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> 連続1100日突破</p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
