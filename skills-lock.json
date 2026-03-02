@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "drawio": {
+      "source": "jgraph/drawio-mcp",
+      "sourceType": "github",
+      "computedHash": "32f8f428de3c278eb6ac92f02e9d42bd5c32545b41244a818ad75e35a63e215e"
+    }
+  }
+}
