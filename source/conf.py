@@ -74,8 +74,9 @@ revealjs_css_files = [
 # -- Options for sphinxcontrib-budoux -------------------------------------------------
 budoux_targets = ["h1", "h2", "h3"]
 
-# -- Options for Open Graph Protocol -------------------------------------------------
+# -- Options for html_context -------------------------------------------------
 html_context = {
+    "highlight_color": "#5ae08e",
     "twitter_site": "@ftnext",
     "site_base_url": "https://ftnext.github.io/2026-slides",
 }

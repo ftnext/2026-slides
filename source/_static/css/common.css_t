@@ -7,9 +7,11 @@
   text-transform: none;
 }
 
+{% if highlight_color %}
 .reveal strong {
-  color: #5ae08e;
+  color: {{ highlight_color }};
 }
+{% endif %}
 
 .reveal ol.upperalpha {
   list-style-type: upper-alpha;
