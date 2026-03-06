@@ -1,3 +1,9 @@
+:ogp_title: わたしの、最高の相棒、Codex CLI
+:ogp_event_name: codex-findy
+:ogp_slide_name: my-best-partner-codex-cli
+:ogp_description: Codexどう使ってる？期待通りにいかない時の向き合い方と工夫
+:ogp_image_name: codex-findy
+
 ==================================================
 わたしの、最高の相棒、Codex CLI
 ==================================================
