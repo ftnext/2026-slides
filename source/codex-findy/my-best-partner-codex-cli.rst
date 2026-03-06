@@ -2,7 +2,7 @@
 わたしの、最高の相棒、Codex CLI
 ==================================================
 
-わたしの、最高の相棒、Codex CLI
+わたしの、最高の **相棒**、Codex CLI
 ==================================================
 
 :Event: Codexどう使ってる？期待通りにいかない時の向き合い方と工夫
@@ -78,7 +78,7 @@ Agent Development Kit 🏃‍♂️
 マイナーバージョンアップで壊れる 🏃‍♂️
 --------------------------------------------------
 
-* adk-python は隔週リリース
+* adk-python は隔週リリース（現在 1.26.0）
 * ADKのバージョンを上げる（:command:`uv sync -P google-adk`）
 * Web UIは起動する
 * 実行時にエラー
@@ -187,7 +187,8 @@ Rules
 ==================================================
 
 * https://developers.openai.com/codex/rules
-* コマンド実行を **事前許可** する仕組み
+* コマンド実行を **事前許可** （禁止）する仕組み
+* patternへの前方一致
 
 `OpenAI Learning Lab: Codex を使いこなす <https://openai.ondemand.goldcast.io/on-demand/d1544c04-a382-4e1f-9077-01ba81293f44>`__ より
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -234,8 +235,10 @@ Rules（途中の状態）
 --------------------------------------------------
 
 * ``docker rm -f`` や ``kill`` を任意の引数で実行できちゃうのはリスク（Codexは賢いのでめったになさそうだが）
-* スクリプトであれば **引数までコントロールできる**
-* 放置して達成！：https://github.com/ftnext/adk-python-db-schema-history
+* スクリプトであれば前方一致だけでなく **引数までコントロールできる**
+* 放置して達成！ [#adk-python-db-schema-history-codex-version]_ ：https://github.com/ftnext/adk-python-db-schema-history
+
+.. [#adk-python-db-schema-history-codex-version] gpt-5.2-codex (medium effort?) (後に gpt-5.3-codex)
 
 .. revealjs-break::
     :notitle:
@@ -263,8 +266,6 @@ yorifujiさん記事から：Rulesは ``[]`` をネストしても書けます
     # After
     prefix_rule(pattern=["git", ["add", "commit"]], decision="allow")
 
-.. matchも書く?
-
 `execpolicyのREADME <https://github.com/openai/codex/blob/main/codex-rs/execpolicy/README.md>`__ にあります
 
 まとめ🌯 繰り返し作業を Rules で自走
@@ -277,15 +278,17 @@ yorifujiさん記事から：Rulesは ``[]`` をネストしても書けます
 Dive：コマンド実行許可の裏側
 ==================================================
 
-ソースコードリーディングより
+v0.110.0のソースコードリーディングより [#latest-codex-cli-version-20260306]_
+
+.. [#latest-codex-cli-version-20260306] 発表時最新はv0.111.0
 
 .. https://nikkie-ftnext.hatenablog.com/entry/when-codex-cli-shell-command-ask-for-approval-from-source-reading
 
 Codex CLIのセキュリティ
 --------------------------------------------------
 
-* Sandbox mode: シェルコマンドを安全に実行
-* Approval policy: シェルコマンドの実行許可を尋ねさせて安全に
+* Sandbox mode: シェルコマンドを安全に **実行**
+* Approval policy: シェルコマンドの実行 **許可を尋ね** させて安全に
 
 https://developers.openai.com/codex/security#sandbox-and-approvals
 
@@ -297,15 +300,24 @@ Codex CLIのオプション
 
 https://developers.openai.com/codex/cli/reference#global-flags
 
+``#codex_findy`` より（2025/10）
+--------------------------------------------------
+
+.. raw:: html
+
+    <iframe src="https://www.docswell.com/slide/KJQYQM/embed#p25" allowfullscreen="true" class="docswell-iframe" width="620" height="350" style="border: 1px solid #ccc; display: block; margin: 0px auto; padding: 0px; aspect-ratio: 620/350;"></iframe>
+
 :command:`codex` （フラグなし）
 --------------------------------------------------
 
-projectを **trust**
+projectを **trust** (*Do you trust the contents of this directory?*)
 
-* Sandbox mode: workspace-write
-* Approval policy: OnRequest
+* Sandbox: workspace-write [#default-sandbox-mode-0.110.0]_
+* Approval: OnRequest [#default-approval-policy-0.110.0]_
 
-.. コードの行数を入れよう
+.. [#default-sandbox-mode-0.110.0] https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1456
+
+.. [#default-approval-policy-0.110.0] https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1827
 
 シェルコマンドの実行許可
 --------------------------------------------------
@@ -313,19 +325,30 @@ projectを **trust**
 1. **ルールにあればルールのdecisionとなる**
 2. ルールにない場合のフォールバック処理
 
-Sandbox modeとApproval policyに基づくフォールバック
+https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L199
+
+SandboxとApprovalに基づくフォールバック
 ------------------------------------------------------------
 
-* 安全なコマンド -> 実行
-* 危険かもしれないコマンド -> 許可を求める
-* 追加の権限を必要とするか -> するなら許可を求め、しないなら実行
+* `安全なコマンド <https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/shell-command/src/command_safety/is_safe_command.rs>`__ （``ls``, ``git status``） -> 実行
+* `危険かもしれないコマンド <https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/shell-command/src/command_safety/is_dangerous_command.rs>`__ （``rm -rf /``） -> 許可を求める
+* 追加の権限を必要とするか -> するなら許可を求め、しないなら実行 [#exec-policy-0.110.0]_
+
+.. [#exec-policy-0.110.0] https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L488
 
 コマンドはsandboxで実行
 --------------------------------------------------
 
-* Approval policy: OnRequestでは、コマンドが失敗した時sandboxの外での実行は **しない**
+* Approval: OnRequestでは、コマンドが失敗した時sandboxの外での実行は **しない**
+* （コマンドが失敗した時にsandbox外で実行させることもできます。自走tips）
 
-.. 小まとめ
+https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/tools/orchestrator.rs#L232
+
+小まとめ：コマンド実行許可の裏側
+==================================================
+
+* Rulesのpatternやdecisionが優先される
+* Rulesに無いコマンドは、sandboxやapprovalに基づいて処理（通常はworkspace-write・OnRequest）
 
 ご清聴ありがとうございました！
 --------------------------------------------------
