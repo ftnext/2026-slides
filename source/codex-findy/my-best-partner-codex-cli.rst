@@ -13,7 +13,7 @@
 
 1. Codex自走事例
 2. 使った仕組み： **Rules**
-3. dive（裏側の実装）
+3. 裏側の実装にdive
 
 お前、誰よ（Python使いの自己紹介）
 ==================================================
@@ -25,7 +25,12 @@
 
 .. [#nikkie-ftnext-blog] `ブログ <https://nikkie-ftnext.hatenablog.com/>`__ 連続1200日突破
 
-.. 過去の発表（コーディングエージェント）
+Claude CodeやCodex CLIについて発表
+--------------------------------------------------
+
+* `Pythonを"理解"しているコーディングエージェントが欲しい！！ <https://ftnext.github.io/2025-slides/yapc-fukuoka/lt-agent-who-understand-python.html#/2>`__ （Claude CodeのHooks）
+* `ねぇ、Codex CLI。私だけにあなたのコンテキスト、教えて？ <https://ftnext.github.io/2025-slides/aidd-codex1/codex-rs-telemetry.html#/2>`__
+* `Codex CLIで 加速 するコードリーディング <https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html>`__
 
 コーディングエージェントについての見解
 --------------------------------------------------
@@ -37,10 +42,12 @@
 
 .. [#claude-code-language-free-input-article] `Claude Code に"自由入力で"言語設定できるようになったと聞きまして <https://nikkie-ftnext.hatenablog.com/entry/claude-code-210-language-setting-free-input-can-be-my-sister#%E7%A7%81%E3%81%AF%E5%A6%B9%E3%81%AB%E3%81%97%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99>`__
 
-Codex CLI自走事例
+Codex CLI **自走** 事例
 ==================================================
 
-「DBをdockerで立てて、APIを別で立てて、curlして、その後DBをdumpして」を何回も
+「DBをdockerで立てて、APIを別で立てて、curlして、その後DBをdumpして」を20回くらい
+
+🏃‍♂️のスライドはCodex CLIの話ではないため、詳細が理解できなくても大丈夫です
 
 Agent Development Kit 🏃‍♂️
 --------------------------------------------------
@@ -55,7 +62,7 @@ Agent Development Kit 🏃‍♂️
     :caption: :file:`search_agent/agent.py`
 
     root_agent = Agent(
-        model='gemini-2.5-pro',
+        model='gemini-3.1-pro-preview',
         name='search_agent',
         instruction="You are a helpful assistant with access to Google Search. (略)",
         tools=[google_search],
@@ -64,25 +71,42 @@ Agent Development Kit 🏃‍♂️
 ``adk web`` 🏃‍♂️
 --------------------------------------------------
 
-.. TODO web UI
+.. image:: ../_static/codex-findy/adk-web-screenshot.png
 
 .. Agent Engine や Cloud Run にデプロイ容易
 
 マイナーバージョンアップで壊れる 🏃‍♂️
 --------------------------------------------------
 
+* adk-python は隔週リリース
 * ADKのバージョンを上げる（:command:`uv sync -P google-adk`）
 * Web UIは起動する
 * 実行時にエラー
 
-.. TODO エラーメッセージ
+.. revealjs-break::
+    :notitle:
+
+.. image:: ../_static/codex-findy/adk-miner-version-up-runtime-error.png
+
+.. code-block:: log
+    :caption: 応答がなく、エラーが出ている
+
+    INFO:     127.0.0.1:61263 - "POST /run_sse HTTP/1.1" 500 Internal Server Error
+
+    sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) column events.custom_metadata does not exist
+
+    [SQL: SELECT events.id AS events_id, events.app_name AS events_app_name, events.user_id AS events_user_id, events.session_id AS events_session_id, events.invocation_id AS events_invocation_id, events.author AS events_author, events.actions AS events_actions, events.long_running_tool_ids_json AS events_long_running_tool_ids_json, events.branch AS events_branch, events.timestamp AS events_timestamp, events.content AS events_content, events.grounding_metadata AS events_grounding_metadata, events.custom_metadata AS events_custom_metadata, events.usage_metadata AS events_usage_metadata, events.citation_metadata AS events_citation_metadata, events.partial AS events_partial, events.turn_complete AS events_turn_complete, events.error_code AS events_error_code, events.error_message AS events_error_message, events.interrupted AS events_interrupted 
+    FROM events 
+    WHERE events.app_name = %(app_name_1)s::VARCHAR AND events.user_id = %(user_id_1)s::VARCHAR AND events.session_id = %(session_id_1)s::VARCHAR ORDER BY events.timestamp DESC]
+    [parameters: {'app_name_1': 'search_agent', 'user_id_1': 'user', 'session_id_1': '3e967de9-05aa-4d53-bd07-aad4daf0c25d'}]
+    (Background on this error at: https://sqlalche.me/e/20/f405)
 
 なぜマイナーバージョンアップで壊れるのか 🏃‍♂️
 --------------------------------------------------
 
-* ADKのマイナーバージョンアップで **ORMの実装が変わっている** （カラム追加）
+* **ORMの実装が変わっている** （カラム追加）
 * 一方DBのテーブル定義は古いまま
-* ``SELECT`` で指定した新カラムがテーブルになく、実行時にエラー
+* 新しいカラムを ``SELECT`` で指定しているが、テーブルになく、実行時にエラー
 
 .. https://nikkie-ftnext.hatenablog.com/entry/google-adk-python-minor-version-up-break-at-runtime-due-to-table-change-cope-with-sqldef
 
@@ -93,7 +117,9 @@ Agent Development Kit 🏃‍♂️
 * 2つのテーブル定義から **ALTER TABLE を自動で作る**
 * 💡ADKのマイナーバージョンアップと合わせて ``ALTER TABLE`` もやれば、実行時エラーなくなるのでは
 
-テーブル定義のdump作業
+.. 希望のissue
+
+**テーブル定義** のdump作業
 ==================================================
 
 1. DB起動
@@ -110,12 +136,14 @@ DB起動・終了
     $ docker run --name adk-pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres:18
     $ docker rm -f adk-pg
 
+:command:`docker` 操作
+
 ADKサーバ起動
 --------------------------------------------------
 
 .. code-block:: shell
 
-    $ uvx --from google-adk==1.22.0 adk api_server \
+    $ nohup uvx --from google-adk==1.22.0 adk api_server \
         --session_service_uri postgresql+psycopg://postgres:mysecretpassword@localhost:5432/postgres
     $ lsof -ti :8000
     $ kill <pid>
@@ -125,26 +153,35 @@ ADKサーバ起動
 
 .. code-block:: shell
 
-    $ curl -X POST http://127.0.0.1:8000/apps/my_agent/users/test_user/sessions -H 'Content-Type: application/json' -d '{}'
+    $ curl -X POST http://127.0.0.1:8000/apps/my_agent/users/test_user/sessions \
+        -H 'Content-Type: application/json' -d '{}'
 
-    $ psqldef -h localhost -p 5432 -U postgres -W mysecretpassword postgres --export > schemas/v<version>/postgresql.sql
+    $ psqldef -h localhost -p 5432 -U postgres -W mysecretpassword \
+        postgres --export > schemas/v<version>/postgresql.sql
 
 まずペアプロ
 --------------------------------------------------
 
-* 対話的に :file:`AGENTS.md` を作成。ここまでのコマンドを列挙した手順書
-* 1つバージョンを指定して、許可しながら一緒に作業
+* 対話的に :file:`AGENTS.md` を作成。ここまでのコマンドを列挙した **手順書**
+* 1つバージョンを指定して、コマンド実行を都度許可しながら一緒に作業
 * :file:`AGENTS.md` 更新や、シェルスクリプトによる自動化を必要に応じて依頼
 
 やや脱線：Codex CLIの作業から **学ぶ** 🏃‍♂️
 --------------------------------------------------
 
 * `git status <https://git-scm.com/docs/git-status>`__ **-sb**
-* 起動したサーバのログの保存（``nohup uvx adk api_server > "$log" 2>&1``）
+* 起動したサーバのログの保存（``nohup uvx adk api_server > server.log 2>&1``）
 * ログファイルを見て調査している！
 
 IMO：Codex CLIは **シェル芸人**
 --------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="800" height="480" src="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/5/4"
+        title="Codex CLIで 加速 するコードリーディング"></iframe>
+
+.. https://x.com/ftnext/status/1993526059401461978
 
 Rules
 ==================================================
@@ -152,7 +189,7 @@ Rules
 * https://developers.openai.com/codex/rules
 * コマンド実行を **事前許可** する仕組み
 
-`OpenAI Learning Lab: Codex を使いこなす <https://openai.ondemand.goldcast.io/on-demand/d1544c04-a382-4e1f-9077-01ba81293f44>`__
+`OpenAI Learning Lab: Codex を使いこなす <https://openai.ondemand.goldcast.io/on-demand/d1544c04-a382-4e1f-9077-01ba81293f44>`__ より
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 * 「Codexがいちいち承認を求めてきてテンポが悪い -> Rules で事前承認」（40:30〜）
@@ -177,6 +214,7 @@ Rules（途中の状態）
 ==================================================
 
 .. code-block:: starlark
+    :emphasize-lines: 1
 
     prefix_rule(pattern=["scripts/export_schema.sh"], decision="allow")
     prefix_rule(pattern=["git", "add"], decision="allow")
@@ -185,7 +223,7 @@ Rules（途中の状態）
 スクリプト（抜粋）
 --------------------------------------------------
 
-.. code-block:: shell
+.. code-block:: bash
 
     api_pid="$(cat "$current_pidfile")"
     kill "$api_pid" >/dev/null 2>&1 || true
@@ -195,20 +233,26 @@ Rules（途中の状態）
 なぜスクリプトにまとめたか
 --------------------------------------------------
 
-* docker rm -f や kill を任意の引数で実行できちゃうのはリスク（Codexは賢いのでめったになさそうだが）
+* ``docker rm -f`` や ``kill`` を任意の引数で実行できちゃうのはリスク（Codexは賢いのでめったになさそうだが）
 * スクリプトであれば **引数までコントロールできる**
+* 放置して達成！：https://github.com/ftnext/adk-python-db-schema-history
 
-Rules速習におすすめ記事 [#yorifuji-codex-rules-article]_
-----------------------------------------------------------------------------------------------------
+.. revealjs-break::
+    :notitle:
 
 .. raw:: html
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="ja" dir="ltr">Codex でコマンド実行ポリシーをカスタマイズする方法について書きました、Claude Code の permissions(allow/deny) に相当します<a href="https://t.co/JDAJEF7q52">https://t.co/JDAJEF7q52</a></p>&mdash; Yorifuji Mitsunori (@yorifuji) <a href="https://twitter.com/yorifuji/status/2007705314666393967?ref_src=twsrc%5Etfw">2026年1月4日</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 
-.. [#yorifuji-codex-rules-article] yorifujiさん `Codex の Execution policy rules を理解して安全・快適に利用する <https://zenn.dev/yorifuji/articles/3d44ca14ad6b3e>`__
+.. comment out
+    Rules速習におすすめ記事 [#yorifuji-codex-rules-article]_
+    ----------------------------------------------------------------------------------------------------
+    .. [#yorifuji-codex-rules-article] yorifujiさん `Codex の Execution policy rules を理解して安全・快適に利用する <https://zenn.dev/yorifuji/articles/3d44ca14ad6b3e>`__
 
-学び：Rulesは ``[]`` をネストしても書けます
---------------------------------------------------
+.. OpenAI Developer Docs MCP に聞く
+
+yorifujiさん記事から：Rulesは ``[]`` をネストしても書けます
+----------------------------------------------------------------------------------------------------
 
 .. code-block:: starlark
     :emphasize-lines: 5
@@ -219,9 +263,73 @@ Rules速習におすすめ記事 [#yorifuji-codex-rules-article]_
     # After
     prefix_rule(pattern=["git", ["add", "commit"]], decision="allow")
 
+.. matchも書く?
+
 `execpolicyのREADME <https://github.com/openai/codex/blob/main/codex-rs/execpolicy/README.md>`__ にあります
+
+まとめ🌯 繰り返し作業を Rules で自走
+==================================================
+
+* 「DBをdockerで立てて、APIを別で立てて、curlして、その後DBをdumpして」を20回くらい
+* :file:`AGENTS.md` に手順書を作り、自動化スクリプトも書かせていく
+* Rules で前方一致でマッチよりもスクリプトに入れたほうがより安全にできた例
 
 Dive：コマンド実行許可の裏側
 ==================================================
+
+ソースコードリーディングより
+
+.. https://nikkie-ftnext.hatenablog.com/entry/when-codex-cli-shell-command-ask-for-approval-from-source-reading
+
+Codex CLIのセキュリティ
+--------------------------------------------------
+
+* Sandbox mode: シェルコマンドを安全に実行
+* Approval policy: シェルコマンドの実行許可を尋ねさせて安全に
+
+https://developers.openai.com/codex/security#sandbox-and-approvals
+
+Codex CLIのオプション
+--------------------------------------------------
+
+* Sandbox mode: ``--sandbox``, ``-s``
+* Approval policy: ``--ask-for-approval``, ``-a``
+
+https://developers.openai.com/codex/cli/reference#global-flags
+
+:command:`codex` （フラグなし）
+--------------------------------------------------
+
+projectを **trust**
+
+* Sandbox mode: workspace-write
+* Approval policy: OnRequest
+
+.. コードの行数を入れよう
+
+シェルコマンドの実行許可
+--------------------------------------------------
+
+1. **ルールにあればルールのdecisionとなる**
+2. ルールにない場合のフォールバック処理
+
+Sandbox modeとApproval policyに基づくフォールバック
+------------------------------------------------------------
+
+* 安全なコマンド -> 実行
+* 危険かもしれないコマンド -> 許可を求める
+* 追加の権限を必要とするか -> するなら許可を求め、しないなら実行
+
+コマンドはsandboxで実行
+--------------------------------------------------
+
+* Approval policy: OnRequestでは、コマンドが失敗した時sandboxの外での実行は **しない**
+
+.. 小まとめ
+
+ご清聴ありがとうございました！
+--------------------------------------------------
+
+Happy Python Development♪
 
 .. Appendix 最初のプロンプト
