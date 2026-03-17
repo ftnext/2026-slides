@@ -13,6 +13,7 @@ from __future__ import annotations
 import io
 import os
 import queue
+import signal
 import sys
 import tempfile
 import threading
@@ -73,6 +74,7 @@ class SpacebarLiveTranscriber:
         self._lock = threading.Lock()
         self._stop_event = threading.Event()
         self._live_thread: threading.Thread | None = None
+        self._final_threads: list[threading.Thread] = []
         self._stream: sd.InputStream | None = None
         self._last_live_len = 0
 
@@ -159,24 +161,7 @@ class SpacebarLiveTranscriber:
 
         print("\n🎙️ Recording... (space を離すと停止)", flush=True)
 
-    def stop_recording(self) -> None:
-        with self._lock:
-            if not self.state.recording:
-                return
-            self.state.recording = False
-            self._stop_event.set()
-
-            if self._stream is not None:
-                self._stream.stop()
-                self._stream.close()
-                self._stream = None
-
-            samples = self._current_samples()
-
-        if self._live_thread is not None:
-            self._live_thread.join(timeout=2.0)
-            self._live_thread = None
-
+    def _finalize_recording(self, samples: np.ndarray) -> None:
         duration = samples.size / SAMPLE_RATE if SAMPLE_RATE else 0.0
         if duration < MIN_DURATION_SECONDS:
             print(
@@ -196,21 +181,82 @@ class SpacebarLiveTranscriber:
 
         print(f"✅ Final: {text}\n", flush=True)
 
+    def stop_recording(self) -> None:
+        with self._lock:
+            if not self.state.recording:
+                return
+            self.state.recording = False
+            self._stop_event.set()
+
+            if self._stream is not None:
+                self._stream.stop()
+                self._stream.close()
+                self._stream = None
+
+            samples = self._current_samples()
+
+        if self._live_thread is not None:
+            self._live_thread.join(timeout=2.0)
+            self._live_thread = None
+
+        final_thread = threading.Thread(
+            target=self._finalize_recording,
+            args=(samples,),
+            daemon=True,
+        )
+        self._final_threads = [
+            thread for thread in self._final_threads if thread.is_alive()
+        ]
+        self._final_threads.append(final_thread)
+        final_thread.start()
+
+    def shutdown(self) -> None:
+        """Stop any ongoing recording so the process can exit cleanly."""
+        self.stop_recording()
+        for final_thread in self._final_threads:
+            if final_thread.is_alive():
+                final_thread.join()
+
 
 def main() -> int:
     print("Space長押しで録音、離して停止。Ctrl+C で終了します。", flush=True)
     transcriber = SpacebarLiveTranscriber()
+    stop_requested = threading.Event()
+    ctrl_down = False
+
+    def request_stop() -> None:
+        stop_requested.set()
+        transcriber.shutdown()
 
     def on_press(key) -> None:
+        nonlocal ctrl_down
+        if key in (keyboard.Key.ctrl, keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
+            ctrl_down = True
+            return
+        if ctrl_down and getattr(key, "char", None) == "c":
+            request_stop()
+            return
         if key == keyboard.Key.space:
             transcriber.start_recording()
 
     def on_release(key):
+        nonlocal ctrl_down
+        if key in (keyboard.Key.ctrl, keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
+            ctrl_down = False
+            return None
         if key == keyboard.Key.space:
             transcriber.stop_recording()
         if key == keyboard.Key.esc:
+            request_stop()
             return False
         return None
+
+    def handle_sigint(signum, frame) -> None:
+        del signum, frame
+        request_stop()
+
+    previous_sigint_handler = signal.getsignal(signal.SIGINT)
+    signal.signal(signal.SIGINT, handle_sigint)
 
     listener_kwargs = {
         "on_press": on_press,
@@ -232,9 +278,13 @@ def main() -> int:
 
     with listener:
         try:
-            listener.join()
+            while listener.is_alive() and not stop_requested.wait(0.1):
+                pass
         except KeyboardInterrupt:
-            pass
+            request_stop()
+        finally:
+            listener.stop()
+            signal.signal(signal.SIGINT, previous_sigint_handler)
 
     return 0
 
