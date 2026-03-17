@@ -25,6 +25,11 @@ import sounddevice as sd
 from openai import OpenAI
 from pynput import keyboard
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(line_buffering=True, write_through=True)
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(line_buffering=True, write_through=True)
+
 SAMPLE_RATE = 16_000
 CHANNELS = 1
 MIN_DURATION_SECONDS = 1.0
@@ -81,7 +86,7 @@ class SpacebarLiveTranscriber:
     def _audio_callback(self, indata: np.ndarray, frames: int, t, status) -> None:
         del frames, t
         if status:
-            print(f"[audio] {status}", file=sys.stderr, flush=True)
+            print(f"[audio] {status}", file=sys.stderr)
         pcm = np.copy(indata[:, 0]).astype(np.int16)
         self._chunk_queue.put(pcm)
 
@@ -127,13 +132,13 @@ class SpacebarLiveTranscriber:
             try:
                 text = self._transcribe_bytes(wav_data, prompt=self.state.live_prompt)
             except Exception as e:  # noqa: BLE001
-                print(f"\n[live transcription error] {e}", file=sys.stderr, flush=True)
+                print(f"\n[live transcription error] {e}", file=sys.stderr)
                 continue
 
             if len(text) <= self._last_live_len:
                 continue
 
-            print(f"\rLive: {text}", end="", flush=True)
+            print(f"\rLive: {text}", end="")
             self._last_live_len = len(text)
             with self._lock:
                 self.state.live_prompt = text
@@ -159,27 +164,26 @@ class SpacebarLiveTranscriber:
             self._live_thread = threading.Thread(target=self._live_loop, daemon=True)
             self._live_thread.start()
 
-        print("\n🎙️ Recording... (space を離すと停止)", flush=True)
+        print("\n🎙️ Recording... (space を離すと停止)")
 
     def _finalize_recording(self, samples: np.ndarray) -> None:
         duration = samples.size / SAMPLE_RATE if SAMPLE_RATE else 0.0
         if duration < MIN_DURATION_SECONDS:
             print(
-                f"\n⏹️ 録音が短すぎます ({duration:.2f}s < {MIN_DURATION_SECONDS:.2f}s)。",
-                flush=True,
+                f"\n⏹️ 録音が短すぎます ({duration:.2f}s < {MIN_DURATION_SECONDS:.2f}s)。"
             )
             return
 
-        print("\n🧠 最終文字起こし中...", flush=True)
+        print("\n🧠 最終文字起こし中...")
         try:
             normalized = normalize_peak_int16(samples)
             wav_data = wav_bytes_from_int16(normalized)
             text = self._transcribe_bytes(wav_data)
         except Exception as e:  # noqa: BLE001
-            print(f"❌ transcription failed: {e}", file=sys.stderr, flush=True)
+            print(f"❌ transcription failed: {e}", file=sys.stderr)
             return
 
-        print(f"✅ Final: {text}\n", flush=True)
+        print(f"✅ Final: {text}\n")
 
     def stop_recording(self) -> None:
         with self._lock:
@@ -219,7 +223,7 @@ class SpacebarLiveTranscriber:
 
 
 def main() -> int:
-    print("Space長押しで録音、離して停止。Ctrl+C で終了します。", flush=True)
+    print("Space長押しで録音、離して停止。Ctrl+C で終了します。")
     transcriber = SpacebarLiveTranscriber()
     stop_requested = threading.Event()
     ctrl_down = False
@@ -272,7 +276,6 @@ def main() -> int:
         print(
             "⚠️ keyboard suppress が使えないため、スペース入力が端末に見える場合があります。",
             file=sys.stderr,
-            flush=True,
         )
         listener = keyboard.Listener(**listener_kwargs)
 
