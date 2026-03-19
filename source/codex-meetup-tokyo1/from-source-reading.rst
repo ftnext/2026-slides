@@ -10,7 +10,7 @@ Codex CLIで（を）ソースコードリーディング！
 :Event: Codex Meetup Tokyo #1
 :Presented: 2026/03/19 nikkie
 
-Codexはソースが **公開** されている🤗
+Codex CLIはソースが **公開** されている🤗
 ==================================================
 
 https://github.com/openai/codex
@@ -25,7 +25,7 @@ Rust製
 
 .. [#python-sdk-looking-forward] `Codex App Server Python SDK <https://github.com/openai/codex/tree/rust-v0.115.0/sdk/python>`__ 準備中。楽しみ！
 
-CodexのソースコードをCodex {CLI,App}に解説してもらう日々
+Codex CLIのソースをCodex {CLI,App}に解説してもらう日々
 ------------------------------------------------------------
 
 その中から **小さな機能2つ** と、どう実装されているかを共有します
@@ -62,10 +62,10 @@ https://developers.openai.com/codex/cli/features#syntax-highlighting-and-themes
 .. https://nikkie-ftnext.hatenablog.com/entry/codex-cli-v0.105.0-syntax-highlight-by-syntect-minimum-clone-like-bat
 
 * `feat(tui): syntax highlighting via syntect with theme picker #11447 <https://github.com/openai/codex/pull/11447>`__
-* `syntect <https://github.com/trishume/syntect>`__
+* `syntect <https://github.com/trishume/syntect>`__ [#codex-cli-use-syntect]_
 * ``cat`` cloneの :command:`bat` でも使われている
 
-.. https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L570
+.. [#codex-cli-use-syntect] https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L570
 
 syntectを使った実装例 [#syntect-practice]_
 --------------------------------------------------
@@ -94,12 +94,12 @@ syntectを使った実装例 [#syntect-practice]_
 
 .. _two-face: https://github.com/CosmicHorrorDev/two-face
 
-テーマは `two-face`_
+テーマは `two-face`_ [#codex-cli-two-face]_
 --------------------------------------------------
 
 .. image:: ../_static/codex-meetup-tokyo1/codex-cli-themes.png
 
-.. https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L136
+.. [#codex-cli-two-face] https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L136
 
 カスタムテーマ
 --------------------------------------------------
@@ -226,10 +226,10 @@ Codex CLI（とCodex App）について
     % codex --version
     codex-cli 0.115.0
 
-Codex CLIの設定を変える
---------------------------------------------------
+Codex CLIの設定を変える [#codex-cli-feature-flags]_
+----------------------------------------------------------------------------------------------------
 
-.. https://developers.openai.com/codex/cli/features#feature-flags
+.. [#codex-cli-feature-flags] https://developers.openai.com/codex/cli/features#feature-flags
 
 .. code-block:: toml
     :caption: :file:`~/.codex/config.toml` を手で変更
@@ -253,16 +253,16 @@ Codex CLIの設定を変える
 では、どう実装されている？ (Codex CLI)
 ==================================================
 
-* APIキー認証の場合 `gpt-4o-mini-transcribe <https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe>`__
+* APIキー認証の場合 `gpt-4o-mini-transcribe <https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe>`__ [#codex-cli-api-key-transcribe]_
 * ChatGPTアカウント認証の場合、/backend-api/transcribe へ
 
-.. https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/voice.rs#L789
+.. [#codex-cli-api-key-transcribe] https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/voice.rs#L789
 
 promptパラメタでひと工夫
 --------------------------------------------------
 
 * https://developers.openai.com/api/docs/guides/speech-to-text#prompting
-* 前方にあるテキスト（ユーザ入力）も音声と合わせてgpt-4o-mini-transcribeへ送る
+* 前方にある **テキスト（ユーザ入力）も音声と合わせて** gpt-4o-mini-transcribeへ送る
 
 メンテしている音声認識ライブラリでパクる [#thank-you-codex-half-year-pro-support]_
 ----------------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ promptパラメタでひと工夫
 
 * シンタックスハイライト：syntect（bat同様）、テーマはtwo-face
 * 音声入力：gpt-4o-mini-transcribe、promptパラメタの工夫
-* Codex CLIやCodex Appで気になるソースコードを読むのは、いいぞ
+* Codex CLIやCodex Appで気になる **ソースコードを読む** のは、いいぞ
 
 ご清聴ありがとうございました（最後に、お前、誰よ）
 --------------------------------------------------
