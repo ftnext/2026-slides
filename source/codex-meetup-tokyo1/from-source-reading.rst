@@ -1,3 +1,9 @@
+:ogp_title: Codex CLIで（を）ソースコードリーディング！あの機能はどうできている？
+:ogp_event_name: codex-meetup-tokyo1
+:ogp_slide_name: from-source-reading
+:ogp_description: Codex Meetup Tokyo #1
+:ogp_image_name: codex-meetup-tokyo1
+
 ==================================================
 Codex CLIで（を）ソースコードリーディング！
 ==================================================
