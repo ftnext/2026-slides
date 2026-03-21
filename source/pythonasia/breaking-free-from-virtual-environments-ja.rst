@@ -296,30 +296,41 @@ TODO ソース確認
 解決策2: inline script metadata
 ============================================================
 
-Pythonスクリプトに適用可能
+Python **スクリプト** に適用可能
+
+https://packaging.python.org/en/latest/specifications/inline-script-metadata/
 
 サードパーティライブラリを使ったスクリプト
 ------------------------------------------------------------
 
-.. code-block:: python
-
-    # TODO httpxとrichを使ったスクリプト（PEP最新順できる？）
+.. literalinclude:: ../../samplecode/inline-script-metadata/example_like_pep723.py
+    :language: python
+    :lines: 8-20
+    :caption: 最新のPEP 10件のタイトルを取得
 
 Before：仮想環境に依存をインストールしてからスクリプト実行
 ------------------------------------------------------------
 
-venv を作成し、httpx と rich をインストールしてからスクリプトを実行する
+.. code-block:: shell
+
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install httpx rich
+    (.venv) $ python script.py
 
 .. - 問題: スクリプトにも依存関係が必要なため、使い捨ての venv が増えがち
     先の課題3
     配布が大変
 
-PEP 723: inline script metadata
+.. _PEP 723: https://peps.python.org/pep-0723/
+
+`PEP 723`_ – Inline script metadata
 ------------------------------------------------------------
 
-.. code-block:: python
-
-    # TODO コメントで書いたメタデータを示す。これだけ！
+.. literalinclude:: ../../samplecode/inline-script-metadata/example_like_pep723.py
+    :language: python
+    :lines: 1-7
+    :caption: コメントとしてTOML形式のメタデータを書く
 
 inline script metadataをサポートするツールで実行するだけ
 ------------------------------------------------------------
@@ -332,29 +343,68 @@ inline script metadataをサポートするツールで実行するだけ
 ツールが依存をインストールした仮想環境を用意して実行
 ------------------------------------------------------------
 
-uvはinline script metadataを書き込む！
-------------------------------------------------------------
+* ツールがmetadataを読み
+* *requires-python* に沿ったPython処理系で
+* *dependencies* をインストールした一時的な仮想環境を用意して、スクリプト実行
 
-:command:`uv add --script script.py httpx rich`
+uvはinline script metadataを書き込む！ [#alternative-uv-init-script]_
+------------------------------------------------------------------------------------------
+
+`uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__ script.py httpx rich [#uv-add-script-write-lower-bound]_
+
+.. code-block:: python
+
+    # /// script
+    # requires-python = ">=3.13"
+    # dependencies = [
+    #     "httpx>=0.28.1",
+    #     "rich>=14.3.3",
+    # ]
+    # ///
+
+.. [#alternative-uv-init-script] `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__ でinline script metadata付きの空スクリプトができる
+
+.. [#uv-add-script-write-lower-bound] `uv 0.9.16 <https://github.com/astral-sh/uv/releases/tag/0.9.16>`__ からlower boundが書かれるように。ref: https://github.com/astral-sh/uv/issues/15544
 
 デモ 手動 venv vs ``uv run script.py``
 ------------------------------------------------------------
 
-.. TODO before after のコマンド比較できるように
+.. 準備 inline script metadataのないscript.pyを用意しておく
+
+.. code-block:: shell
+    :caption: Before
+
+    $ python -m venv script-env --upgrade-deps
+    $ source script-env/bin/activate
+    (script-env) $ python -m pip install httpx rich
+    (script-env) $ python script.py
+
+.. code-block:: shell
+    :caption: After [#pip-26-requirements-from-script]_
+
+    $ uv add --script script.py httpx rich
+    $ uv run script.py
+
+.. [#pip-26-requirements-from-script] `pip install --requirements-from-script script.py <https://ichard26.github.io/blog/2026/01/whats-new-in-pip-26.0/#installing-from-inline-script-metadata-pep-723>`__
 
 inline script metadataのススメ
 ------------------------------------------------------------
 
 * 私たちが仮想環境を触ることがない（ツールが代わってくれる）
-* スクリプトがポータブルに。環境をまたいで簡単に再現実行できる
+* スクリプトがポータブルに。別のマシンでも **簡単に再現実行** できる [#execute-from-url-inline-script-metadata]_
 
-私はこんなところで使ってます（TODO コマンドで示そう）
+.. [#execute-from-url-inline-script-metadata] uv run https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py （信頼できないスクリプトにはオススメしません）
+
+私はこんなところで使ってます
 ------------------------------------------------------------
 
-* PyPIで配布しているライブラリであればexamplesに
-* コーディングエージェントのフック
+* SlackやDiscordでスクリプトを共有する際
+* PyPIで配布しているライブラリであればexamplesに提案 [#nikkie-inline-script-metadata-example]_
+* コーディングエージェントのフック（シバンで ``uv run``） [#coding-agent-hooks-shebang-uv-run-example]_
 
-.. （gistのURLから実行する例。セキュリティリスクはあるが）
+.. [#nikkie-inline-script-metadata-example] 例 https://github.com/argilla-io/synthetic-data-generator/pull/23
+
+.. [#coding-agent-hooks-shebang-uv-run-example] with `cchooks <https://github.com/GowayLee/cchooks>`__ https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49
 
 .. 8. ツール選定とまとめ（2分）
 
