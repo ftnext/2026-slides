@@ -30,7 +30,7 @@ What is something developers used to manage themselves all the time, but hardly 
 The answer is **virtual environments**
 ------------------------------------------------------------
 
-Are you managing virtual environments by hand? 🙋
+Hard to believe? 🙋
 
 .. I almost never do. Those who raised their hands have a lot to take home from this talk.
 
@@ -55,8 +55,8 @@ may affect this landscape😅
 Breaking Free from Virtual Environments: Agenda
 ==============================================================
 
-1. Virtual Environment Basics
-2. The Pain of Manual Virtual Environment Management
+1. Virtual Environment Basics (quick🏃‍♂️)
+2. The Pain of Manual Virtual Environment Management (quick🏃‍♂️)
 3. Evolution of Solutions (Main Part)
 
 Solutions Available as of 2026
@@ -243,7 +243,7 @@ Problem 4: Linters and formatters installed in every virtual environment
 ------------------------------------------------------------------------------------------
 
 * CLIs used during development must be installed **in every virtual environment**
-* Keeping them up to date across all projects is tedious
+* Keeping them up to date across all projects is less convenient
 
 Our Pain as Virtual Environment Managers
 ------------------------------------------------------------
