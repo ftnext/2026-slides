@@ -225,7 +225,7 @@ Problem 2: Hard to uninstall specific packages
 .. revealjs-break::
     :notitle:
 
-.. image:: ../_static/pythonasia/remove-direct-dependency.drawio.png
+.. image:: ../_static/pythonasia/remove-direct-dependency-en.drawio.png
 
 Problem 3: Virtual environments proliferate per script
 ------------------------------------------------------------
