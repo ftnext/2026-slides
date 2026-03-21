@@ -1,0 +1,123 @@
+.. 6. Modern Solution 2: inline script metadata (5 min) + half of 7 (1.5 min)
+
+3️⃣-2️⃣ inline script metadata
+==============================================================
+
+* Approach to Problem 3: "Too many virtual environments for **scripts**"
+* Applicable to any Python script
+
+https://packaging.python.org/en/latest/specifications/inline-script-metadata/
+
+A script using third-party libraries
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/inline-script-metadata/example_like_pep723.py
+    :language: python
+    :lines: 8-20
+    :caption: Get the titles of the 10 most recent PEPs
+
+Before: Install dependencies to virtual environment, then run script
+--------------------------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install httpx rich
+    (.venv) $ python script.py
+
+.. _PEP 723: https://peps.python.org/pep-0723/
+
+`PEP 723`_ – Inline script metadata [#pep723-author-is-hatch-creator]_
+------------------------------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/inline-script-metadata/example_like_pep723.py
+    :language: python
+    :lines: 1-7
+    :caption: Write TOML-format metadata as **comments**
+
+.. [#pep723-author-is-hatch-creator] The author of PEP 723 is the creator of Hatch
+
+Just run with a tool that supports inline script metadata
+------------------------------------------------------------
+
+* uv run script.py
+* pipx run script.py
+* hatch run script.py [#hatch-installation-doc]_
+* pdm run script.py [#pdm-installation-doc]_
+
+.. [#hatch-installation-doc] https://hatch.pypa.io/dev/install/
+
+.. [#pdm-installation-doc] https://pdm-project.org/en/latest/#installation
+
+The tool sets up a virtual environment with dependencies installed and runs the script
+----------------------------------------------------------------------------------------------------
+
+* The tool reads the metadata
+* Uses a **Python interpreter** matching *requires-python*
+* Sets up a **temporary virtual environment** with *dependencies* installed, then runs the script
+
+uv can write inline script metadata! [#alternative-uv-init-script]_
+------------------------------------------------------------------------------------------
+
+`uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__ script.py httpx rich [#uv-add-script-write-lower-bound]_
+
+.. code-block:: python
+
+    # /// script
+    # requires-python = ">=3.13"
+    # dependencies = [
+    #     "httpx>=0.28.1",
+    #     "rich>=14.3.3",
+    # ]
+    # ///
+
+.. Easily add inline script metadata to existing scripts
+
+.. [#alternative-uv-init-script] `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__ creates an empty script with inline script metadata
+
+.. [#uv-add-script-write-lower-bound] Lower bounds are written starting from `uv 0.9.16 <https://github.com/astral-sh/uv/releases/tag/0.9.16>`__. ref: https://github.com/astral-sh/uv/issues/15544
+
+**Demo** Manual venv vs ``uv run script.py``
+------------------------------------------------------------
+
+.. Prep: prepare a script.py without inline script metadata
+    display it with bat
+
+.. code-block:: shell
+    :caption: Before
+
+    $ python -m venv script-env --upgrade-deps
+    $ source script-env/bin/activate
+    (script-env) $ python -m pip install httpx rich
+    (script-env) $ python script.py
+
+.. exit the virtual environment
+
+.. code-block:: shell
+    :caption: After [#pip-26-requirements-from-script]_
+
+    $ uv add --script script.py httpx rich
+    $ uv run script.py
+
+.. [#pip-26-requirements-from-script] `pip install --requirements-from-script script.py <https://ichard26.github.io/blog/2026/01/whats-new-in-pip-26.0/#installing-from-inline-script-metadata-pep-723>`__
+
+Recommendations for inline script metadata
+------------------------------------------------------------
+
+* We don't touch virtual environments (the tool handles it) (Problem 3 solved)
+* The script declares its own dependencies
+* **Easy to reproduce and run** on another machine [#execute-from-url-inline-script-metadata]_
+
+.. [#execute-from-url-inline-script-metadata] uv run https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py (not recommended for scripts you don't trust)
+
+Here's where I use it
+------------------------------------------------------------
+
+* When sharing scripts on Slack or Discord
+* Propose adoption in examples for libraries published on PyPI [#nikkie-inline-script-metadata-example]_
+* Hooks for coding agents (using ``uv run`` in the shebang) [#coding-agent-hooks-shebang-uv-run-example]_
+
+.. [#nikkie-inline-script-metadata-example] Example: https://github.com/argilla-io/synthetic-data-generator/pull/23
+
+.. [#coding-agent-hooks-shebang-uv-run-example] with `cchooks <https://github.com/GowayLee/cchooks>`__ https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49

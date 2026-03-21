@@ -1,0 +1,115 @@
+.. 5. Modern Solution 1: Running Commands Without Installation (5 min) + half of 7 (1.5 min)
+
+3️⃣-1️⃣ CLI Execution Without Virtual Environment Management
+==============================================================
+
+* Approach to Problem 4: "Installing and updating **CLIs** in every virtual environment"
+* Using Ruff as an example, but applicable to any CLI on PyPI
+
+.. - Code comparison: old way vs new way
+
+Before: Install to virtual environment, then run CLI
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ # python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate  # project's virtual environment
+    (.venv) $ python -m pip install ruff
+    (.venv) $ ruff format
+
+Now, CLI execution using temporary virtual environments is possible
+--------------------------------------------------------------------------------
+
+- :command:`uvx ruff format` (``uv tool run ruff format``) [#fyi-uv-format]_
+- or :command:`pipx run ruff format`
+
+.. [#fyi-uv-format] There is also the experimental `uv format <https://docs.astral.sh/uv/reference/cli/#uv-format>`__ (added in `0.8.13 <https://github.com/astral-sh/uv/releases/tag/0.8.13>`__)
+
+Installation
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: uv (for macOS & Linux) [#uv-installation-doc]_
+
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+.. code-block:: shell
+    :caption: For pipx, prefer **your system's package manager** like ``brew`` [#pipx-installation-doc]_
+
+    python3 -m pip install --user pipx
+
+.. [#uv-installation-doc] https://docs.astral.sh/uv/getting-started/installation/
+.. [#pipx-installation-doc] For detail, see https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx
+
+The tool installs into a temporary virtual environment
+------------------------------------------------------------
+
+.. - Mechanism: a temporary virtual environment is used internally
+
+* Sets up a temporary virtual environment with the package installed [#uv-doc-cache-tool-environments]_
+* Runs the CLI [#pipx-doc-explanation-run]_
+
+.. [#uv-doc-cache-tool-environments] Not creating a new virtual environment every time — it's also *cached* https://docs.astral.sh/uv/concepts/tools/#tool-environments
+
+.. [#pipx-doc-explanation-run] https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run
+
+**Demo** Manual venv vs ``uvx``
+------------------------------------------------------------
+
+.. 7 Running a formatter: manual venv vs `uvx`
+
+.. code-block:: shell
+    :caption: Before
+
+    $ python -m venv format-env --upgrade-deps
+    $ source format-env/bin/activate
+    (format-env) $ python -m pip install ruff
+    (format-env) $ ruff format
+
+.. exit the virtual environment
+
+.. code-block:: shell
+    :caption: After
+
+    $ uvx ruff format
+
+Recommendations for ``uvx`` and ``pipx run``
+------------------------------------------------------------
+
+* We don't touch virtual environments (the tool handles it)
+* **Use the latest CLI version without management overhead**
+* Works across multiple projects (Problem 4 solved)
+
+Here's where I use it [#awesome-pipx-uvx]_
+------------------------------------------------------------
+
+.. - Actual use cases
+    Linters, formatters (Ruff already introduced)
+
+.. code-block:: shell
+
+    $ uvx cookiecutter gh:simonw/llm-plugin
+
+.. code-block:: shell
+
+    $ uvx --from sphinx --with sphinx-new-tab-link \
+        sphinx-build -M html source build
+
+.. code-block:: shell
+    :caption: pipx is pre-installed on **GitHub Actions** Ubuntu images [#github-actions-pipx-python-build]_
+
+    $ pipx run build
+    $ pipx run twine check dist/*
+
+.. [#awesome-pipx-uvx] https://github.com/ftnext/awesome-pipx-uvx (WIP)
+
+.. [#github-actions-pipx-python-build] https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml
+
+FYI: You can also install globally on your machine
+------------------------------------------------------------
+
+* :command:`uv tool install`
+* :command:`pipx install` (`Installing stand alone command line tools <https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/>`__)
+
+However, manual upgrade is required (`uv tool upgrade <https://docs.astral.sh/uv/concepts/tools/#upgrading-tools>`__ · `pipx upgrade-all <https://pipx.pypa.io/stable/reference/cli/#pipx-upgrade-all>`__)
