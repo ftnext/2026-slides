@@ -1,9 +1,10 @@
 .. 6. 現代的な解決策2: inline script metadata（5分） + 7の半分（1.5分）
 
-解決策2: inline script metadata
+3️⃣-2️⃣ inline script metadata
 ============================================================
 
-Python **スクリプト** に適用可能
+* 課題3「たくさんのスクリプトと仮想環境」へのアプローチ
+* Python **スクリプト** に適用可能
 
 https://packaging.python.org/en/latest/specifications/inline-script-metadata/
 
