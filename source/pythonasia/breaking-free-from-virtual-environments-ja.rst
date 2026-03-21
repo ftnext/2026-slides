@@ -230,66 +230,114 @@ Rye、そしてuv
 解決策1：仮想環境管理不要のコマンド実行
 ============================================================
 
-CLIでコマンド実行するパッケージに適用可能（例：Ruff）
+PyPIで公開されている **CLI** に適用可能（例：Ruff）
 
 .. - コード比較: 古い方法 vs 新しい方法
 
-Before：人力仮想環境
+Before：仮想環境にインストールしてからコマンド実行
 ------------------------------------------------------------
 
-プロジェクトの venv に Ruff をインストールし、アクティベートしてから実行する
+.. code-block:: shell
+
+    $ # python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate  # プロジェクトの仮想環境
+    (.venv) $ python -m pip install ruff
+    (.venv) $ ruff format
 
 今は一時的な仮想環境を使ったコマンド実行が可能
 ------------------------------------------------------------
 
-- :command:`uvx ruff format` （:command:`uv tool run ruff format`）
+- :command:`uvx ruff format` （:command:`uv tool run ruff format`） [#fyi-uv-format]_
 - または :command:`pipx run ruff format`
 
-インストール方法（TODO）
+.. [#fyi-uv-format] experimentalな `uv format <https://docs.astral.sh/uv/reference/cli/#uv-format>`__ もあります （`0.8.13 <https://github.com/astral-sh/uv/releases/tag/0.8.13>`__ で追加）
+
+インストール方法
 ------------------------------------------------------------
 
-* uv
-* pipx
+.. code-block:: shell
+    :caption: uv (for macOS & Linux) [#uv-installation-doc]_
+
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+.. code-block:: shell
+    :caption: pipx は ``brew`` など **システムのパッケージマネージャ優先** で [#pipx-installation-doc]_
+
+    python3 -m pip install --user pipx
+
+.. [#uv-installation-doc] https://docs.astral.sh/uv/getting-started/installation/
+.. [#pipx-installation-doc] For detail, see https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx
 
 ツールが一時的な仮想環境にインストールしている
 ------------------------------------------------------------
 
 .. - 仕組み: 内部では一時的な仮想環境が使われている
 
-TODO ソース確認
+* ツールがコマンドの指定を受け
+* パッケージをインストールした一時的な仮想環境を用意して [#uv-doc-cache-tool-environments]_
+* コマンド実行 [#pipx-doc-explanation-run]_
+
+.. [#uv-doc-cache-tool-environments] 毎回仮想環境を作るわけでなく、 *キャッシュ* もされる https://docs.astral.sh/uv/concepts/tools/#tool-environments
+
+.. [#pipx-doc-explanation-run] https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run
 
 デモ 手動 venv vs ``uvx``
 ------------------------------------------------------------
 
 .. 7 フォーマッターの実行: 手動 venv vs `uvx`
-.. TODO before after のコマンド比較できるように
+
+.. code-block:: shell
+    :caption: Before
+
+    $ python -m venv format-env --upgrade-deps
+    $ source format-env/bin/activate
+    (format-env) $ python -m pip install ruff
+    (format-env) $ ruff format
+
+.. code-block:: shell
+    :caption: After
+
+    $ uvx ruff format
 
 ``uvx`` や ``pipx run`` のススメ
 ------------------------------------------------------------
 
 * 私たちが仮想環境を触ることがない（ツールが代わってくれる）
-* 常に最新バージョンが使える
+* **管理の手間なく最新バージョン** が使える
 * 複数プロジェクトで横断的に使える（課題4）
 
-マシンに入れるやり方
-------------------------------------------------------------
-
-* :command:`uv tool install`
-* :command:`pipx install`
-
-私はこんなところで使ってます（TODO コマンドで示そう）
+私はこんなところで使ってます [#awesome-pipx-uvx]_
 ------------------------------------------------------------
 
 .. - 実際のユースケース
     リンター、フォーマッター（Ruffは紹介済み）
 
-* Cookiecutter
-* Sphinx
-* ビルドツール
+.. code-block:: shell
 
-.. GitHub Actionsではpipxが入っている
+    $ uvx cookiecutter gh:simonw/llm-plugin
 
-.. TODO awesome案内（脚注）
+.. code-block:: shell
+
+    $ uvx --from sphinx --with sphinx-new-tab-link \
+        sphinx-build -M html source build
+
+.. code-block:: shell
+    :caption: GitHub ActionsのUbuntuイメージにはpipxがインストール済み [#github-actions-pipx-python-build]_
+
+    $ pipx run build
+    $ pipx run twine check dist/*
+
+.. [#awesome-pipx-uvx] https://github.com/ftnext/awesome-pipx-uvx (WIP)
+
+.. [#github-actions-pipx-python-build] https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml
+
+一時的の代わりにマシンに入れることもできます
+------------------------------------------------------------
+
+* :command:`uv tool install`
+* :command:`pipx install` (`Installing stand alone command line tools <https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/>`__)
+
+ただし手動でアップグレードが必要（`uv tool upgrade <https://docs.astral.sh/uv/concepts/tools/#upgrading-tools>`__・`pipx upgrade-all <https://pipx.pypa.io/stable/reference/cli/#pipx-upgrade-all>`__）
 
 .. 6. 現代的な解決策2: inline script metadata（5分） + 7の半分（1.5分）
 
@@ -337,8 +385,12 @@ inline script metadataをサポートするツールで実行するだけ
 
 * uv run script.py
 * pipx run script.py
-* hatch run script.py
-* pdm run script.py
+* hatch run script.py [#hatch-installation-doc]_
+* pdm run script.py [#pdm-installation-doc]_
+
+.. [#hatch-installation-doc] https://hatch.pypa.io/dev/install/
+
+.. [#pdm-installation-doc] https://pdm-project.org/en/latest/#installation
 
 ツールが依存をインストールした仮想環境を用意して実行
 ------------------------------------------------------------
