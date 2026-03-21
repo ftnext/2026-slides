@@ -1,14 +1,14 @@
 .. 5. 現代的な解決策1: インストール不要のコマンド実行（5分） + 7の半分（1.5分）
 
-3️⃣-1️⃣ 仮想環境管理不要のコマンド実行
+3️⃣-1️⃣ 仮想環境管理不要のCLI実行
 ============================================================
 
-* 課題4「リンタやフォーマッタをどの仮想環境にもインストールして最新化していく」へのアプローチ
-* PyPIで公開されている **CLI** に適用可能（例：Ruff）
+* 課題4「**CLI** を仮想環境に都度インストールして最新化」へのアプローチ
+* Ruffを例にしますが、PyPI上のあらゆるCLIに適用可能
 
 .. - コード比較: 古い方法 vs 新しい方法
 
-Before：仮想環境にインストールしてからコマンド実行
+Before：仮想環境にインストールしてからCLI実行
 ------------------------------------------------------------
 
 .. code-block:: shell
@@ -18,10 +18,10 @@ Before：仮想環境にインストールしてからコマンド実行
     (.venv) $ python -m pip install ruff
     (.venv) $ ruff format
 
-今は一時的な仮想環境を使ったコマンド実行が可能
+今は一時的な仮想環境を使ったCLI実行が可能
 ------------------------------------------------------------
 
-- :command:`uvx ruff format` （:command:`uv tool run ruff format`） [#fyi-uv-format]_
+- :command:`uvx ruff format` （``uv tool run ruff format``） [#fyi-uv-format]_
 - または :command:`pipx run ruff format`
 
 .. [#fyi-uv-format] experimentalな `uv format <https://docs.astral.sh/uv/reference/cli/#uv-format>`__ もあります （`0.8.13 <https://github.com/astral-sh/uv/releases/tag/0.8.13>`__ で追加）
@@ -47,15 +47,14 @@ Before：仮想環境にインストールしてからコマンド実行
 
 .. - 仕組み: 内部では一時的な仮想環境が使われている
 
-* ツールがコマンドの指定を受け
 * パッケージをインストールした一時的な仮想環境を用意して [#uv-doc-cache-tool-environments]_
-* コマンド実行 [#pipx-doc-explanation-run]_
+* CLI実行 [#pipx-doc-explanation-run]_
 
 .. [#uv-doc-cache-tool-environments] 毎回仮想環境を作るわけでなく、 *キャッシュ* もされる https://docs.astral.sh/uv/concepts/tools/#tool-environments
 
 .. [#pipx-doc-explanation-run] https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run
 
-デモ 手動 venv vs ``uvx``
+**デモ** 手動 venv vs ``uvx``
 ------------------------------------------------------------
 
 .. 7 フォーマッターの実行: 手動 venv vs `uvx`
@@ -68,6 +67,8 @@ Before：仮想環境にインストールしてからコマンド実行
     (format-env) $ python -m pip install ruff
     (format-env) $ ruff format
 
+.. 仮想環境を抜ける
+
 .. code-block:: shell
     :caption: After
 
@@ -77,8 +78,8 @@ Before：仮想環境にインストールしてからコマンド実行
 ------------------------------------------------------------
 
 * 私たちが仮想環境を触ることがない（ツールが代わってくれる）
-* **管理の手間なく最新バージョン** が使える
-* 複数プロジェクトで横断的に使える（課題4）
+* **管理の手間なくCLIの最新バージョン** が使える
+* 複数プロジェクトで横断的に使える（課題4解消）
 
 私はこんなところで使ってます [#awesome-pipx-uvx]_
 ------------------------------------------------------------
@@ -96,7 +97,7 @@ Before：仮想環境にインストールしてからコマンド実行
         sphinx-build -M html source build
 
 .. code-block:: shell
-    :caption: GitHub ActionsのUbuntuイメージにはpipxがインストール済み [#github-actions-pipx-python-build]_
+    :caption: **GitHub Actions** のUbuntuイメージにはpipxがインストール済み [#github-actions-pipx-python-build]_
 
     $ pipx run build
     $ pipx run twine check dist/*
@@ -105,7 +106,7 @@ Before：仮想環境にインストールしてからコマンド実行
 
 .. [#github-actions-pipx-python-build] https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml
 
-一時的の代わりにマシンに入れることもできます
+FYI：マシンにグローバルインストールもできます
 ------------------------------------------------------------
 
 * :command:`uv tool install`
