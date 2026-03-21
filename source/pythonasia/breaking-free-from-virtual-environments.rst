@@ -30,12 +30,12 @@ What is something developers used to manage themselves all the time, but hardly 
 The answer is **virtual environments**
 ------------------------------------------------------------
 
-Are you still managing virtual environments by hand? 🙋
+Are you managing virtual environments by hand? 🙋
 
 .. I almost never do. Those who raised their hands have a lot to take home from this talk.
 
-Developers no longer need to manage virtual environments
-------------------------------------------------------------
+many developers no longer need to manage virtual environments directly
+-----------------------------------------------------------------------
 
 .. - Preview of this paradigm shift
 
@@ -43,7 +43,7 @@ Developers no longer need to manage virtual environments
 * CLI execution using *temporary virtual environments*
 * *inline script metadata* (PEP 723)
 
-BREAKING NEWS!!
+may affect this landscape😅
 ------------------------------------------------------------
 
 .. Not sure how long today's conclusion will hold, but I'll present what I prepared.
@@ -408,7 +408,7 @@ Poetry
 .. Poetry's maturity: not keeping up with the latest specs
 
 * Poetry made things much easier (but challenges around CLI and script execution remained)
-* Not keeping up with the latest specs promptly (hard to recommend)
+* Slower to adopt some newer specs (not my first recommendation)
 
     * `PEP 621 <https://peps.python.org/pep-0621/>`__ (``[project]``) support came 4 years later in `2.0.0 <https://github.com/python-poetry/poetry/releases/tag/2.0.0>`__
 
@@ -423,7 +423,7 @@ uv🏅
     $ uv add httpx
     $ uv sync
 
-* Currently the top choice for **broadly supporting** everything from ``uvx`` to inline script metadata with one tool
+* Currently the top choice for **broadly supporting** everything from ``uvx`` to inline script metadata with one tool (*but watching OpenAI*)
 
 .. Currently uv is known for quickly implementing the latest PEPs, but OpenAI's acquisition may change that tendency
 
@@ -456,9 +456,9 @@ Summary 🌯 Breaking Free from **Manual** Virtual Environment Management
 .. - Vision: developers are freed from manual virtual environment management
 
 * Virtual environments remain important as installation destinations for third-party libraries
-* However, today, developers **no longer need to manage** virtual environments
+* However, today, many developers **no longer need to manage** virtual environments directly.
 
-Developers are **liberated** from manual virtual environment management
+Developers are **abstracted away** from manual virtual environment management
 ------------------------------------------------------------------------------------------
 
 * CLI execution: tools install into a temporary virtual environment
@@ -476,7 +476,7 @@ Do beginner tutorials really need virtual environment setup commands?
 ------------------------------------------------------------------------------------------
 
 * Isn't it time to revisit Python tutorials and beginner books?
-* IMO: For beginners who just want to **write scripts in Python, it's okay to skip** this (use inline script metadata instead)
+* IMO: For beginners who just want to **write scripts in Python, starting with inline script metadata** might lower the barrier
 * Professional Python developers are still recommended to understand virtual environments
 
 Thank you for listening
