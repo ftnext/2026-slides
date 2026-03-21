@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Breaking Free from Virtual Environments: A New Python Paradigm for 2026</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides//.html">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Breaking Free from Virtual Environments: A New Python Paradigm for 2026</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Breaking Free from Virtual Environments: A New Python Paradigm for 2026</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PythonAsia 2026</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/03/22 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Hello, PythonAsia! (Who are you?)</h2>
+<ul class="simple">
+<li><p>Machine learning engineer in Tokyo. Developing <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> (with <a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>) <a class="footnote-reference brackets" href="#uzabase-south-asia-news" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p><span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a> <a class="reference external" href="https://github.com/Uberi/speech_recognition" rel="noreferrer" target="_blank">SpeechRecognition</a> (9k⭐️) maintainer</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uzabase-south-asia-news" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://uzabaseglobal.com/press-release/uzabase-expands-southeast-asia-expert-network-with-acquisition-of-sealed-network" rel="noreferrer" target="_blank">Acquisition of Sealed Network</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">What is something developers used to manage themselves all the time, but hardly manage anymore?</h2>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">The answer is <strong>virtual environments</strong></h3>
+<p>Hard to believe? 🙋</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">many developers no longer need to manage virtual environments directly</h3>
+<ul class="simple">
+<li><p>Various Python project management tools</p></li>
+<li><p>CLI execution using <em>temporary virtual environments</em></p></li>
+<li><p><em>inline script metadata</em> (PEP 723)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">may affect this landscape😅</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="en"><p dir="ltr" lang="en">We've reached an agreement to acquire Astral.<br/><br/>After we close, OpenAI plans for <a href="https://twitter.com/astral_sh?ref_src=twsrc%5Etfw">@astral_sh</a> to join our Codex team, with a continued focus on building great tools and advancing the shared mission of making developers more productive.<a href="https://t.co/V0rDo0G8h9">https://t.co/V0rDo0G8h9</a></p>— OpenAI Newsroom (@OpenAINewsroom) <a href="https://twitter.com/OpenAINewsroom/status/2034616934671724639?ref_src=twsrc%5Etfw">2026年3月19日</a></blockquote> <script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Breaking Free from Virtual Environments: Agenda</h2>
+<ol class="arabic simple">
+<li><p>Virtual Environment Basics (quick🏃‍♂️)</p></li>
+<li><p>The Pain of Manual Virtual Environment Management (quick🏃‍♂️)</p></li>
+<li><p>Evolution of Solutions (Main Part)</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Solutions Available as of 2026</h3>
+<ol class="arabic simple">
+<li><p>CLI execution using <em>temporary virtual environments</em></p></li>
+<li><p><em>inline script metadata</em> (PEP 723)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">1️⃣ Virtual Environment Basics</h2>
+<p>Why do we (Python developers) need virtual environments?</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">From the Python Tutorial</h3>
+<pre data-id="from-the-python-tutorial"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install sampleproject</code></pre>
+<p><a class="reference external" href="https://docs.python.org/3/tutorial/venv.html#creating-virtual-environments" rel="noreferrer" target="_blank">12.2. Creating Virtual Environments (The Python Tutorial)</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">A virtual environment is a <strong>directory</strong></h3>
+<pre data-id="a-virtual-environment-is-a-directory"><code class="shell" data-noescape="" data-trim="">% python -m venv --help
+usage: venv ENV_DIR [ENV_DIR ...]</code></pre>
+<div class="literal-block-wrapper docutils container" id="id32">
+<div class="code-block-caption"><span class="caption-text">A directory called <code class="file docutils literal notranslate"><span class="pre">.venv/</span></code> has been created</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">% ls -al
+drwxr-xr-x@  7 nikkie  staff  224 Mar 20 12:42 .venv</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Why create a directory?</h3>
+<ul class="simple">
+<li><p>To serve as the installation destination for <strong>third-party libraries</strong></p></li>
+<li><p>Without a virtual environment, there is only one installation location on the machine</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">What's inside <code class="file docutils literal notranslate"><span class="pre">.venv/</span></code>? <a class="footnote-reference brackets" href="#python314-easter-egg" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id33">
+<div class="code-block-caption"><span class="caption-text">Installed on macOS from python.org</span></div>
+<pre><code class="txt" data-line-numbers="2,7,11,12" data-noescape="" data-trim="">.venv
+├── bin
+│   ├── activate
+│   ├── pip
+│   ├── pip3
+│   ├── pip3.14
+│   ├── python -&gt; python3.14
+│   ├── python3 -&gt; python3.14
+│   ├── python3.14 -&gt; /Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14
+│   └── 𝜋thon -&gt; python3.14
+├── lib
+│   └── python3.14/
+└── pyvenv.cfg</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="python314-easter-egg" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>easter egg: 𝜋thon <a class="reference external" href="https://github.com/python/cpython/pull/125035" rel="noreferrer" target="_blank">https://github.com/python/cpython/pull/125035</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">.venv/bin/python</span></code></h3>
+<ul class="simple">
+<li><p>A <strong>symbolic link</strong> to the Python interpreter installed on your machine</p></li>
+<li><p>The <code class="file docutils literal notranslate"><span class="pre">activate</span></code> script updates the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable so this interpreter is found</p></li>
+<li><p>The interpreter and standard library use this path</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">.venv/lib/python3.14/site-packages/</span></code></h3>
+<ul class="simple">
+<li><p>The directory where third-party libraries are installed</p></li>
+<li><p>Separated per virtual environment, so <strong>different versions can coexist</strong></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2️⃣ We Are the Virtual Environment Management Tool</h2>
+<pre data-id="we-are-the-virtual-environment-management-tool"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install sampleproject</code></pre>
+<p>Let's list the pains of manual management (4 in total)</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Reproducing a virtual environment: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code></h3>
+<pre data-id="reproducing-a-virtual-environment-pip-freeze"><code class="shell" data-noescape="" data-trim="">(.venv) $ python -m pip freeze &gt; requirements.txt</code></pre>
+<pre data-id="reproducing-a-virtual-environment-pip-freeze"><code class="shell" data-noescape="" data-trim="">$ python -m venv recreate-env --upgrade-deps
+$ source recreate-env/bin/activate
+(recreate-env) $ python -m pip install -r requirements.txt</code></pre>
+<p><a class="reference external" href="https://docs.python.org/3/tutorial/venv.html#managing-packages-with-pip" rel="noreferrer" target="_blank">12.3. Managing Packages with pip (The Python Tutorial)</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">There are two types of dependencies</h3>
+<div class="literal-block-wrapper docutils container" id="id34">
+<div class="code-block-caption"><span class="caption-text">Direct dependencies</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">(.venv) $ % python -m pip install httpx</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id35">
+<div class="code-block-caption"><span class="caption-text">Transitive dependencies</span></div>
+<pre><code class="shell" data-line-numbers="2,3,4,5,7" data-noescape="" data-trim="">(.venv) $ python -m pip freeze
+anyio==4.12.1
+certifi==2026.2.25
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.11</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Problem 1: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> output is hard to manage</h3>
+<ul class="simple">
+<li><p>Both direct and transitive dependencies are combined into a single <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+<li><p>If extras were specified for direct dependencies <a class="footnote-reference brackets" href="#specify-extra-install" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <strong>extra information is lost</strong> in <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="specify-extra-install" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">SpeechRecognition[audio]</span></code></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Problem 2: Hard to uninstall specific packages</h3>
+<ul class="simple">
+<li><p>When removing a direct dependency, <strong>removing transitive dependencies</strong> is difficult</p></li>
+<li><p>Direct dependency 1 depends on libA and libB</p></li>
+<li><p>Direct dependency 2 depends on libA and libC</p></li>
+</ul>
+</section>
+<section>
+<img alt="../_images/remove-direct-dependency-en.drawio.png" src="../_images/remove-direct-dependency-en.drawio.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Problem 3: Virtual environments proliferate per script</h3>
+<ul class="simple">
+<li><p>Just want to quickstart a library, but a new virtual environment must be created each time</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id36">
+<div class="code-block-caption"><span class="caption-text">Many directories like this</span></div>
+<pre><code class="txt" data-noescape="" data-trim="">.
+├── .venv/
+└── script.py</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Problem 4: Linters and formatters installed in every virtual environment</h3>
+<ul class="simple">
+<li><p>CLIs used during development must be installed <strong>in every virtual environment</strong></p></li>
+<li><p>Keeping them up to date across all projects is less convenient</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Our Pain as Virtual Environment Managers</h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> lumps direct and transitive together</p></li>
+<li><p>Can we remove transitive when removing direct?</p></li>
+<li><p>Too many virtual environments for scripts</p></li>
+<li><p>Installing and updating CLIs in every virtual environment</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣ How the Community Has Addressed These Problems</h2>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> lumps direct and transitive together</p></li>
+<li><p>Can we remove transitive when removing direct?</p></li>
+<li><p>Too many virtual environments for scripts</p></li>
+<li><p>Installing and updating CLIs in every virtual environment</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/jazzband/pip-tools" rel="noreferrer" target="_blank">pip-tools</a></h3>
+<ul class="simple">
+<li><p>In place of <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code>: <strong class="command">pip-compile</strong> &amp; <strong class="command">pip-sync</strong> <a class="footnote-reference brackets" href="#pip-tools-overview-reference" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<img alt="../_images/pip-tools-overview.svg" src="../_images/pip-tools-overview.svg"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pip-tools-overview-reference" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id6" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/jazzband/pip-tools/blob/v7.5.3/img/pip-tools-overview.svg" rel="noreferrer" target="_blank">https://github.com/jazzband/pip-tools/blob/v7.5.3/img/pip-tools-overview.svg</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools workflow</h3>
+<div class="literal-block-wrapper docutils container" id="id37">
+<div class="code-block-caption"><span class="caption-text">Write direct dependencies in <code class="file docutils literal notranslate"><span class="pre">requirements.in</span></code></span></div>
+<pre><code class="txt" data-noescape="" data-trim="">httpx</code></pre>
+</div>
+<p>Problem 1: direct and transitive lumped together — solved</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools workflow</h3>
+<div class="literal-block-wrapper docutils container" id="id38">
+<div class="code-block-caption"><span class="caption-text"><strong class="command">pip-compile</strong> generates <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> (direct &amp; transitive)</span></div>
+<pre><code class="txt" data-noescape="" data-trim="">anyio==4.12.1
+    # via httpx
+certifi==2026.2.25
+    # via
+    #   httpcore
+    #   httpx
+h11==0.16.0
+    # via httpcore
+httpcore==1.0.9
+    # via httpx
+httpx==0.28.1
+    # via -r requirements.in
+idna==3.11
+    # via
+    #   anyio
+    #   httpx</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools workflow</h3>
+<ul class="simple">
+<li><p>Use <strong class="command">pip-sync</strong> to sync the virtual environment to <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+<li><p><strong>Change direct dependencies</strong> in <code class="file docutils literal notranslate"><span class="pre">requirements.in</span></code> to update both <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> and the virtual environment (Problem 2 solved)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/python-poetry/poetry" rel="noreferrer" target="_blank">Poetry</a></h3>
+<div class="literal-block-wrapper docutils container" id="id39">
+<div class="code-block-caption"><span class="caption-text">Specify direct dependencies (= approach to Problems 1 &amp; 2)</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ poetry new
+$ poetry add httpx
+$ ls
+poetry.lock     pyproject.toml</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Even less awareness of virtual environments <a class="footnote-reference brackets" href="#poetry-uses-project-venv" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id40">
+<div class="code-block-caption"><span class="caption-text">Just prefix commands with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span></code> to run in the virtual environment</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ poetry run python -m pip freeze</code></pre>
+</div>
+<ul class="simple">
+<li><p>Widely adopted for Python project development (around 2020) <a class="footnote-reference brackets" href="#poetry-alternative-pipenv" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="poetry-uses-project-venv" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://python-poetry.org/docs/configuration/#virtualenvsin-project" rel="noreferrer" target="_blank">use the {project-dir}/.venv directory if one already exists.</a></p>
+</aside>
+<aside class="footnote brackets" id="poetry-alternative-pipenv" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/pypa/pipenv" rel="noreferrer" target="_blank">Pipenv</a> was also widely adopted for Python project development</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/astral-sh/rye" rel="noreferrer" target="_blank">Rye</a> <a class="footnote-reference brackets" href="#rye-sunset" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>Written in Rust (faster than Python-based tools)</p></li>
+<li><p><strong>Python version management</strong> + virtual environment management</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id41">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://rye.astral.sh/guide/basics/" rel="noreferrer" target="_blank">https://rye.astral.sh/guide/basics/</a> <a class="footnote-reference brackets" href="#rye-interesting-point" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ rye init
+$ rye add httpx
+$ rye sync</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="rye-sunset" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p>Created by mitsuhiko, transferred to Astral, then archived in February 2026. Thank you for the great work.</p>
+</aside>
+<aside class="footnote brackets" id="rye-interesting-point" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id12" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p>It was technically interesting that it managed virtual environments without pip, using pip-tools</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">And then came uv</h3>
+<ul class="simple">
+<li><p>Emerged as a Rust implementation of pip. <a class="reference external" href="https://astral.sh/blog/uv" rel="noreferrer" target="_blank">drop-in replacement for pip and pip-tools workflows.</a></p></li>
+<li><p>Expanded to also manage Python itself and project virtual environments <a class="footnote-reference brackets" href="#uv-unified-python-packaging" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-unified-python-packaging" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id13" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://astral.sh/blog/uv-unified-python-packaging" rel="noreferrer" target="_blank">https://astral.sh/blog/uv-unified-python-packaging</a></p>
+</aside>
+</aside>
+<div class="literal-block-wrapper docutils container" id="id42">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://docs.astral.sh/uv/guides/projects/" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/guides/projects/</a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv init
+$ uv add httpx
+$ uv sync</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">The path to uv</h3>
+<ul class="simple">
+<li><p>Poetry (and Pipenv) made <strong>Python project virtual environment management</strong> easy</p></li>
+<li><p>Rust-based Rye: also manages <strong>Python itself</strong> (virtual env management via pip-tools)</p></li>
+<li><p>uv incorporated Rye's features along with <em>pipx</em> and <em>PEP 723</em> (introduced next)</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣-1️⃣ CLI Execution Without Virtual Environment Management</h2>
+<ul class="simple">
+<li><p>Approach to Problem 4: "Installing and updating <strong>CLIs</strong> in every virtual environment"</p></li>
+<li><p>Using Ruff as an example, but applicable to any CLI on PyPI</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Before: Install to virtual environment, then run CLI</h3>
+<pre data-id="before-install-to-virtual-environment-then-run-cli"><code class="shell" data-noescape="" data-trim="">$ # python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate  # project's virtual environment
+(.venv) $ python -m pip install ruff
+(.venv) $ ruff format</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Now, CLI execution using temporary virtual environments is possible</h3>
+<ul class="simple">
+<li><p><strong class="command">uvx ruff format</strong> (<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">tool</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">format</span></code>) <a class="footnote-reference brackets" href="#fyi-uv-format" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a></p></li>
+<li><p>or <strong class="command">pipx run ruff format</strong></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="fyi-uv-format" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">10</a><span class="fn-bracket">]</span></span>
+<p>There is also the experimental <a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-format" rel="noreferrer" target="_blank">uv format</a> (added in <a class="reference external" href="https://github.com/astral-sh/uv/releases/tag/0.8.13" rel="noreferrer" target="_blank">0.8.13</a>)</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Installation</h3>
+<div class="literal-block-wrapper docutils container" id="id43">
+<div class="code-block-caption"><span class="caption-text">uv (for macOS &amp; Linux) <a class="footnote-reference brackets" href="#uv-installation-doc" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id44">
+<div class="code-block-caption"><span class="caption-text">For pipx, prefer <strong>your system's package manager</strong> like <code class="docutils literal notranslate"><span class="pre">brew</span></code> <a class="footnote-reference brackets" href="#pipx-installation-doc" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">python3 -m pip install --user pipx</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id15" role="doc-backlink">11</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/getting-started/installation/</a></p>
+</aside>
+<aside class="footnote brackets" id="pipx-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id16" role="doc-backlink">12</a><span class="fn-bracket">]</span></span>
+<p>For detail, see <a class="reference external" href="https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx" rel="noreferrer" target="_blank">https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">The tool installs into a temporary virtual environment</h3>
+<ul class="simple">
+<li><p>Sets up a temporary virtual environment with the package installed <a class="footnote-reference brackets" href="#uv-doc-cache-tool-environments" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a></p></li>
+<li><p>Runs the CLI <a class="footnote-reference brackets" href="#pipx-doc-explanation-run" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-doc-cache-tool-environments" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id17" role="doc-backlink">13</a><span class="fn-bracket">]</span></span>
+<p>Not creating a new virtual environment every time — it's also <em>cached</em> <a class="reference external" href="https://docs.astral.sh/uv/concepts/tools/#tool-environments" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/concepts/tools/#tool-environments</a></p>
+</aside>
+<aside class="footnote brackets" id="pipx-doc-explanation-run" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id18" role="doc-backlink">14</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run" rel="noreferrer" target="_blank">https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>Demo</strong> Manual venv vs <code class="docutils literal notranslate"><span class="pre">uvx</span></code></h3>
+<div class="literal-block-wrapper docutils container" id="id45">
+<div class="code-block-caption"><span class="caption-text">Before</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ python -m venv format-env --upgrade-deps
+$ source format-env/bin/activate
+(format-env) $ python -m pip install ruff
+(format-env) $ ruff format</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id46">
+<div class="code-block-caption"><span class="caption-text">After</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uvx ruff format</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Recommendations for <code class="docutils literal notranslate"><span class="pre">uvx</span></code> and <code class="docutils literal notranslate"><span class="pre">pipx</span> <span class="pre">run</span></code></h3>
+<ul class="simple">
+<li><p>We don't touch virtual environments (the tool handles it)</p></li>
+<li><p><strong>Use the latest CLI version without management overhead</strong></p></li>
+<li><p>Works across multiple projects (Problem 4 solved)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Here's where I use it <a class="footnote-reference brackets" href="#awesome-pipx-uvx" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a></h3>
+<pre data-id="here-s-where-i-use-it"><code class="shell" data-noescape="" data-trim="">$ uvx cookiecutter gh:simonw/llm-plugin</code></pre>
+<pre data-id="here-s-where-i-use-it"><code class="shell" data-noescape="" data-trim="">$ uvx --from sphinx --with sphinx-new-tab-link \
+    sphinx-build -M html source build</code></pre>
+<div class="literal-block-wrapper docutils container" id="id47">
+<div class="code-block-caption"><span class="caption-text">pipx is pre-installed on <strong>GitHub Actions</strong> Ubuntu images <a class="footnote-reference brackets" href="#github-actions-pipx-python-build" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ pipx run build
+$ pipx run twine check dist/*</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="awesome-pipx-uvx" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id19" role="doc-backlink">15</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/awesome-pipx-uvx" rel="noreferrer" target="_blank">https://github.com/ftnext/awesome-pipx-uvx</a> (WIP)</p>
+</aside>
+<aside class="footnote brackets" id="github-actions-pipx-python-build" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id20" role="doc-backlink">16</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml" rel="noreferrer" target="_blank">https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">FYI: You can also install globally on your machine</h3>
+<ul class="simple">
+<li><p><strong class="command">uv tool install</strong></p></li>
+<li><p><strong class="command">pipx install</strong> (<a class="reference external" href="https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/" rel="noreferrer" target="_blank">Installing stand alone command line tools</a>)</p></li>
+</ul>
+<p>However, manual upgrade is required (<a class="reference external" href="https://docs.astral.sh/uv/concepts/tools/#upgrading-tools" rel="noreferrer" target="_blank">uv tool upgrade</a> · <a class="reference external" href="https://pipx.pypa.io/stable/reference/cli/#pipx-upgrade-all" rel="noreferrer" target="_blank">pipx upgrade-all</a>)</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣-2️⃣ inline script metadata</h2>
+<ul class="simple">
+<li><p>Approach to Problem 3: "Too many virtual environments for <strong>scripts</strong>"</p></li>
+<li><p>Applicable to any Python script</p></li>
+</ul>
+<p><a class="reference external" href="https://packaging.python.org/en/latest/specifications/inline-script-metadata/" rel="noreferrer" target="_blank">https://packaging.python.org/en/latest/specifications/inline-script-metadata/</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">A script using third-party libraries</h3>
+<div class="literal-block-wrapper docutils container" id="id48">
+<div class="code-block-caption"><span class="caption-text">Get the titles of the 10 most recent PEPs</span></div>
+<pre><code class="python" data-noescape="" data-trim="">from datetime import datetime
+
+import httpx
+from rich.pretty import pprint
+
+resp = httpx.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])
+</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Before: Install dependencies to virtual environment, then run script</h3>
+<pre data-id="before-install-dependencies-to-virtual-environment-then-run-script"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install httpx rich
+(.venv) $ python script.py</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://peps.python.org/pep-0723/" rel="noreferrer" target="_blank">PEP 723</a> – Inline script metadata <a class="footnote-reference brackets" href="#pep723-author-is-hatch-creator" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id49">
+<div class="code-block-caption"><span class="caption-text">Write TOML-format metadata as <strong>comments</strong></span></div>
+<pre><code class="python" data-noescape="" data-trim=""># /// script
+# requires-python = "&gt;=3.13"
+# dependencies = [
+#     "httpx",
+#     "rich",
+# ]
+# ///
+</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pep723-author-is-hatch-creator" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id21" role="doc-backlink">17</a><span class="fn-bracket">]</span></span>
+<p>The author of PEP 723 is the creator of Hatch</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Just run with a tool that supports inline script metadata</h3>
+<ul class="simple">
+<li><p>uv run script.py</p></li>
+<li><p>pipx run script.py</p></li>
+<li><p>hatch run script.py <a class="footnote-reference brackets" href="#hatch-installation-doc" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a></p></li>
+<li><p>pdm run script.py <a class="footnote-reference brackets" href="#pdm-installation-doc" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hatch-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id22" role="doc-backlink">18</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://hatch.pypa.io/dev/install/" rel="noreferrer" target="_blank">https://hatch.pypa.io/dev/install/</a></p>
+</aside>
+<aside class="footnote brackets" id="pdm-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id23" role="doc-backlink">19</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://pdm-project.org/en/latest/#installation" rel="noreferrer" target="_blank">https://pdm-project.org/en/latest/#installation</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">The tool sets up a virtual environment with dependencies installed and runs the script</h3>
+<ul class="simple">
+<li><p>The tool reads the metadata</p></li>
+<li><p>Uses a <strong>Python interpreter</strong> matching <em>requires-python</em></p></li>
+<li><p>Sets up a <strong>temporary virtual environment</strong> with <em>dependencies</em> installed, then runs the script</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uv can write inline script metadata! <a class="footnote-reference brackets" href="#alternative-uv-init-script" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a></h3>
+<p><a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-add--script" rel="noreferrer" target="_blank">uv add --script</a> script.py httpx rich <a class="footnote-reference brackets" href="#uv-add-script-write-lower-bound" id="id25" role="doc-noteref"><span class="fn-bracket">[</span>21<span class="fn-bracket">]</span></a></p>
+<pre data-id="uv-can-write-inline-script-metadata"><code class="python" data-noescape="" data-trim=""># /// script
+# requires-python = "&gt;=3.13"
+# dependencies = [
+#     "httpx&gt;=0.28.1",
+#     "rich&gt;=14.3.3",
+# ]
+# ///</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="alternative-uv-init-script" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id24" role="doc-backlink">20</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-init--script" rel="noreferrer" target="_blank">uv init --script</a> creates an empty script with inline script metadata</p>
+</aside>
+<aside class="footnote brackets" id="uv-add-script-write-lower-bound" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id25" role="doc-backlink">21</a><span class="fn-bracket">]</span></span>
+<p>Lower bounds are written starting from <a class="reference external" href="https://github.com/astral-sh/uv/releases/tag/0.9.16" rel="noreferrer" target="_blank">uv 0.9.16</a>. ref: <a class="reference external" href="https://github.com/astral-sh/uv/issues/15544" rel="noreferrer" target="_blank">https://github.com/astral-sh/uv/issues/15544</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>Demo</strong> Manual venv vs <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">script.py</span></code></h3>
+<div class="literal-block-wrapper docutils container" id="id50">
+<div class="code-block-caption"><span class="caption-text">Before</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ python -m venv script-env --upgrade-deps
+$ source script-env/bin/activate
+(script-env) $ python -m pip install httpx rich
+(script-env) $ python script.py</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id51">
+<div class="code-block-caption"><span class="caption-text">After <a class="footnote-reference brackets" href="#pip-26-requirements-from-script" id="id26" role="doc-noteref"><span class="fn-bracket">[</span>22<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv add --script script.py httpx rich
+$ uv run script.py</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pip-26-requirements-from-script" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id26" role="doc-backlink">22</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://ichard26.github.io/blog/2026/01/whats-new-in-pip-26.0/#installing-from-inline-script-metadata-pep-723" rel="noreferrer" target="_blank">pip install --requirements-from-script script.py</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Recommendations for inline script metadata</h3>
+<ul class="simple">
+<li><p>We don't touch virtual environments (the tool handles it) (Problem 3 solved)</p></li>
+<li><p>The script declares its own dependencies</p></li>
+<li><p><strong>Easy to reproduce and run</strong> on another machine <a class="footnote-reference brackets" href="#execute-from-url-inline-script-metadata" id="id27" role="doc-noteref"><span class="fn-bracket">[</span>23<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="execute-from-url-inline-script-metadata" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id27" role="doc-backlink">23</a><span class="fn-bracket">]</span></span>
+<p>uv run <a class="reference external" href="https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py" rel="noreferrer" target="_blank">https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py</a> (not recommended for scripts you don't trust)</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Here's where I use it</h3>
+<ul class="simple">
+<li><p>When sharing scripts on Slack or Discord</p></li>
+<li><p>Propose adoption in examples for libraries published on PyPI <a class="footnote-reference brackets" href="#nikkie-inline-script-metadata-example" id="id29" role="doc-noteref"><span class="fn-bracket">[</span>24<span class="fn-bracket">]</span></a></p></li>
+<li><p>Hooks for coding agents (using <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code> in the shebang) <a class="footnote-reference brackets" href="#coding-agent-hooks-shebang-uv-run-example" id="id30" role="doc-noteref"><span class="fn-bracket">[</span>25<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-inline-script-metadata-example" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id29" role="doc-backlink">24</a><span class="fn-bracket">]</span></span>
+<p>Example: <a class="reference external" href="https://github.com/argilla-io/synthetic-data-generator/pull/23" rel="noreferrer" target="_blank">https://github.com/argilla-io/synthetic-data-generator/pull/23</a></p>
+</aside>
+<aside class="footnote brackets" id="coding-agent-hooks-shebang-uv-run-example" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id30" role="doc-backlink">25</a><span class="fn-bracket">]</span></span>
+<p>with <a class="reference external" href="https://github.com/GowayLee/cchooks" rel="noreferrer" target="_blank">cchooks</a> <a class="reference external" href="https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49" rel="noreferrer" target="_blank">https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Finally, Tool Selection</h2>
+<p>Considering Python project management since Poetry</p>
+<ul class="simple">
+<li><p>uv🏅</p></li>
+<li><p>Hatch❤️</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Poetry</h3>
+<ul>
+<li><p>Poetry made things much easier (but challenges around CLI and script execution remained)</p></li>
+<li><p>Slower to adopt some newer specs (not my first recommendation)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://peps.python.org/pep-0621/" rel="noreferrer" target="_blank">PEP 621</a> (<code class="docutils literal notranslate"><span class="pre">[project]</span></code>) support came 4 years later in <a class="reference external" href="https://github.com/python-poetry/poetry/releases/tag/2.0.0" rel="noreferrer" target="_blank">2.0.0</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uv🏅</h3>
+<div class="literal-block-wrapper docutils container" id="id52">
+<div class="code-block-caption"><span class="caption-text">Also supports Python project management (enforces <code class="file docutils literal notranslate"><span class="pre">pyproject.toml</span></code>)</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv add httpx
+$ uv sync</code></pre>
+</div>
+<ul class="simple">
+<li><p>Currently the top choice for <strong>broadly supporting</strong> everything from <code class="docutils literal notranslate"><span class="pre">uvx</span></code> to inline script metadata with one tool (<em>but watching OpenAI</em>)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Hatch</h3>
+<ul class="simple">
+<li><p>Also supports Python project management, but manages <strong>multiple virtual environments</strong></p></li>
+<li><p>Can use inline script metadata, but lacks <code class="docutils literal notranslate"><span class="pre">uvx</span></code>-equivalent functionality</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Hatch is interesting ❤️</h3>
+<pre data-id="hatch-is-interesting"><code class="console" data-noescape="" data-trim="">$ hatch env show
+Standalone
+┏━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Name    ┃ Type    ┃ Dependencies ┃ Scripts ┃
+┡━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━┩
+│ default │ virtual │              │         │
+├─────────┼─────────┼──────────────┼─────────┤
+│ types   │ virtual │ mypy&gt;=1.0.0  │ check   │
+└─────────┴─────────┴──────────────┴─────────┘</code></pre>
+<p>Most tools including uv use a single virtual environment per Python project</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Summary 🌯 Breaking Free from <strong>Manual</strong> Virtual Environment Management</h2>
+<ul class="simple">
+<li><p>Virtual environments remain important as installation destinations for third-party libraries</p></li>
+<li><p>However, today, many developers <strong>no longer need to manage</strong> virtual environments directly.</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Developers are <strong>abstracted away</strong> from manual virtual environment management</h3>
+<ul class="simple">
+<li><p>CLI execution: tools install into a temporary virtual environment</p></li>
+<li><p>Script execution: inline script metadata</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Let's try it and <strong>make life easier</strong>!</h3>
+<ul class="simple">
+<li><p>uv (<code class="docutils literal notranslate"><span class="pre">uvx</span></code>, <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code>)</p></li>
+<li><p>pipx (<code class="docutils literal notranslate"><span class="pre">pipx</span> <span class="pre">run</span></code>)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Do beginner tutorials really need virtual environment setup commands?</h3>
+<ul class="simple">
+<li><p>Isn't it time to revisit Python tutorials and beginner books?</p></li>
+<li><p>IMO: For beginners who just want to <strong>write scripts in Python, starting with inline script metadata</strong> might lower the barrier</p></li>
+<li><p>Professional Python developers are still recommended to understand virtual environments</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Thank you for listening</h3>
+<p>Happy Python Development</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

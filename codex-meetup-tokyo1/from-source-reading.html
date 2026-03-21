@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Codex CLIで（を）ソースコードリーディング！</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/codex-meetup-tokyo1/from-source-reading.html">
+    <meta property="og:title" content="Codex CLIで（を）ソースコードリーディング！あの機能はどうできている？">
+    <meta property="og:description" content="Codex Meetup Tokyo #1">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/codex-meetup-tokyo1.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIで（を）ソースコードリーディング！</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIで（を）ソースコードリーディング！</h2>
+<p>あの機能はどうできている？</p>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Codex Meetup Tokyo #1</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/03/19 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIはソースが <strong>公開</strong> されている🤗</h2>
+<p><a class="reference external" href="https://github.com/openai/codex" rel="noreferrer" target="_blank">https://github.com/openai/codex</a></p>
+<p>Rust製</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例えば Codex App</h3>
+<ul class="simple">
+<li><p><strong class="command">codex app-server</strong></p></li>
+<li><p>JSON-RPCによるプロトコル（<a class="reference external" href="https://developers.openai.com/codex/app-server" rel="noreferrer" target="_blank">Codex App Server</a>） <a class="footnote-reference brackets" href="#python-sdk-looking-forward" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="python-sdk-looking-forward" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/tree/rust-v0.115.0/sdk/python" rel="noreferrer" target="_blank">Codex App Server Python SDK</a> 準備中。楽しみ！</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIのソースをCodex {CLI,App}に解説してもらう日々</h3>
+<p>その中から <strong>小さな機能2つ</strong> と、どう実装されているかを共有します</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">1️⃣シンタックスハイライト</h2>
+<p>Codex CLIについて <a class="footnote-reference brackets" href="#codex-app-highlight" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+<p><a class="reference external" href="https://developers.openai.com/codex/cli/features#syntax-highlighting-and-themes" rel="noreferrer" target="_blank">https://developers.openai.com/codex/cli/features#syntax-highlighting-and-themes</a></p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-app-highlight" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>Codex Appも差分のコードに色ついてますね</p>
+</aside>
+</aside>
+</section>
+<section>
+<a class="reference internal image-reference" href="../_images/codex-cli-syntax-highlight-example.png"><img alt="../_images/codex-cli-syntax-highlight-example.png" height="435" src="../_images/codex-cli-syntax-highlight-example.png" width="567"/>
+</a>
+<p>(GPT-5.4 medium effort)</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/openai/codex/releases/tag/rust-v0.105.0" rel="noreferrer" target="_blank">v0.105.0</a> にてシンタックスハイライト追加</h3>
+<blockquote>
+<div><p>The TUI now syntax-highlights fenced code blocks and diffs, adds a /theme picker with live preview, and uses better theme-aware diff colors for light and dark terminals.</p>
+</div></blockquote>
+<p>コードブロックや実行するコマンドが <strong>劇的に読みやすく</strong></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">では、どう実装されている？</h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/openai/codex/pull/11447" rel="noreferrer" target="_blank">feat(tui): syntax highlighting via syntect with theme picker #11447</a></p></li>
+<li><p><a class="reference external" href="https://github.com/trishume/syntect" rel="noreferrer" target="_blank">syntect</a> <a class="footnote-reference brackets" href="#codex-cli-use-syntect" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cat</span></code> cloneの <strong class="command">bat</strong> でも使われている</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-cli-use-syntect" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L570" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L570</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">syntectを使った実装例 <a class="footnote-reference brackets" href="#syntect-practice" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></h3>
+<pre data-id="syntect"><code class="rust" data-noescape="" data-trim="">let syn_set = two_face::syntax::extra_newlines();
+let theme_set = two_face::theme::extra();
+
+let syn_ref = syn_set.find_syntax_by_extension("py").unwrap();
+let theme = &amp;theme_set[two_face::theme::EmbeddedThemeName::CatppuccinMocha];
+let mut highlighter = syntect::easy::HighlightLines::new(syn_ref, theme);
+let lines = content.lines();
+let mut output = String::new();
+
+for line in lines {
+    let ranges = highlighter.highlight_line(line, &amp;syn_set).unwrap();
+    let escaped = syntect::util::as_24_bit_terminal_escaped(&amp;ranges[..], false);
+    output.push_str(&amp;escaped);
+    output.push('\n');
+}
+
+print!("{}", output);</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="syntect-practice" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/command-line-rust-book/tree/c1bc1e49fdf56464d9225fd6d4fafc9b8661f319/self-taught/codex-highlight" rel="noreferrer" target="_blank">https://github.com/ftnext/command-line-rust-book/tree/c1bc1e49fdf56464d9225fd6d4fafc9b8661f319/self-taught/codex-highlight</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">テーマは <a class="reference external" href="https://github.com/CosmicHorrorDev/two-face" rel="noreferrer" target="_blank">two-face</a> <a class="footnote-reference brackets" href="#codex-cli-two-face" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<img alt="../_images/codex-cli-themes.png" src="../_images/codex-cli-themes.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-cli-two-face" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L136" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/render/highlight.rs#L136</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">カスタムテーマ</h3>
+<div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-text"><cite>~/.codex/themes/sunset-aurora.tmTheme</cite> (made by GPT-5.4)</span></div>
+<pre><code class="xml" data-noescape="" data-trim="">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;name&lt;/key&gt;
+    &lt;string&gt;Sunset Aurora&lt;/string&gt;
+    &lt;key&gt;settings&lt;/key&gt;
+    &lt;array&gt;
+    &lt;!-- Global --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#fff03c&lt;/string&gt;
+        &lt;key&gt;background&lt;/key&gt;&lt;string&gt;#274079&lt;/string&gt;
+        &lt;key&gt;caret&lt;/key&gt;&lt;string&gt;#f19557&lt;/string&gt;
+        &lt;key&gt;selection&lt;/key&gt;&lt;string&gt;#7f6575&lt;/string&gt;
+        &lt;key&gt;lineHighlight&lt;/key&gt;&lt;string&gt;#6bb6b0&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Comments --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;Comment&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;comment&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#c7b83c&lt;/string&gt;
+        &lt;key&gt;fontStyle&lt;/key&gt;&lt;string&gt;italic&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Keywords --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;Keyword&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;keyword, storage.type&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#f19557&lt;/string&gt;
+        &lt;key&gt;fontStyle&lt;/key&gt;&lt;string&gt;bold&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Strings --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;String&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;string&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#6bb6b0&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Functions / Types --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;Function and Type Names&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;entity.name.function, entity.name.type&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#fff03c&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Constants / Numbers --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;Constants&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;constant, constant.numeric&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#c7b83c&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+
+    &lt;!-- Invalid / Error --&gt;
+    &lt;dict&gt;
+        &lt;key&gt;name&lt;/key&gt;&lt;string&gt;Invalid&lt;/string&gt;
+        &lt;key&gt;scope&lt;/key&gt;&lt;string&gt;invalid&lt;/string&gt;
+        &lt;key&gt;settings&lt;/key&gt;
+        &lt;dict&gt;
+        &lt;key&gt;foreground&lt;/key&gt;&lt;string&gt;#274079&lt;/string&gt;
+        &lt;key&gt;background&lt;/key&gt;&lt;string&gt;#f19557&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+    &lt;/array&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">/theme</span></code> でカスタムテーマ選択</h3>
+<a class="reference internal image-reference" href="../_images/codex-cli-custom-syntax-highlight.png"><img alt="../_images/codex-cli-custom-syntax-highlight.png" height="496" src="../_images/codex-cli-custom-syntax-highlight.png" width="535"/>
+</a>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2️⃣音声入力</h2>
+<p>Codex CLI（とCodex App）について</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>半角スペース</strong> を長押し（Codex CLI）</h3>
+<img alt="../_images/codex-cli-transcribe.png" src="../_images/codex-cli-transcribe.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">M</kbd> （Codex App, macOS）</h3>
+<img alt="../_images/codex-app-transcribe.png" src="../_images/codex-app-transcribe.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong class="command">codex features list</strong></h3>
+<pre data-id="codex-features-list"><code class="txt" data-noescape="" data-trim="">voice_transcription              under development  false</code></pre>
+<pre data-id="codex-features-list"><code class="txt" data-noescape="" data-trim="">% codex --version
+codex-cli 0.115.0</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIの設定を変える <a class="footnote-reference brackets" href="#codex-cli-feature-flags" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-cli-feature-flags" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id15" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/cli/features#feature-flags" rel="noreferrer" target="_blank">https://developers.openai.com/codex/cli/features#feature-flags</a></p>
+</aside>
+</aside>
+<div class="literal-block-wrapper docutils container" id="id25">
+<div class="code-block-caption"><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">~/.codex/config.toml</span></code> を手で変更</span></div>
+<pre><code class="toml" data-noescape="" data-trim="">[features]
+voice_transcription = true</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id26">
+<div class="code-block-caption"><span class="caption-text">コマンドで <code class="file docutils literal notranslate"><span class="pre">~/.codex/config.toml</span></code> を変更</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">codex features enable voice_transcription</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">起動時に一時的に</h3>
+<pre data-id="id17"><code class="shell" data-noescape="" data-trim="">codex --enable voice_transcription
+codex -c features.voice_transcription=true</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">では、どう実装されている？ (Codex CLI)</h2>
+<ul class="simple">
+<li><p>APIキー認証の場合 <a class="reference external" href="https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe" rel="noreferrer" target="_blank">gpt-4o-mini-transcribe</a> <a class="footnote-reference brackets" href="#codex-cli-api-key-transcribe" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p></li>
+<li><p>ChatGPTアカウント認証の場合、/backend-api/transcribe へ</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-cli-api-key-transcribe" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id19" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/voice.rs#L789" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.115.0/codex-rs/tui/src/voice.rs#L789</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">promptパラメタでひと工夫</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developers.openai.com/api/docs/guides/speech-to-text#prompting" rel="noreferrer" target="_blank">https://developers.openai.com/api/docs/guides/speech-to-text#prompting</a></p></li>
+<li><p>前方にある <strong>テキスト（ユーザ入力）も音声と合わせて</strong> gpt-4o-mini-transcribeへ送る</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">メンテしている音声認識ライブラリでパクる <a class="footnote-reference brackets" href="#thank-you-codex-half-year-pro-support" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://github.com/Uberi/speech_recognition/pull/881" rel="noreferrer" target="_blank">https://github.com/Uberi/speech_recognition/pull/881</a> のイメージ</span></div>
+<pre><code class="python" data-noescape="" data-trim="">class SpacebarLiveTranscriber:
+    def __init__(self) -&gt; None:
+        self._worker_thread = threading.Thread(target=self._transcription_worker, daemon=True)
+        self._worker_thread.start()
+
+    def _transcription_worker(self) -&gt; None:
+        while True:
+            audio = sr.AudioData(frame_data, sample_rate, sample_width)
+            return self.recognizer.recognize_openai(audio, model="gpt-4o-mini-transcribe").strip()</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="thank-you-codex-half-year-pro-support" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id20" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/Uberi/speech_recognition" rel="noreferrer" target="_blank">SpeechRecognition</a> メンテナへの <a class="reference external" href="https://x.com/OpenAIDevs/status/2029998202934677938" rel="noreferrer" target="_blank">サポート</a> に深く感謝申し上げます</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：あの機能はどうできている？</h2>
+<ul class="simple">
+<li><p>シンタックスハイライト：syntect（bat同様）、テーマはtwo-face</p></li>
+<li><p>音声入力：gpt-4o-mini-transcribe、promptパラメタの工夫</p></li>
+<li><p>Codex CLIやCodex Appで気になる <strong>ソースコードを読む</strong> のは、いいぞ</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました（最後に、お前、誰よ）</h3>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python歴8年</p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発。 <a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供開始</a> （<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
