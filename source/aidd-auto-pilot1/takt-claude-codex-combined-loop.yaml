@@ -1,0 +1,52 @@
+name: example-review-loop
+description: Minimal implement-review loop without loop monitor
+max_movements: 10
+initial_movement: implement
+interactive_mode: passthrough
+
+movements:
+  - name: implement
+    edit: true
+    required_permission_mode: edit
+    provider_options:
+      claude:
+        allowed_tools: [Read, Glob, Grep, Edit, Write, Bash]
+    instruction: |
+      Implement the requested changes in this repository.
+      Keep the scope focused and avoid unrelated edits.
+
+      When implementation is done, output the status for the first rule.
+      If you are blocked, output the status for the second rule with a brief reason.
+    rules:
+      - condition: Implementation complete
+        next: review
+      - condition: Cannot proceed
+        next: ABORT
+
+  - name: review
+    edit: false
+    session: refresh
+    provider_options:
+      claude:
+        allowed_tools: [Read, Glob, Grep, Bash]
+    # for Cursor to run `codex review`
+    # required_permission_mode: full
+    instruction: |
+      Review the implementation for correctness, scope, and maintainability.
+      Run Codex CLI review first, then base your judgment on its output.
+      Do not modify files.
+
+      Run:
+      codex review --base main 2>&1
+
+      Summarize the findings and decide:
+      - If there are actionable issues, request fixes.
+      - If there are no actionable issues, approve.
+
+      If acceptable, output the status for the first rule.
+      If fixes are needed, output the status for the second rule and explain what to fix.
+    rules:
+      - condition: Approved
+        next: COMPLETE
+      - condition: Needs fix
+        next: implement
