@@ -1,0 +1,32 @@
+name: with-review
+max_movements: 10
+initial_movement: implement
+interactive_mode: passthrough
+
+movements:
+  - name: implement
+    edit: true
+    required_permission_mode: edit
+    provider_options:
+      claude:
+        allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, WebSearch, WebFetch]
+    rules:
+      - condition: Implementation complete
+        next: review
+      - condition: Cannot proceed
+        next: ABORT
+    instruction: |
+      Implement the requested changes.
+
+  - name: review
+    edit: false
+    provider_options:
+      codex:
+        allowed_tools: [Read, Glob, Grep, WebSearch, WebFetch]
+    rules:
+      - condition: Approved
+        next: COMPLETE
+      - condition: Needs fix
+        next: implement
+    instruction: |
+      Review the implementation for code quality and best practices.
