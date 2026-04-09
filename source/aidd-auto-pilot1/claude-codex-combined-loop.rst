@@ -48,6 +48,16 @@ Claude Codeで実装（``/feature-dev``）
     % claude plugins marketplace add https://github.com/anthropics/claude-plugins-official          
     % claude plugins install feature-dev@claude-plugins-official
 
+鹿野さんもおすすめ
+------------------------------------------------------------
+
+    | 手戻りを減らしたい
+    | Claude Codeのfeature-devプラグインを使う
+
+3/11 `Claude Codeを加速させる私の推しスキル・ツール・設定（Findyイベント登壇資料） <https://zenn.dev/ubie_dev/articles/claude-code-tips-findy-2026#%E6%89%8B%E6%88%BB%E3%82%8A%E3%82%92%E6%B8%9B%E3%82%89%E3%81%97%E3%81%9F%E3%81%84>`__
+
+.. かのさん https://x.com/ftnext/status/2031577043176157449
+
 .. _Feature Dev: https://claude.com/plugins/feature-dev
 
 `Feature Dev`_
@@ -58,16 +68,6 @@ Claude Codeで実装（``/feature-dev``）
 * code-explorer (Phase 2)
 * code-architect (Phase 4)
 * code-reviewer (Phase 6)
-
-鹿野さんもおすすめ
-------------------------------------------------------------
-
-    | 手戻りを減らしたい
-    | Claude Codeのfeature-devプラグインを使う
-
-3/11 `Claude Codeを加速させる私の推しスキル・ツール・設定（Findyイベント登壇資料） <https://zenn.dev/ubie_dev/articles/claude-code-tips-findy-2026#%E6%89%8B%E6%88%BB%E3%82%8A%E3%82%92%E6%B8%9B%E3%82%89%E3%81%97%E3%81%9F%E3%81%84>`__
-
-.. かのさん https://x.com/ftnext/status/2031577043176157449
 
 実装し切ったらCodexでレビュー
 ------------------------------------------------------------
@@ -88,15 +88,16 @@ OpenAIはCodexで一通りレビュー
 直近の開発フロー まとめ
 ------------------------------------------------------------
 
-.. TODO 画像にする
+.. image:: ../_static/aidd-auto-pilot1/claude-codex-human-loop.drawio.png
+    :width: 85%
 
-Claude Code ←→ 私 ←→ Codex CLI
+.. Claude Code ←→ 私 ←→ Codex CLI
 
 .. 著名エンジニアも https://x.com/kenn/status/2041438528090058950
 
 .. _openai/codex-plugin-cc: https://github.com/openai/codex-plugin-cc
 
-openai/codex-plugin-cc は有効性の証左？
+`openai/codex-plugin-cc`_ は有効性の証左？
 ------------------------------------------------------------
 
     Claude Code のワークフローを維持したまま、Codex が強い場面だけ Codex を使えるようにする（`Claude Code 向け Codex Plugin の紹介 <https://x.com/reach_vb/status/2039251986357338257>`__）
@@ -154,15 +155,16 @@ openai/codex-plugin-cc は有効性の証左？
 受け渡すだけの私って、 **必要なくね** ？
 ============================================================
 
-Claude Code ←→ 私 ←→ Codex CLI
+.. image:: ../_static/aidd-auto-pilot1/claude-codex-human-loop.drawio.png
+    :width: 85%
 
 **自動ループ** の構築を試みる
 ------------------------------------------------------------
 
-.. TODO 画像にする
+.. image:: ../_static/aidd-auto-pilot1/claude-codex-loop.drawio.png
+    :width: 85%
 
-* Claude（実装） → Codex（レビュー） → Claude（実装） → Codex（レビュー） → ...
-* レビューで指摘がなくなったり、前回と矛盾したりしたら止まる
+レビューで指摘がなくなったり、前回と矛盾したりしたら止まる
 
 私は takt に目をつけた 🎼
 ------------------------------------------------------------
@@ -181,6 +183,12 @@ Claude Code ←→ 私 ←→ Codex CLI
 * `AIの見張り番をやめよう - AIチームを指揮するOSS「TAKT」を公開しました <https://zenn.dev/nrs/articles/c6842288a526d7>`__
 * 3/12 `Claude Code Meetup Japan #3 LT <https://www.youtube.com/live/csJhIQFuYJw?si=8pj0UHkrAWNqfy4b&t=7688>`__
 * 4/10 `Claude Code Meetup Japan #4 <https://aid.connpass.com/event/386203/>`__ LT & 4/15 `配信 <https://nrs-seminar.connpass.com/event/389688/>`__
+
+MCPでやる方法も聞きます 🏃‍♂️
+------------------------------------------------------------
+
+* `codex mcp-server <https://developers.openai.com/codex/cli/reference#codex-mcp-server>`__ してClaude Codeに設定
+* （先のopenai/codex-plugin-ccを呼ばせてもいいのかも）
 
 私が理解したtakt
 ============================================================
