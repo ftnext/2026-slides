@@ -1,3 +1,9 @@
+:ogp_title: Claude Codeで実装、 Codexでレビュー、合わせて自走の企て
+:ogp_event_name: aidd-auto-pilot1
+:ogp_slide_name: claude-codex-combined-loop
+:ogp_description: 【AI駆動開発】AI自走環境構築・運用スペシャル #1
+:ogp_image_name: aidd-auto-pilot1
+
 ============================================================
 Claude Codeで実装、 Codexでレビュー、合わせて自走の企て
 ============================================================
