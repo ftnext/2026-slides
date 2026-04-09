@@ -12,7 +12,7 @@ Claude Codeで実装、 Codexでレビュー、合わせて自走の企て
 ============================================================
 
 :Event: 【AI駆動開発】AI自走環境構築・運用スペシャル #1
-:Presented: 2026/04/09 nikkie
+:Presented: 2026/04/09 nikkie （スペース連打 or 矢印キーでめくります）
 
 お前、誰よ？（**Python使い** の自己紹介）
 ============================================================
@@ -40,7 +40,7 @@ Claude Codeで実装、 Codexでレビュー、合わせて自走の企て
 * Claude Code
 * Codex CLI
 
-Claude Codeで実装（``/feature-dev``）
+Claude Codeで実装（``/feature-dev``）使ってる方🙋
 ------------------------------------------------------------
 
 .. code-block:: txt
@@ -75,7 +75,7 @@ Claude Codeで実装（``/feature-dev``）
 * code-architect (Phase 4)
 * code-reviewer (Phase 6)
 
-実装し切ったらCodexでレビュー
+実装し切ったらCodexでレビュー（使ってる方🙋）
 ------------------------------------------------------------
 
 * :command:`codex review --base main`
@@ -95,7 +95,6 @@ OpenAIはCodexで一通りレビュー
 ------------------------------------------------------------
 
 .. image:: ../_static/aidd-auto-pilot1/claude-codex-human-loop.drawio.png
-    :width: 85%
 
 .. Claude Code ←→ 私 ←→ Codex CLI
 
@@ -103,7 +102,7 @@ OpenAIはCodexで一通りレビュー
 
 .. _openai/codex-plugin-cc: https://github.com/openai/codex-plugin-cc
 
-`openai/codex-plugin-cc`_ は有効性の証左？
+`openai/codex-plugin-cc`_ は有効性の証左？ 🏃‍♂️
 ------------------------------------------------------------
 
     Claude Code のワークフローを維持したまま、Codex が強い場面だけ Codex を使えるようにする（`Claude Code 向け Codex Plugin の紹介 <https://x.com/reach_vb/status/2039251986357338257>`__）
@@ -112,11 +111,25 @@ OpenAIはCodexで一通りレビュー
 
     /codex:review
 
-適用事例：20行の参照実装
+適用事例：Pythonファイルに以下を書き込む
 ------------------------------------------------------------
 
 .. code-block:: python
-    :caption: crude example of modifying (`PEP 723 <https://peps.python.org/pep-0723/#reference-implementation>`__)
+    :caption: `inline script metadata <https://packaging.python.org/ja/latest/specifications/inline-script-metadata/>`__ [#pyconjp-2024-pep723]_
+
+    # /// script
+    # dependencies = [
+    #   "httpx",
+    # ]
+    # ///
+
+.. [#pyconjp-2024-pep723] `PyCon JP 2024 <https://2024.pycon.jp/ja/talk/89F3RQ>`__ で素晴らしさを伝えました
+
+*20行* の参照実装
+------------------------------------------------------------
+
+.. code-block:: python
+    :caption: 荒削り(crude)な例 (`PEP 723 <https://peps.python.org/pep-0723/#reference-implementation>`__)
     :linenos:
 
     import re
@@ -162,17 +175,15 @@ OpenAIはCodexで一通りレビュー
 ============================================================
 
 .. image:: ../_static/aidd-auto-pilot1/claude-codex-human-loop.drawio.png
-    :width: 85%
 
 **自動ループ** の構築を試みる
 ------------------------------------------------------------
 
 .. image:: ../_static/aidd-auto-pilot1/claude-codex-loop.drawio.png
-    :width: 85%
 
 レビューで指摘がなくなったり、前回と矛盾したりしたら止まる
 
-私は takt に目をつけた 🎼
+私は takt に目をつけた 🎼（使ってる方🙋）
 ------------------------------------------------------------
 
 * TAKT Agent Koordination Topology
@@ -190,11 +201,17 @@ OpenAIはCodexで一通りレビュー
 * 3/12 `Claude Code Meetup Japan #3 LT <https://www.youtube.com/live/csJhIQFuYJw?si=8pj0UHkrAWNqfy4b&t=7688>`__
 * 4/10 `Claude Code Meetup Japan #4 <https://aid.connpass.com/event/386203/>`__ LT & 4/15 `配信 <https://nrs-seminar.connpass.com/event/389688/>`__
 
-MCPでやる方法も聞きます 🏃‍♂️
+MCPでやる方法も聞きます [#claude-add-codex-mcp]_ 🏃‍♂️
 ------------------------------------------------------------
 
-* `codex mcp-server <https://developers.openai.com/codex/cli/reference#codex-mcp-server>`__ してClaude Codeに設定
-* （先のopenai/codex-plugin-ccを呼ばせてもいいのかも）
+.. code-block:: shell
+
+    claude mcp add --transport stdio codex -- codex mcp-server
+
+* `CodexはMCPサーバになる <https://developers.openai.com/codex/cli/reference#codex-mcp-server>`__ ！ [#claude-mcp-serve]_
+
+.. [#claude-add-codex-mcp] 先のopenai/codex-plugin-ccを呼ばせてもいいかもです
+.. [#claude-mcp-serve] Claude CodeもMCPサーバになります（``claude mcp serve``）
 
 私が理解したtakt
 ============================================================
@@ -302,3 +319,13 @@ taktを使った自動ループ（一歩目）
 ------------------------------------------------------------
 
 Happy Development ❤️🤖
+
+OSSサポートに感謝申し上げます
+------------------------------------------------------------
+
+* `SpeechRecognition <https://github.com/Uberi/speech_recognition>`__ (9k star) メンテナ
+* `Claude for Open Source <https://claude.com/contact-sales/claude-for-oss>`__
+* `Codex for Open Source <https://openai.com/ja-JP/form/codex-for-oss/>`__
+
+EOF
+===
