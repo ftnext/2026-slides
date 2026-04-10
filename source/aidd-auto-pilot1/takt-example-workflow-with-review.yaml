@@ -3,7 +3,7 @@ max_movements: 10
 initial_movement: implement
 interactive_mode: passthrough
 
-movements:
+steps:
   - name: implement
     edit: true
     required_permission_mode: edit
