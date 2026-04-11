@@ -44,9 +44,25 @@
 矢吹可奈さん [#keru-chang]_
 ============================================================
 
-https://millionlive-theaterdays.idolmaster-official.jp/idol/kana/
-
     ちょっぴり音痴・・・でも、歌が大好き！
+
+.. raw:: html
+
+    <a class="ogp-card" href="https://millionlive-theaterdays.idolmaster-official.jp/idol/kana/" target="_blank" rel="noopener">
+      <div class="ogp-card__body">
+        <div>
+          <p class="ogp-card__title">矢吹 可奈｜ アイドルマスター ミリオンライブ！ シアターデイズ（ミリシタ）｜ バンダイナムコエンターテインメント公式サイト</p>
+          <p class="ogp-card__desc">スマートフォンゲームアプリ「アイドルマスター ミリオンライブ！ シアターデイズ（ミリシタ）」公式サイト</p>
+        </div>
+        <div class="ogp-card__footer">
+          <img class="ogp-card__favicon" src="https://www.google.com/s2/favicons?domain=millionlive-theaterdays.idolmaster-official.jp&amp;sz=32" alt="">
+          <span class="ogp-card__domain">millionlive-theaterdays.idolmaster-official.jp</span>
+        </div>
+      </div>
+      <div class="ogp-card__thumb">
+        <img src="https://millionlive-theaterdays.idolmaster-official.jp/assets/img/idol/ogp/16/ogp.png" alt="矢吹 可奈">
+      </div>
+    </a>
 
 .. [#keru-chang] けるちゃん🦜を飼っています
 
@@ -140,14 +156,30 @@ https://millionlive-theaterdays.idolmaster-official.jp/idol/kana/
 
 厳しいフィードバックをする彼女にも **相応の背景** があるんですよ！！
 
-.. _北沢志保: https://millionlive-theaterdays.idolmaster-official.jp/idol/shiho/
-
-`北沢志保`_ さん
+北沢志保さん
 ------------------------------------------------------------
 
     孤高でクールでストイック！
 
 アイドルへの憧れ + *母親を支えたい* 💰
+
+.. raw:: html
+
+    <a class="ogp-card" href="https://millionlive-theaterdays.idolmaster-official.jp/idol/shiho/" target="_blank" rel="noopener">
+      <div class="ogp-card__body">
+        <div>
+          <p class="ogp-card__title">北沢 志保｜ アイドルマスター ミリオンライブ！ シアターデイズ（ミリシタ）｜ バンダイナムコエンターテインメント公式サイト</p>
+          <p class="ogp-card__desc">スマートフォンゲームアプリ「アイドルマスター ミリオンライブ！ シアターデイズ（ミリシタ）」公式サイト</p>
+        </div>
+        <div class="ogp-card__footer">
+          <img class="ogp-card__favicon" src="https://www.google.com/s2/favicons?domain=millionlive-theaterdays.idolmaster-official.jp&amp;sz=32" alt="">
+          <span class="ogp-card__domain">millionlive-theaterdays.idolmaster-official.jp</span>
+        </div>
+      </div>
+      <div class="ogp-card__thumb">
+        <img src="https://millionlive-theaterdays.idolmaster-official.jp/assets/img/idol/ogp/20/ogp.png" alt="北沢 志保">
+      </div>
+    </a>
 
 プレイしなよ、ミリシタ **iDOL GRAND-PRIX** を...
 ------------------------------------------------------------
