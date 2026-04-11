@@ -36,12 +36,14 @@
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="ja" dir="ltr">OVA<br>アイドルマスター ミリオンライブ！<br>～いつか、真ん中で～<br>∴‥∵‥∴‥∵‥∴‥∴‥∵‥∴‥🦋<br><br>2026/3/27(金)<br>本日Blu-ray発売🎉<br><br>今後とも「アイドルマスター ミリオンライブ！」を<br>よろしくお願いいたします！<a href="https://twitter.com/hashtag/%E3%83%9F%E3%83%AA%E3%82%AA%E3%83%B3%E3%83%A9%E3%82%A4%E3%83%96?src=hash&amp;ref_src=twsrc%5Etfw">#ミリオンライブ</a> <a href="https://twitter.com/hashtag/%E3%83%9F%E3%83%AA%E3%82%B7%E3%82%BF?src=hash&amp;ref_src=twsrc%5Etfw">#ミリシタ</a> <a href="https://twitter.com/hashtag/%E3%83%9F%E3%83%AA%E3%82%A2%E3%83%8B?src=hash&amp;ref_src=twsrc%5Etfw">#ミリアニ</a> <a href="https://t.co/i8105pcXCh">https://t.co/i8105pcXCh</a> <a href="https://t.co/ZtzjmRKRsO">pic.twitter.com/ZtzjmRKRsO</a></p>&mdash; アイドルマスター ミリオンライブ！【公式】 (@imasml_765PRO) <a href="https://twitter.com/imasml_765PRO/status/2037368324003389946?ref_src=twsrc%5Etfw">2026年3月27日</a></blockquote>
 
-矢吹可奈さん
+矢吹可奈さん [#keru-chang]_
 ============================================================
 
 https://millionlive-theaterdays.idolmaster-official.jp/idol/kana/
 
     ちょっぴり音痴・・・でも、歌が大好き！
+
+.. [#keru-chang] けるちゃん🦜を飼っています
 
 **ミリシタ時空** でのお話です
 ------------------------------------------------------------
