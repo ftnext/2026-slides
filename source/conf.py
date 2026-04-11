@@ -69,6 +69,7 @@ revealjs_css_files = [
     "revealjs/plugin/highlight/zenburn.css",
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css",
     "css/common.css",
+    "css/experimental/ogp-card.css",
 ]
 
 # -- Options for sphinxcontrib-budoux -------------------------------------------------
