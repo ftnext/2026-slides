@@ -1,3 +1,9 @@
+:ogp_title: ふだんのアウトプットから繋げるプロポーザル
+:ogp_event_name: cfp-findy
+:ogp_slide_name: proposal-accumulating-everyday-output
+:ogp_description: 伝わるプロポーザルの書き方 〜採択側・人気登壇者が明かすCfPの構造〜
+:ogp_image_name: cfp-findy
+
 ============================================================
 ふだんのアウトプットから繋げるプロポーザル
 ============================================================
