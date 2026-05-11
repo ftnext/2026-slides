@@ -1,0 +1,13 @@
+version = 1
+disable_existing_loggers = false
+
+[loggers.httpxyz]
+level = "DEBUG"
+handlers = ["console"]
+
+[handlers.console]
+class = "logging.StreamHandler"
+formatter = "detailed"
+
+[formatters.detailed]
+format = "%(asctime)s | %(levelname)s (%(name)s) | %(filename)s:%(funcName)s:%(lineno)d - %(message)s"
