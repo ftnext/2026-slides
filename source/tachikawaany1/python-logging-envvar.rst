@@ -2,8 +2,6 @@
 こんなPythonロギングはどうだい！？
 ======================================================================
 
-.. https://youtu.be/KGkdhAjWfSo?si=UtlAADPW2BfOz_GC&t=46
-
 :Event: Tachikawa.any #1
 :Presented: 2026/05/12 nikkie
 
@@ -19,7 +17,7 @@ nikkieと立川
 
 * 今日は吉祥寺より先まで中央線グリーン車でおトク！
 * **シネマシティ**、だいすき！
-* 超かぐや姫の舞台！！
+* 超かぐや姫！の舞台！！
 
 これすき
 ---------------------------------------------------
@@ -35,18 +33,23 @@ nikkieと立川
 
     % happy-python-logging run --log-config httpxyz=debug example.py
 
+`happy-python-logging <https://pypi.org/project/happy-python-logging/>`__
+
 最新のPEPを取得するスクリプト
 ---------------------------------------------------
 
 .. literalinclude:: example.py
    :language: python
+   :caption: :file:`example.py`
 
 .. revealjs-break::
 
-* HTTPクライアント HTTPXYZ
+* HTTPクライアント HTTPXYZ [#fall-in-love-with-httpxyz]_
 * カラフルな出力 Rich
 
 .. image:: ../_static/tachikawaany1/latest-peps-rich-output.png
+
+.. [#fall-in-love-with-httpxyz] 推しの非同期サポートHTTPクライアントです。拙ブログ `君は HTTPXYZ を知っているか  <https://nikkie-ftnext.hatenablog.com/entry/do-you-know-httpxyz-friendly-fork-httpx>`__
 
 ライブラリHTTPXYZの作者によるロギング
 ======================================================================
@@ -74,6 +77,7 @@ https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py
 .. literalinclude:: example_debug.py
    :language: python
    :lines: 7-14
+   :caption: :file:`example.py` にロギングの実装を追加
 
 .. code-block:: txt
 
@@ -82,12 +86,14 @@ https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py
 ロガー・ハンドラ・フォーマッタを設定 🏃‍♂️
 ---------------------------------------------------
 
-PyCon JP 2025 で話しています！
+* PyCon JP 2025 で話しています！ [#pyconjp-2026-cfp]_
+* `標準ライブラリのlogging、レゴブロックのように組合せてロギングできることを理解しよう！ <https://2025.pycon.jp/ja/timetable/talk/Z8ZYFA>`__
+* 動画 https://www.youtube.com/watch?v=tSuSr2jFE0Q
 
-https://www.youtube.com/watch?v=tSuSr2jFE0Q
+.. [#pyconjp-2026-cfp] `PyCon JP 2026 Call for Proposals を開始しました <https://pyconjp.blogspot.com/2026/04/pycon-jp-2026-call-for-proposals.html>`__ （5/31(日)まで）
 
-オーバーヘッドが多い -> 設定ファイルで外出し
----------------------------------------------------
+ボイラープレートコードが多い -> **設定ファイル** で外出し
+-------------------------------------------------------------
 
 .. literalinclude:: config.toml
    :language: toml
@@ -100,12 +106,17 @@ https://www.youtube.com/watch?v=tSuSr2jFE0Q
 
     $ RUST_LOG=codex_core=trace codex exec "print hello" --skip-git-repo-check
 
-バイナリ実行中のログレベルを外から制御できる！
+バイナリ実行中のログレベルを外から制御できる！ [#codex-cli-logging-breaking-news]_
+
+.. [#codex-cli-logging-breaking-news] 拙ブログ `【速報】nikkie氏、ついに Codex CLI から Responses API へのリクエストを覗くことに成功！ <https://nikkie-ftnext.hatenablog.com/entry/codex-cli-rust-log-env-var-responses-api-request-json>`__
 
 ``RUST_LOG`` 関係者
 ---------------------------------------------------
 
 * `env_logger <https://docs.rs/env_logger/latest/env_logger/>`__
+
+    The ``RUST_LOG`` environment variable controls logging with the syntax:
+
 * `tracing_subscriber <https://docs.rs/tracing-subscriber/latest/tracing_subscriber/>`__
 
 ``PYTHON_LOG`` が私は欲しいぞ！
@@ -123,8 +134,14 @@ https://www.youtube.com/watch?v=tSuSr2jFE0Q
 ---------------------------------------------------
 
 * Python使いをロギングで幸せにするために始動
-* あるライブラリをちょっとロギングしたいだけなのに、なんで何行も書かないといけないのか（仕組みを理解した上で）
-* 「HTTPXYZは今だけdebugレベルで」実行！
+* あるライブラリをちょっとロギングしたいだけなのに、 **なんで何行も書かないといけないのか** （仕組みを理解した上で）
+
+「HTTPXYZは今だけdebugレベルで」
+---------------------------------------------------
+
+.. literalinclude:: example.py
+   :language: python
+   :caption: :command:`PYTHON_LOG=httpxyz=debug happy-python-logging run example.py`
 
 .. _runpy.run_path: https://docs.python.org/ja/3/library/runpy.html#runpy.run_path
 
@@ -133,13 +150,13 @@ https://www.youtube.com/watch?v=tSuSr2jFE0Q
 
 * ``python path/to/script`` 相当
 * ``PYTHON_LOG`` に沿ったロギング設定をしてからスクリプト実行
-* Opus 4.7とGPT-5.5の実装・レビュー20往復でこれは消えた...（別の実装に）
+* Opus 4.7とGPT-5.5の実装・レビュー `20往復 <https://github.com/ftnext/happy-python-logging/pull/3>`__ でこれは消えた...（別の実装に）
 
 まとめ：こんなPythonロギングはどうだい！？
 ======================================================================
 
 * ``RUST_LOG`` ならぬ ``PYTHON_LOG``
-* ``happy-python-logging run`` お試しあれ！
+* ロギングのコードを書かずにロギングできる :command:`happy-python-logging run` お試しあれ！
 
 .. code-block:: shell
 
@@ -152,3 +169,20 @@ https://www.youtube.com/watch?v=tSuSr2jFE0Q
 * 機械学習エンジニア。 `Speeda AI Agent <https://jp.ub-speeda.com/news/speeda-promotion-gallery/>`__ 開発（`We're hiring! <https://hrmos.co/pages/uzabase/jobs/1829077236709650481>`__）
 
 .. image:: ../_static/uzabase-white-logo.png
+
+本LTタイトルはこちらから
+---------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/KGkdhAjWfSo?si=XyQPxWQhwFoGfDqj&amp;start=46" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+happy-python-logging命名インスパイア
+---------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/uMY_qIoWgnk?si=Dzsc6Bma1_p4M3he" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+EOF
+---
