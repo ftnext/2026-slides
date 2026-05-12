@@ -1,3 +1,9 @@
+:ogp_title: こんなPythonロギングはどうだい！？
+:ogp_event_name: tachikawaany1
+:ogp_slide_name: python-logging-envvar
+:ogp_description: Tachikawa.any #1 happy-python-logging runの紹介
+:ogp_image_name: tachikawaany1
+
 ======================================================================
 こんなPythonロギングはどうだい！？
 ======================================================================
