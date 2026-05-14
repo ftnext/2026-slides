@@ -1,0 +1,263 @@
+.. _Logger.setLevel(): https://docs.python.org/ja/3/library/logging.html#logging.Logger.setLevel
+
+Chapter 1: loggingモジュールの構成要素 [#chapter1-base]_
+======================================================================
+
+* ロガー
+* ハンドラ
+* フォーマッタ
+* フィルタ
+
+.. [#chapter1-base] 元にした拙ブログ `Pythonのライブラリに用意されたロガーを設定してログを出力する <https://nikkie-ftnext.hatenablog.com/entry/configure-python-librarys-logger>`__
+
+HTTPXを例に **実際のログを見ながら** [#pep723]_ 構成要素を紹介
+----------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 10-12,23-25
+    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpx_logging.py>`__ [#logging-percent-format]_
+
+.. [#pep723] `PyCon JP 2024 で話した inline script metadata <https://2024.pycon.jp/ja/talk/89F3RQ>`__ を使っています
+
+.. [#logging-percent-format] ログメッセージに限っては、f-stringよりも ``%s`` で変数を埋めるのが推奨です（`拙ブログ <https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages>`__。t-stringは話が違うっぽい？）
+
+ロガー
+======================================================================
+
+* ライブラリ **作者** はロガーを使って **プログラム実行中のイベントを記録** する
+* イベントの重要性（レベル） + メッセージ
+
+HTTPXの中にあるロギング
+--------------------------------------------------
+
+.. code-block:: python
+    :caption: INFOレベルでHTTPリクエストを記録 [#httpx-logger-info-line]_
+
+    class Client(BaseClient):
+        def _send_single_request(self, request: Request) -> Response:
+            logger.info(
+                'HTTP Request: %s %s "%s %d %s"',
+                request.method,
+                request.url,
+                response.http_version,
+                response.status_code,
+                response.reason_phrase,
+            )
+
+.. [#httpx-logger-info-line] https://github.com/encode/httpx/blob/0.28.1/httpx/_client.py#L1025
+
+ログのレベル [#level-table-ref]_
+--------------------------------------------------
+
+.. [#level-table-ref] `logging を使うとき（基本 logging チュートリアル） <https://docs.python.org/ja/3/howto/logging.html#when-to-use-logging>`__
+
+.. list-table::
+
+    * - レベル
+      - メソッド
+      - いつ使うか
+    * - DEBUG
+      - ``debug()``
+      - おもに問題を診断するときにのみ関心があるような、詳細な情報。
+    * - INFO
+      - ``info()``
+      - 想定された通りのことが起こったことの確認。
+
+.. revealjs-break::
+    :notitle:
+
+.. list-table::
+
+    * - WARNING
+      - ``warning()``
+      - 想定外のことが起こった、または問題が近く起こりそうであることの表示。
+    * - ERROR
+      - ``error()``
+      - より重大な問題により、ソフトウェアがある機能を実行できないこと。
+    * - CRITICAL
+      - ``critical()``
+      - プログラム自体が実行を続けられないことを表す、重大なエラー。
+
+.. ロギングレベル https://docs.python.org/ja/3/library/logging.html#logging-levels
+    レベルを追加する人向け？
+
+.. _logging.getLogger(): https://docs.python.org/ja/3/library/logging.html#logging.getLogger
+
+ロガーの取得に `logging.getLogger()`_
+--------------------------------------------------
+
+.. code-block:: python
+    :caption: httpxロガーを取得 [#httpx-get-logger-line]_
+
+    logger = logging.getLogger("httpx")
+
+.. [#httpx-get-logger-line] https://github.com/encode/httpx/blob/0.28.1/httpx/_client.py#L117
+
+ライブラリ **ユーザ** がログを **見る** には
+======================================================================
+
+.. code-block:: python
+    :caption: このINFOレベルのログを見たい
+
+    logger = logging.getLogger("httpx")
+
+    class Client(BaseClient):
+        def _send_single_request(self, request: Request) -> Response:
+            logger.info(
+                'HTTP Request: %s %s "%s %d %s"',
+                request.method,
+                request.url,
+                response.http_version,
+                response.status_code,
+                response.reason_phrase,
+            )
+
+HTTPXに仕込まれたログを見るためのコード
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 13-21
+    :linenos:
+    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpx_logging.py>`__
+
+1️⃣ ユーザもロガーを取得
+--------------------------------------------------
+
+* ライブラリユーザも都度 ``getLogger`` [#singleton]_
+
+.. [#singleton] ロガーはシングルトン（`「避けるべきパターン」の「ロガーをクラスの属性にするか、パラメータで渡す」 <https://docs.python.org/ja/3/howto/logging-cookbook.html#using-loggers-as-attributes-in-a-class-or-passing-them-as-parameters>`__）
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 13-14
+    :emphasize-lines: 1
+
+2️⃣ ロガーの **レベルを設定** - `Logger.setLevel()`_
+------------------------------------------------------------
+
+* ロガーのレベル以上の重要度のメッセージを記録、未満は無視
+* 今回は ``DEBUG`` レベル以上を記録する（``INFO`` 含む）
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 13-14
+    :emphasize-lines: 2
+
+📌ロガーは **自身のレベル以上** の重要度のメッセージを **記録**
+----------------------------------------------------------------------
+
+.. list-table:: ``WARNING`` レベルのロガー ``logger``
+
+    * - ``logger.warning("メッセージ")``
+      - 記録する（ログレコード生成）
+    * - ``logger.info("メッセージ")``
+      - 無視
+
+3️⃣ **出力先** を設定 - ハンドラ
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 16-21
+    :caption: ストリームに出力するハンドラをロガーに取り付け
+    :linenos:
+    :lineno-start: 4
+    :emphasize-lines: 1,6
+
+.. code-block:: txt
+    :caption: httpxロガーによるログが見えます！
+
+    % uv run example.py
+    HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"
+
+.. デフォルトの書式設定が %(message)s
+    _defaultFormatter = Formatter() https://github.com/python/cpython/blob/3.13/Lib/logging/__init__.py#L734
+    https://github.com/python/cpython/blob/3.13/Lib/logging/__init__.py#L446
+
+ハンドラがログレコードを出力先に振り分ける
+--------------------------------------------------
+
+* ストリーム
+* ファイル
+* などなど（`logging.handlers <https://docs.python.org/ja/3/library/logging.handlers.html>`__）
+
+4️⃣ **見た目の設定** - フォーマッタ
+--------------------------------------------------
+
+* フォーマッタがログレコードに書式を適用し、それをハンドラが出力
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 17-20
+    :linenos:
+    :lineno-start: 4
+
+書式は **ログレコードの属性名** を指定
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+    :language: python
+    :lines: 17-20
+    :linenos:
+    :lineno-start: 4
+    :emphasize-lines: 2
+
+.. code-block:: txt
+
+    2025-09-24 23:38:25,370 | INFO (httpx) | _client.py:_send_single_request:1025 - HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"
+
+`LogRecord 属性 <https://docs.python.org/ja/3/library/logging.html#logrecord-attributes>`__
+
+.. revealjs-break::
+    :notitle:
+
+.. list-table:: 属性名
+
+    * - asctime
+      - ログレコード生成時刻
+    * - levelname
+      - 文字のロギングレベル
+    * - name
+      - ロガーの名前
+    * - filename
+      - ファイル名
+    * - funcName
+      - 関数名
+    * - lineno
+      - 行番号
+    * - message
+      - ログメッセージ
+
+5️⃣ フィルタ（ここでは名前だけ。3章で登場）
+--------------------------------------------------
+
+* ロガーやハンドラに取り付ける
+* フィルタにロガーの名前を指定する
+* 指定したロガーと *子のロガー* のログレコードだけを通す
+
+まとめ🥟 loggingモジュールの構成要素
+======================================================================
+
+* HTTPXのログを見た
+* ライブラリ **作者** がイベントを **記録**
+* ライブラリ **ユーザ** が **ログを見る**
+
+ライブラリ作者がイベントを記録🥟
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-library-creator-logger.drawio.png
+    :scale: 150%
+
+* イベントの **レベル** と **メッセージ** を指定して、ロガーを操作
+
+ライブラリユーザがログを見る🥟
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-library-user-logger.drawio.png
+    :scale: 150%
+
+* ロガーにレベルを設定
+* ロガーに **ハンドラ** を取り付ける
+* ハンドラに **フォーマッタ** を取り付ける

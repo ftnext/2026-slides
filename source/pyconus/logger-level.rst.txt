@@ -1,0 +1,168 @@
+Chapter 2: ロガーのレベルはどう決まる？ [#chapter2-base]_
+======================================================================
+
+.. [#chapter2-base] 底本とした `拙ブログ <https://nikkie-ftnext.hatenablog.com/entry/python-configuring-logging-for-library-log-level-notset>`__
+
+復習：ロガーは **自身のレベル以上** の重要度のメッセージを **記録**
+----------------------------------------------------------------------
+
+.. list-table:: ``INFO`` レベルのロガー ``logger``
+
+    * - ``logger.warning()``
+      - 記録
+    * - ``logger.info()``
+      - 記録
+    * - ``logger.debug()``
+      - 無視
+
+❓ ``httpx`` ロガーのレベルは？ [#httpx-get-logger-line]_
+------------------------------------------------------------
+
+.. code-block:: python
+
+    logger = logging.getLogger("httpx")
+
+❓ ``httpx`` ロガーのレベル
+--------------------------------------------------
+
+* ``DEBUG``?
+* ``INFO``?
+* ``WARNING``?
+* ``ERROR``?
+* ``CRITICAL``?
+
+**NOTSET**
+--------------------------------------------------
+
+    ロガーが生成された際、レベルは ``NOTSET`` (略) に設定されます。
+
+`Logger.setLevel()`_
+
+.. code-block:: pycon
+
+    >>> import logging
+    >>> httpx_logger = logging.getLogger("httpx")
+    >>> logging.getLevelName(httpx_logger.level)
+    'NOTSET'
+
+.. getLevelName https://github.com/python/cpython/blob/3.13/Lib/logging/__init__.py#L129
+
+``NOTSET`` とは
+--------------------------------------------------
+
+   もしロガーのレベルが ``NOTSET`` ならば、祖先ロガーの系列の中を ``NOTSET`` 以外のレベルの祖先を見つけるかルートに到達するまで辿っていく（`Logger.setLevel()`_）
+
+祖先ロガー？
+
+📌ロガーの階層構造
+======================================================================
+
+ロガーには **名前で決まる親子関係** があります
+
+名前は **ドット（ピリオド）区切り** にもできる
+--------------------------------------------------
+
+    ロガー名は、何でも望むものにでき、ロギングされたメッセージが発生した場所を指し示します。（`上級ロギングチュートリアル <https://docs.python.org/ja/3/howto/logging.html#advanced-logging-tutorial>`__）
+
+.. code-block:: python
+
+    logging.getLogger("spam")
+    logging.getLogger("spam.ham")
+
+ロガーの親子関係
+--------------------------------------------------
+
+.. code-block:: python
+
+    logger = logging.getLogger("spam.ham")
+
+* ``spam.ham`` ロガーの **親** にあたるのが ``spam`` ロガー
+* すべてのロガーの親 *ルートロガー* （引数渡さず ``logging.getLogger()``）
+
+.. https://docs.python.org/ja/3/library/logging.html#logging.Logger.parent
+    spam.ham ロガーの parent は RootLogger
+
+.. revealjs-break::
+
+.. image:: ../_static/pyconus/pyconjp-logger-ancestors.drawio.png
+    :scale: 120%
+
+.. _自走プログラマー: https://gihyo.jp/book/2020/978-4-297-11197-7
+
+ロガーの名前に ``__name__``
+--------------------------------------------------
+
+.. code-block:: python
+
+    logger = logging.getLogger(__name__)
+
+* 「ロガーに名前をつけるときの良い習慣」（`上級ロギングチュートリアル <https://docs.python.org/ja/3/howto/logging.html#advanced-logging-tutorial>`__） [#why-name-good]_
+* `70:個別の名前でロガーを作らない <https://jisou-programmer.beproud.jp/%E3%83%AD%E3%82%AE%E3%83%B3%E3%82%B0/70-%E5%80%8B%E5%88%A5%E3%81%AE%E5%90%8D%E5%89%8D%E3%81%A7%E3%83%AD%E3%82%AC%E3%83%BC%E3%82%92%E4%BD%9C%E3%82%89%E3%81%AA%E3%81%84.html>`__　（『`自走プログラマー`_』）
+
+.. [#why-name-good] 上位のモジュールのロガーを触ってロギングを設定できるためです。今日の話も適用可能です
+
+.. https://docs.python.org/ja/3/library/logging.html#logger-objects
+    推奨される構築方法である logging.getLogger(__name__) を使ってモジュール単位でロガーを構築すれば、パッケージの階層構造とロガーの階層構造は同一になります。
+
+💡ルートロガーのレベルを変える
+======================================================================
+
+一番親のロガーのレベルを変えると、子のロガーの *レベル* も変わる
+
+.. _getEffectiveLevel(): https://docs.python.org/ja/3/library/logging.html#logging.Logger.getEffectiveLevel
+
+実効レベル `getEffectiveLevel()`_
+--------------------------------------------------
+
+    そうでない場合（＝ ``NOTSET`` レベルが設定されていた場合）、 ``NOTSET`` 以外の値が見つかるまでロガーの階層をルートロガーの方向に追跡します。
+
+ルートロガーのレベルは ``WARNING``
+--------------------------------------------------
+
+.. code-block:: pycon
+
+    >>> import logging
+    >>> root_logger = logging.getLogger()
+    >>> logging.getLevelName(root_logger.level)
+    'WARNING'
+
+ルートロガーのレベルと同じ ``WARNING``
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-root-default-warning.drawio.png
+    :scale: 120%
+
+.. code-block:: pycon
+
+    >>> httpx_logger = logging.getLogger("httpx")
+    >>> logging.getLevelName(httpx_logger.getEffectiveLevel())
+    'WARNING'
+
+ルートロガーのレベルを変えると
+------------------------------------------------------------
+
+.. code-block:: pycon
+
+    >>> root_logger.setLevel(logging.DEBUG)
+    >>> logging.getLevelName(root_logger.level)
+    'DEBUG'
+
+子のロガーの **実効レベルを切り替え** られている
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-root-setlevel-debug.drawio.png
+    :scale: 120%
+
+.. code-block:: pycon
+
+    >>> logging.getLevelName(httpx_logger.getEffectiveLevel())
+    'DEBUG'
+
+まとめ🥟 ロガーのレベルはどう決まる？
+======================================================================
+
+* ライブラリのロガーのレベルは ``NOTSET``
+
+    * 何もしなければ、ルートロガーと同じ ``WARNING``
+
+* **ルートロガーのレベルを変えると、子のロガーの実効レベルも変わる** （これを利用💡）
