@@ -55,15 +55,15 @@ loggingモジュールを理解しましょう！（Takeaway）
 
 .. [#chapter] 章で構成したのは、最近推してる映画『`不思議の国でアリスと <https://sh-anime.shochiku.co.jp/alice-movie/>`__』インスパイアです
 
-.. include:: logging-components.rst.txt
+.. include:: ja/logging-components.rst.txt
 
-.. include:: logger-level.rst.txt
+.. include:: ja/logger-level.rst.txt
 
-.. include:: propagate-to-root-logger.rst.txt
+.. include:: ja/propagate-to-root-logger.rst.txt
 
-.. include:: resistance-against-real-world-logging.rst.txt
+.. include:: ja/resistance-against-real-world-logging.rst.txt
 
-.. include:: gleanings.rst.txt
+.. include:: ja/gleanings.rst.txt
 
 🌯最初の質問：自信を持って標準ライブラリのloggingを使えそうですか？
 ======================================================================
