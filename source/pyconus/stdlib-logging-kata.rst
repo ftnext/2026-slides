@@ -1,3 +1,8 @@
+:ogp_title: Understanding Python's logging: Combine components like Lego blocks!
+:ogp_event_name: pyconus
+:ogp_slide_name: stdlib-logging-kata
+:ogp_description: PyCon US 2026 (DAY3). Sorry for absence
+
 .. _logging.basicConfig(): https://docs.python.org/3/library/logging.html#logging.basicConfig
 .. _When to use logging (Basic logging tutorial): https://docs.python.org/3/howto/logging.html#when-to-use-logging
 
