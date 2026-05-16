@@ -1,14 +1,15 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "httpx",
+#     "httpxyz",
 #     "rich",
 # ]
 # ///
 import logging
 import logging.handlers
+from datetime import datetime
 
-import httpx
+import httpxyz
 from rich.pretty import pprint
 
 detailed_formatter = logging.Formatter(
@@ -30,6 +31,11 @@ root_logger.setLevel(logging.DEBUG)
 root_logger.addHandler(console_handler)
 root_logger.addHandler(rotate_handler)
 
-resp = httpx.get("https://peps.python.org/api/peps.json")
+resp = httpxyz.get("https://peps.python.org/api/peps.json")
 data = resp.json()
-pprint([(k, v["title"]) for k, v in data.items()][:10])
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])

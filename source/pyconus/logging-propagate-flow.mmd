@@ -1,8 +1,8 @@
 flowchart LR
-    START[ロギング<br/>呼び出し] -->|"例 logger.info(...)"| cond1{ロガーの<br/>レベル以上の<br/>呼び出しか};
-    cond1 -->|はい<br/>=有効| node1[LogRecord<br/>作成];
-    node1 --> node2[現在のロガーの<br/>ハンドラへ<br/>渡す];
-    node2 --> cond3{現在のロガーの<br/>propagate属性は<br/>Trueか};
-    cond3 -->|はい=true<br/>=伝播する| cond4{親のロガー<br/>はあるか};
-    cond4 -->|はい=親ロガー<br/>がある| node3[親ロガーを現在の<br/>ロガーとする];
+    START[Logging<br/>call] -->|"e.g.<br/>logger.info(...)"| cond1{Logger enabled for<br/>level of call?};
+    cond1 -->|yes<br/>= enabled| node1[Create<br/>LogRecord];
+    node1 --> node2[Pass to handlers<br/>of current logger];
+    node2 --> cond3{Is propagate True<br/>for current logger?};
+    cond3 -->|yes=true<br/>= propagate| cond4{Is there<br/>a parent logger?};
+    cond4 -->|yes=parent<br/>exists| node3[Set current logger<br/>to parent];
     node3 --> node2;
