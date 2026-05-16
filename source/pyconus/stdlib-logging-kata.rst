@@ -8,6 +8,15 @@ Understanding Python's logging: Combine components like Lego blocks!
 .. 頭の見栄えをよくできないか、LLMに相談
     レゴブロックを交換できるとか
 
+Presentation material QR code
+==============================
+
+.. image:: ../_static//pyconus/pyconus-slide-qr.png
+
+Thank you Myles Scolnick-san [#qr-generator-marimo-link]_ (`DAY1 talk <https://us.pycon.org/2026/schedule/presentation/78/>`__)
+
+.. [#qr-generator-marimo-link] https://marimo.app/?mode=read&embedded=true&slug=tep83k
+
 Understanding Python's logging: Combine components like Lego blocks!
 ======================================================================================
 
