@@ -19,12 +19,12 @@ Chapter 5: Gleanings
     :lines: 1-6,8
     :caption: Warning-level logging in a library
 
-Actually, logging works without ``basicConfig()``
---------------------------------------------------
+Actually, ``WARNING``+ logging can output without ``basicConfig()``
+----------------------------------------------------------------------
 
 .. literalinclude:: ../../samplecode/python-logging/last_resort_example/app.py
     :language: python
-    :caption: Application code that does not configure the root logger
+    :caption: Library-user code that does not configure the root logger
 
 .. code-block:: txt
 
@@ -152,13 +152,13 @@ One more thing
 My package: `happy-python-logging`_
 ----------------------------------------------------------------------
 
-☝️ ``PYTHON_LOG=httpxyz=debug happy-python-logging run script.py``
+☝️ ``uvx --with happy-python-logging[flake8] flake8``
+
+Lint rules that **point out use of logging.basicConfig()**
+
+✌️ ``PYTHON_LOG=httpxyz=debug happy-python-logging run script.py``
 
 Set up logging for your script **with zero logging code**
-
-✌️ ``uvx --with happy-python-logging[flake8] flake8``
-
-Lint rules that **points out use of logging.basicConfig()**
 
 Try ``happy-python-logging run`` [#pep723-support]_ 🏃‍♂️
 ----------------------------------------------------------------------

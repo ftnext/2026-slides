@@ -113,7 +113,7 @@ Five chapters
 🌯Back to the first question: can you use Python's stdlib ``logging`` with confidence?
 ================================================================================================
 
-* A logger's ``NOTSET`` level: use it with **the same effective level as the root logger**
+* A logger's ``NOTSET`` level: use it with **the same effective level as an ancestor logger**
 * Propagation to the root logger: **output through the root logger's handlers**
 
 Summary🌯: Understanding Python's logging: Combine components like Lego blocks!

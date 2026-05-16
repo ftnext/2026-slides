@@ -29,7 +29,7 @@ Chapter 2: How is a logger's level decided? [#chapter2-base-en]_
 
 ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR`` or ``CRITICAL``? 🤔
 
-.. _Logger.setLevel(): <https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
+.. _Logger.setLevel(): https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
 
 **NOTSET**
 --------------------------------------------------
@@ -75,7 +75,7 @@ Parent-child relationships
     logger = logging.getLogger("spam.ham")
 
 * The **parent** of the ``spam.ham`` logger is the ``spam`` logger
-* The parent of every logger is the *root logger* (``logging.getLogger()`` with no arguments)
+* Every logger ultimately descends from the *root logger* (``logging.getLogger()`` with no arguments)
 
 .. revealjs-break::
 
@@ -98,7 +98,7 @@ Use ``__name__`` as the logger name 🏃‍♂️
 💡Change the root logger's level
 ======================================================================
 
-When you change the level of the top parent logger, *children loggers' levels also change*
+When you change the level of the top parent logger, *children loggers' effective levels can also change*
 
 .. _getEffectiveLevel(): https://docs.python.org/3/library/logging.html#logging.Logger.getEffectiveLevel
 
@@ -156,4 +156,4 @@ Summary🥟 how is a logger's level decided?
 
     * If you do nothing, its effective level is the same ``WARNING`` as the root logger
 
-* **Changing the root logger's level also changes its children's effective levels too** (we will use this💡)
+* **Changing the root logger's level also changes descendants' effective levels when their own levels are ``NOTSET``** (we will use this💡)

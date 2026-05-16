@@ -19,7 +19,7 @@ The logger's `propagate`_ attribute
 
     If this attribute evaluates to true, events logged to this logger will be passed to the handlers of higher level (ancestor) loggers, in addition to any handlers attached to this logger. 
 
-After ``getLogger()``, ``propagate`` is ``True``
+After ``getLogger()``, ``propagate`` is ``True`` by default
 ------------------------------------------------------------
 
 .. code-block:: pycon
@@ -47,7 +47,7 @@ With ``propagate``, a LogRecord goes **to the parent logger's handlers**
 .. image:: ../_static/pyconus/pyconjp-logger-propagate-handlers.drawio.png
     :scale: 120%
 
-📌During propagation, **the parent logger's level is not checked** [#reload1-en]_
+📌 **Logging Flow** shows propagation [#reload1-en]_
 ------------------------------------------------------------------------------------------------
 
 .. [#reload1-en] If it seems not to load, reload the page. This is a simplified version of `Logging Flow <https://docs.python.org/3/howto/logging.html#logging-flow>`__ (Logger flow). I also omitted parent logger filters; those are not checked either.
@@ -56,7 +56,7 @@ With ``propagate``, a LogRecord goes **to the parent logger's handlers**
     :zoom:
     :config: {"themeVariables": {"lineColor": "#fff"}}
 
-In the loop on the right, the parent logger's level is not checked
+In the loop on the right (=during propagation), the **parent logger's level is not checked**
 
 💡Attach handlers to the root logger and you can log!
 ======================================================================
@@ -127,9 +127,9 @@ During propagation, the parent logger's level (and filters) are not checked
 Summary🥟 logging through the root logger
 ======================================================================
 
-* A library logger's effective level, for example HTTPXYZ, is the same as the root logger's level (``NOTSET``)
-* A library logger has ``propagate=True`` (it propagates to the root logger)
-* You can log by **attaching handlers (with filters) and formatters** to the root logger!
+* A library logger's effective level, for example HTTPXYZ, is the same as the root logger's level when its own level is ``NOTSET``
+* A logger created by ``getLogger()`` has ``propagate=True`` by default (it propagates to the root logger)
+* You can log by **setting the root logger's level and attaching handlers (with filters) and formatters** to it!
 
 Examples of logging through the root logger [#appendix-note-en]_
 ======================================================================
@@ -195,7 +195,7 @@ Replace it with ``JsonFormatter``
 Two examples of logging through the root logger
 ======================================================================
 
-* Route destinations by level -> multiple handlers with each level
+* Dispatch destinations by level -> multiple handlers with each level
 * JSON format -> replace the formatter
 * IMO: starting from the Lego-like combination pattern, we are **changing only specific components**
 
