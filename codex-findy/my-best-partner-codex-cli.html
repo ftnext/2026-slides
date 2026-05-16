@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>わたしの、最高の相棒、Codex CLI</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/codex-findy/my-best-partner-codex-cli.html">
+    <meta property="og:title" content="わたしの、最高の相棒、Codex CLI">
+    <meta property="og:description" content="Codexどう使ってる？期待通りにいかない時の向き合い方と工夫">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/codex-findy.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">わたしの、最高の相棒、Codex CLI</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">わたしの、最高の <strong>相棒</strong>、Codex CLI</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Codexどう使ってる？期待通りにいかない時の向き合い方と工夫</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/03/06 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お話しすること🗣️</h2>
+<ol class="arabic simple">
+<li><p>Codex自走事例</p></li>
+<li><p>使った仕組み： <strong>Rules</strong></p></li>
+<li><p>裏側の実装にdive</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ（Python使いの自己紹介）</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python歴8年 <a class="footnote-reference brackets" href="#nikkie-ftnext-blog" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-ftnext-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> 連続1200日突破</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Claude CodeやCodex CLIについて発表</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://ftnext.github.io/2025-slides/yapc-fukuoka/lt-agent-who-understand-python.html#/2" rel="noreferrer" target="_blank">Pythonを"理解"しているコーディングエージェントが欲しい！！</a> （Claude CodeのHooks）</p></li>
+<li><p><a class="reference external" href="https://ftnext.github.io/2025-slides/aidd-codex1/codex-rs-telemetry.html#/2" rel="noreferrer" target="_blank">ねぇ、Codex CLI。私だけにあなたのコンテキスト、教えて？</a></p></li>
+<li><p><a class="reference external" href="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html" rel="noreferrer" target="_blank">Codex CLIで 加速 するコードリーディング</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コーディングエージェントについての見解</h3>
+<dl class="field-list simple">
+<dt class="field-odd">Claude Code<span class="colon">:</span></dt>
+<dd class="field-odd"><p>わたしの、最高の <strong>妹</strong> <a class="footnote-reference brackets" href="#claude-code-language-free-input-article" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+</dd>
+<dt class="field-even">Codex CLI<span class="colon">:</span></dt>
+<dd class="field-even"><p>わたしの、最高の <strong>相棒</strong></p>
+</dd>
+</dl>
+<p>あくまで2026年3月初頭時点です</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="claude-code-language-free-input-article" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/claude-code-210-language-setting-free-input-can-be-my-sister#%E7%A7%81%E3%81%AF%E5%A6%B9%E3%81%AB%E3%81%97%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99" rel="noreferrer" target="_blank">Claude Code に"自由入力で"言語設定できるようになったと聞きまして</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLI <strong>自走</strong> 事例</h2>
+<p>「DBをdockerで立てて、APIを別で立てて、curlして、その後DBをdumpして」を20回くらい</p>
+<p>🏃‍♂️のスライドはCodex CLIの話ではないため、詳細が理解できなくても大丈夫です</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Agent Development Kit 🏃‍♂️</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/google/adk-python" rel="noreferrer" target="_blank">https://github.com/google/adk-python</a></p></li>
+<li><p><em>簡単</em> にAIエージェントを開発できる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">adk</span> <span class="pre">create</span></code> 🏃‍♂️</h3>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">search_agent/agent.py</span></code></span></div>
+<pre><code class="python" data-noescape="" data-trim="">root_agent = Agent(
+    model='gemini-3.1-pro-preview',
+    name='search_agent',
+    instruction="You are a helpful assistant with access to Google Search. (略)",
+    tools=[google_search],
+)</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">adk</span> <span class="pre">web</span></code> 🏃‍♂️</h3>
+<img alt="../_images/adk-web-screenshot.png" src="../_images/adk-web-screenshot.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">マイナーバージョンアップで壊れる 🏃‍♂️</h3>
+<ul class="simple">
+<li><p>adk-python は隔週リリース（現在 1.26.0）</p></li>
+<li><p>ADKのバージョンを上げる（<strong class="command">uv sync -P google-adk</strong>）</p></li>
+<li><p>Web UIは起動する</p></li>
+<li><p>実行時にエラー</p></li>
+</ul>
+</section>
+<section>
+<img alt="../_images/adk-miner-version-up-runtime-error.png" src="../_images/adk-miner-version-up-runtime-error.png"/>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text">応答がなく、エラーが出ている</span></div>
+<pre><code class="log" data-noescape="" data-trim="">INFO:     127.0.0.1:61263 - "POST /run_sse HTTP/1.1" 500 Internal Server Error
+
+sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) column events.custom_metadata does not exist
+
+[SQL: SELECT events.id AS events_id, events.app_name AS events_app_name, events.user_id AS events_user_id, events.session_id AS events_session_id, events.invocation_id AS events_invocation_id, events.author AS events_author, events.actions AS events_actions, events.long_running_tool_ids_json AS events_long_running_tool_ids_json, events.branch AS events_branch, events.timestamp AS events_timestamp, events.content AS events_content, events.grounding_metadata AS events_grounding_metadata, events.custom_metadata AS events_custom_metadata, events.usage_metadata AS events_usage_metadata, events.citation_metadata AS events_citation_metadata, events.partial AS events_partial, events.turn_complete AS events_turn_complete, events.error_code AS events_error_code, events.error_message AS events_error_message, events.interrupted AS events_interrupted
+FROM events
+WHERE events.app_name = %(app_name_1)s::VARCHAR AND events.user_id = %(user_id_1)s::VARCHAR AND events.session_id = %(session_id_1)s::VARCHAR ORDER BY events.timestamp DESC]
+[parameters: {'app_name_1': 'search_agent', 'user_id_1': 'user', 'session_id_1': '3e967de9-05aa-4d53-bd07-aad4daf0c25d'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">なぜマイナーバージョンアップで壊れるのか 🏃‍♂️</h3>
+<ul class="simple">
+<li><p><strong>ORMの実装が変わっている</strong> （カラム追加）</p></li>
+<li><p>一方DBのテーブル定義は古いまま</p></li>
+<li><p>新しいカラムを <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> で指定しているが、テーブルになく、実行時にエラー</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">バージョンごとにテーブル定義を知りたい</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/sqldef/sqldef" rel="noreferrer" target="_blank">sqldef</a> というツールを知っていた</p></li>
+<li><p>2つのテーブル定義から <strong>ALTER TABLE を自動で作る</strong></p></li>
+<li><p>💡ADKのマイナーバージョンアップと合わせて <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> もやれば、実行時エラーなくなるのでは</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><strong>テーブル定義</strong> のdump作業</h2>
+<ol class="arabic simple">
+<li><p>DB起動</p></li>
+<li><p>ADKサーバ起動</p></li>
+<li><p>HTTPリクエスト（＝空のテーブル作成）</p></li>
+<li><p>テーブル定義のdump</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">DB起動・終了</h3>
+<pre data-id="db"><code class="shell" data-noescape="" data-trim="">$ docker ps
+$ docker run --name adk-pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres:18
+$ docker rm -f adk-pg</code></pre>
+<p><strong class="command">docker</strong> 操作</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ADKサーバ起動</h3>
+<pre data-id="adk"><code class="shell" data-noescape="" data-trim="">$ nohup uvx --from google-adk==1.22.0 adk api_server \
+    --session_service_uri postgresql+psycopg://postgres:mysecretpassword@localhost:5432/postgres
+$ lsof -ti :8000
+$ kill &lt;pid&gt;</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">残りのコマンド</h3>
+<pre data-id="id10"><code class="shell" data-noescape="" data-trim="">$ curl -X POST http://127.0.0.1:8000/apps/my_agent/users/test_user/sessions \
+    -H 'Content-Type: application/json' -d '{}'
+
+$ psqldef -h localhost -p 5432 -U postgres -W mysecretpassword \
+    postgres --export &gt; schemas/v&lt;version&gt;/postgresql.sql</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">まずペアプロ</h3>
+<ul class="simple">
+<li><p>対話的に <code class="file docutils literal notranslate"><span class="pre">AGENTS.md</span></code> を作成。ここまでのコマンドを列挙した <strong>手順書</strong></p></li>
+<li><p>1つバージョンを指定して、コマンド実行を都度許可しながら一緒に作業</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">AGENTS.md</span></code> 更新や、シェルスクリプトによる自動化を必要に応じて依頼</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">やや脱線：Codex CLIの作業から <strong>学ぶ</strong> 🏃‍♂️</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://git-scm.com/docs/git-status" rel="noreferrer" target="_blank">git status</a> <strong>-sb</strong></p></li>
+<li><p>起動したサーバのログの保存（<code class="docutils literal notranslate"><span class="pre">nohup</span> <span class="pre">uvx</span> <span class="pre">adk</span> <span class="pre">api_server</span> <span class="pre">&gt;</span> <span class="pre">server.log</span> <span class="pre">2&gt;&amp;1</span></code>）</p></li>
+<li><p>ログファイルを見て調査している！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">IMO：Codex CLIは <strong>シェル芸人</strong></h3>
+<iframe height="480" src="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/5/4" title="Codex CLIで 加速 するコードリーディング" width="800"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Rules</h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developers.openai.com/codex/rules" rel="noreferrer" target="_blank">https://developers.openai.com/codex/rules</a></p></li>
+<li><p>コマンド実行を <strong>事前許可</strong> （禁止）する仕組み</p></li>
+<li><p>patternへの前方一致</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://openai.ondemand.goldcast.io/on-demand/d1544c04-a382-4e1f-9077-01ba81293f44" rel="noreferrer" target="_blank">OpenAI Learning Lab: Codex を使いこなす</a> より</h3>
+<ul class="simple">
+<li><p>「Codexがいちいち承認を求めてきてテンポが悪い -&gt; Rules で事前承認」（40:30〜）</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">~/.codex/rules/</span></code> やプロジェクトの <code class="file docutils literal notranslate"><span class="pre">.codex/rules/</span></code> に置く</p></li>
+<li><p><a class="reference external" href="https://developers.openai.com/codex/cli/reference#codex-execpolicy" rel="noreferrer" target="_blank">codex execpolicy check</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Rules（途中の状態）</h3>
+<pre data-id="id13"><code class="starlark" data-noescape="" data-trim="">prefix_rule(pattern=["docker", "ps"], decision="allow")
+prefix_rule(pattern=["scripts/export_schema.sh"], decision="allow")
+prefix_rule(pattern=["docker", "rm", "-f"], decision="allow")
+prefix_rule(pattern=["git", "add"], decision="allow")
+prefix_rule(pattern=["git", "commit"], decision="allow")
+prefix_rule(pattern=["kill"], decision="allow")</code></pre>
+<p>手順書に従って Codex CLI が実行するコマンドを <strong>事前許可</strong></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">🌟 <strong>スクリプト</strong> にさらにまとめればいいじゃん！</h2>
+<pre data-id="id14"><code class="starlark" data-line-numbers="1" data-noescape="" data-trim="">prefix_rule(pattern=["scripts/export_schema.sh"], decision="allow")
+prefix_rule(pattern=["git", "add"], decision="allow")
+prefix_rule(pattern=["git", "commit"], decision="allow")</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スクリプト（抜粋）</h3>
+<pre data-id="id15"><code class="bash" data-noescape="" data-trim="">api_pid="$(cat "$current_pidfile")"
+kill "$api_pid" &gt;/dev/null 2&gt;&amp;1 || true
+
+docker rm -f "$current_container" &gt;/dev/null 2&gt;&amp;1 || true</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">なぜスクリプトにまとめたか</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">rm</span> <span class="pre">-f</span></code> や <code class="docutils literal notranslate"><span class="pre">kill</span></code> を任意の引数で実行できちゃうのはリスク（Codexは賢いのでめったになさそうだが）</p></li>
+<li><p>スクリプトであれば前方一致だけでなく <strong>引数までコントロールできる</strong></p></li>
+<li><p>放置して達成！ <a class="footnote-reference brackets" href="#adk-python-db-schema-history-codex-version" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> ：<a class="reference external" href="https://github.com/ftnext/adk-python-db-schema-history" rel="noreferrer" target="_blank">https://github.com/ftnext/adk-python-db-schema-history</a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="adk-python-db-schema-history-codex-version" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id17" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>gpt-5.2-codex (medium effort?) (後に gpt-5.3-codex)</p>
+</aside>
+</aside>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">Codex でコマンド実行ポリシーをカスタマイズする方法について書きました、Claude Code の permissions(allow/deny) に相当します<a href="https://t.co/JDAJEF7q52">https://t.co/JDAJEF7q52</a></p>— Yorifuji Mitsunori (@yorifuji) <a href="https://twitter.com/yorifuji/status/2007705314666393967?ref_src=twsrc%5Etfw">2026年1月4日</a></blockquote> <script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">yorifujiさん記事から：Rulesは <code class="docutils literal notranslate"><span class="pre">[]</span></code> をネストしても書けます</h3>
+<pre data-id="yorifuji-rules"><code class="starlark" data-line-numbers="5" data-noescape="" data-trim=""># Before
+prefix_rule(pattern=["git", "add"], decision="allow")
+prefix_rule(pattern=["git", "commit"], decision="allow")
+# After
+prefix_rule(pattern=["git", ["add", "commit"]], decision="allow")</code></pre>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/main/codex-rs/execpolicy/README.md" rel="noreferrer" target="_blank">execpolicyのREADME</a> にあります</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 繰り返し作業を Rules で自走</h2>
+<ul class="simple">
+<li><p>「DBをdockerで立てて、APIを別で立てて、curlして、その後DBをdumpして」を20回くらい</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">AGENTS.md</span></code> に手順書を作り、自動化スクリプトも書かせていく</p></li>
+<li><p>Rules で前方一致でマッチよりもスクリプトに入れたほうがより安全にできた例</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Dive：コマンド実行許可の裏側</h2>
+<p>v0.110.0のソースコードリーディングより <a class="footnote-reference brackets" href="#latest-codex-cli-version-20260306" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="latest-codex-cli-version-20260306" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id19" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>発表時最新はv0.111.0</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIのセキュリティ</h3>
+<ul class="simple">
+<li><p>Sandbox mode: シェルコマンドを安全に <strong>実行</strong></p></li>
+<li><p>Approval policy: シェルコマンドの実行 <strong>許可を尋ね</strong> させて安全に</p></li>
+</ul>
+<p><a class="reference external" href="https://developers.openai.com/codex/security#sandbox-and-approvals" rel="noreferrer" target="_blank">https://developers.openai.com/codex/security#sandbox-and-approvals</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIのオプション</h3>
+<ul class="simple">
+<li><p>Sandbox mode: <code class="docutils literal notranslate"><span class="pre">--sandbox</span></code>, <code class="docutils literal notranslate"><span class="pre">-s</span></code></p></li>
+<li><p>Approval policy: <code class="docutils literal notranslate"><span class="pre">--ask-for-approval</span></code>, <code class="docutils literal notranslate"><span class="pre">-a</span></code></p></li>
+</ul>
+<p><a class="reference external" href="https://developers.openai.com/codex/cli/reference#global-flags" rel="noreferrer" target="_blank">https://developers.openai.com/codex/cli/reference#global-flags</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">#codex_findy</span></code> より（2025/10）</h3>
+<iframe allowfullscreen="true" class="docswell-iframe" height="350" src="https://www.docswell.com/slide/KJQYQM/embed#p25" style="border: 1px solid #ccc; display: block; margin: 0px auto; padding: 0px; aspect-ratio: 620/350;" width="620"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong class="command">codex</strong> （フラグなし）</h3>
+<p>projectを <strong>trust</strong> (<em>Do you trust the contents of this directory?</em>)</p>
+<ul class="simple">
+<li><p>Sandbox: workspace-write <a class="footnote-reference brackets" href="#default-sandbox-mode-0-110-0" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+<li><p>Approval: OnRequest <a class="footnote-reference brackets" href="#default-approval-policy-0-110-0" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="default-sandbox-mode-0-110-0" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id22" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1456" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1456</a></p>
+</aside>
+<aside class="footnote brackets" id="default-approval-policy-0-110-0" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id23" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1827" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/config/mod.rs#L1827</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">シェルコマンドの実行許可</h3>
+<ol class="arabic simple">
+<li><p><strong>ルールにあればルールのdecisionとなる</strong></p></li>
+<li><p>ルールにない場合のフォールバック処理</p></li>
+</ol>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L199" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L199</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">SandboxとApprovalに基づくフォールバック</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/shell-command/src/command_safety/is_safe_command.rs" rel="noreferrer" target="_blank">安全なコマンド</a> （<code class="docutils literal notranslate"><span class="pre">ls</span></code>, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code>） -&gt; 実行</p></li>
+<li><p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/shell-command/src/command_safety/is_dangerous_command.rs" rel="noreferrer" target="_blank">危険かもしれないコマンド</a> （<code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">/</span></code>） -&gt; 許可を求める</p></li>
+<li><p>追加の権限を必要とするか -&gt; するなら許可を求め、しないなら実行 <a class="footnote-reference brackets" href="#exec-policy-0-110-0" id="id25" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="exec-policy-0-110-0" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id25" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L488" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/exec_policy.rs#L488</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コマンドはsandboxで実行</h3>
+<ul class="simple">
+<li><p>Approval: OnRequestでは、コマンドが失敗した時sandboxの外での実行は <strong>しない</strong></p></li>
+<li><p>（コマンドが失敗した時にsandbox外で実行させることもできます。自走tips）</p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/tools/orchestrator.rs#L232" rel="noreferrer" target="_blank">https://github.com/openai/codex/blob/rust-v0.110.0/codex-rs/core/src/tools/orchestrator.rs#L232</a></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">小まとめ：コマンド実行許可の裏側</h2>
+<ul class="simple">
+<li><p>Rulesのpatternやdecisionが優先される</p></li>
+<li><p>Rulesに無いコマンドは、sandboxやapprovalに基づいて処理（通常はworkspace-write・OnRequest）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<p>Happy Python Development♪</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
