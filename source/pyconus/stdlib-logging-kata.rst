@@ -87,7 +87,7 @@ Who this talk is for
 .. This talk is based on my blog post
 
 * Everyday `blogging (in Japanese) <https://nikkie-ftnext.hatenablog.com/>`__ over 1000 days (articles referenced in slide)
-* `SpeechRecognition <https://github.com/Uberi/speech_recognition>`__ maintainer
+* `SpeechRecognition <https://github.com/Uberi/speech_recognition>`__ (9k star) maintainer
 * Codex Ambassador (Tokyo)
 * Volunteer staff of the monthly `Start Python Club <https://startpython.connpass.com/>`__ (online)
 
