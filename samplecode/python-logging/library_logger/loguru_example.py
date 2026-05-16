@@ -1,15 +1,16 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "httpx",
+#     "httpxyz",
 #     "loguru",
 #     "rich",
 # ]
 # ///
 import inspect
 import logging
+from datetime import datetime
 
-import httpx
+import httpxyz
 from loguru import logger
 from rich.pretty import pprint
 
@@ -38,13 +39,18 @@ class InterceptHandler(logging.Handler):
 
 
 # logging.basicConfig(handlers=[InterceptHandler()], level=logging.DEBUG)
-# logging.getLogger().handlers[0].addFilter(logging.Filter("httpx"))
+# logging.getLogger().handlers[0].addFilter(logging.Filter("httpxyz"))
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.DEBUG)
 intercept_handler = InterceptHandler()
 root_logger.addHandler(intercept_handler)
-intercept_handler.addFilter(logging.Filter("httpx"))
+intercept_handler.addFilter(logging.Filter("httpxyz"))
 
-resp = httpx.get("https://peps.python.org/api/peps.json")
+resp = httpxyz.get("https://peps.python.org/api/peps.json")
 data = resp.json()
-pprint([(k, v["title"]) for k, v in data.items()][:10])
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])

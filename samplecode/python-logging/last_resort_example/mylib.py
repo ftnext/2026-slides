@@ -4,5 +4,5 @@ logger = logging.getLogger(__name__)
 
 
 def example():
-    logger.info("想定通り")
-    logger.warning("ちょっとヤバいよ")
+    logger.info("as expected")
+    logger.warning("a little dangerous")
