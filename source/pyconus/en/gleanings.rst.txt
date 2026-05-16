@@ -19,7 +19,7 @@ Chapter 5: Gleanings
     :lines: 1-6,8
     :caption: Warning-level logging in a library
 
-Actually, ``WARNING``+ logging can output without ``basicConfig()``
+Actually, ``WARNING`` + logging can output without ``basicConfig()``
 ----------------------------------------------------------------------
 
 .. literalinclude:: ../../samplecode/python-logging/last_resort_example/app.py
