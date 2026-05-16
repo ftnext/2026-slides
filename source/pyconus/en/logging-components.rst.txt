@@ -1,0 +1,261 @@
+.. _Logger.setLevel-en: https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
+
+Chapter 1: Components of the ``logging`` module [#chapter1-base-en]_
+======================================================================
+
+* Logger
+* Handler
+* Formatter
+* Filter
+
+.. [#chapter1-base-en] Based on my blog post: `Pythonのライブラリに用意されたロガーを設定してログを出力する <https://nikkie-ftnext.hatenablog.com/entry/configure-python-librarys-logger>`__
+
+Summary🥟 components of the ``logging`` module
+--------------------------------------------------
+
+:library **author**: **records** events (Logger)
+:library **user**: **views** logs (Logger + Handler + Formatter (+ Filter))
+
+Using HTTPXYZ to introduce components while **looking at real logs** [#pep723-en]_
+----------------------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 9-13,24-31
+    :caption: `Sample script <https://github.com/ftnext/2026-slides/blob/8e0f6f3e86e3c3cbf25e7acd060a199cabf917db/samplecode/python-logging/library_logger/httpxyz_logging.py>`__
+
+.. [#pep723-en] Uses favorite *inline script metadata* (`PEP 723 <https://peps.python.org/pep-0723/>`__) ありがとう、Ofek-san ❤️❤️ (`My talk at PyCon JP 2024 <https://2024.pycon.jp/ja/talk/89F3RQ>`__)
+
+.. _HTTPXYZ: https://codeberg.org/httpxyz/httpxyz
+
+`HTTPXYZ`_ 🏃‍♂️
+--------------------------------------------------
+
+* **friendly fork** of `HTTPX <https://github.com/encode/httpx>`__
+* *httpxyz has now many bug fixes and significantly better performance than httpx* (`httpxyz one month in <https://tildeweb.nl/~michiel/httpxyz-one-month-in.html>`__)
+* ありがとう、Michiel-san ❤️❤️
+
+Logger
+======================================================================
+
+* A library **author** uses a logger to **record events during program execution**
+* Event importance (level) + message
+
+Logging inside HTTPXYZ
+--------------------------------------------------
+
+.. code-block:: python
+    :caption: Record an HTTP request at INFO level [#httpxyz-logger-info-line-en]_
+
+    class Client(BaseClient):
+        def _send_single_request(self, request: Request) -> Response:
+            logger.info(
+                'HTTP Request: %s %s "%s %d %s"',
+                request.method,
+                request.url,
+                response.http_version,
+                response.status_code,
+                response.reason_phrase,
+            )
+
+.. [#httpxyz-logger-info-line-en] https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py#L1032
+
+Logging levels [#level-table-ref-en]_ 🏃‍♂️
+--------------------------------------------------
+
+.. [#level-table-ref-en] `When to use logging (Basic logging tutorial)`_
+
+.. list-table::
+
+    * - Level
+      - Method
+      - When it’s used
+    * - DEBUG
+      - ``debug()``
+      - Detailed information, typically of interest only when diagnosing problems.
+    * - INFO
+      - ``info()``
+      - Confirmation that things are working as expected.
+
+.. revealjs-break::
+    :notitle:
+
+.. list-table::
+
+    * - WARNING
+      - ``warning()``
+      - An indication that something unexpected happened, (omitted)
+    * - ERROR
+      - ``error()``
+      - Due to a more serious problem, the software has not been able to perform some function.
+    * - CRITICAL
+      - ``critical()``
+      - A serious error, indicating that the program itself may be unable to continue running.
+
+.. _logging.getLogger-en: https://docs.python.org/3/library/logging.html#logging.getLogger
+
+Get a logger with `logging.getLogger() <https://docs.python.org/3/library/logging.html#logging.getLogger>`__
+------------------------------------------------------------------------------------------------------------------------
+
+.. code-block:: python
+    :caption: Get the httpxyz logger [#httpxyz-get-logger-line-en]_
+
+    logger = logging.getLogger("httpxyz")
+
+.. [#httpxyz-get-logger-line-en] https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py#L117
+
+How can a library **user** **see logs**?
+======================================================================
+
+.. code-block:: python
+    :caption: I want to see this INFO-level log
+
+    logger = logging.getLogger("httpxyz")
+
+    class Client(BaseClient):
+        def _send_single_request(self, request: Request) -> Response:
+            logger.info(
+                'HTTP Request: %s %s "%s %d %s"',
+                request.method,
+                request.url,
+                response.http_version,
+                response.status_code,
+                response.reason_phrase,
+            )
+
+Code to see logs embedded in HTTPXYZ
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 14-22
+    :linenos:
+    :lineno-start: 1
+    :caption: `Sample script <https://github.com/ftnext/2026-slides/blob/8e0f6f3e86e3c3cbf25e7acd060a199cabf917db/samplecode/python-logging/library_logger/httpxyz_logging.py>`__
+
+1️⃣ The user also gets the logger
+--------------------------------------------------
+
+* The library user also calls ``getLogger`` whenever needed [#singleton-en]_
+
+.. [#singleton-en] Loggers are singletons (see `Using loggers as attributes in a class or passing them as parameters (Patterns to avoid) <https://docs.python.org/3/howto/logging-cookbook.html#using-loggers-as-attributes-in-a-class-or-passing-them-as-parameters>`__)
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 14-15
+    :emphasize-lines: 1
+    :linenos:
+
+2️⃣ **Set the logger level** - `Logger.setLevel() <https://docs.python.org/3/library/logging.html#logging.Logger.setLevel>`__
+--------------------------------------------------------------------------------------------------------------------------------
+
+* Records messages at or above the logger's level; ignores messages below it
+* Here we record ``DEBUG`` +, which includes ``INFO``
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 14-15
+    :emphasize-lines: 2
+    :linenos:
+
+📌A logger **records** messages whose importance is **at or above its own level**
+------------------------------------------------------------------------------------------------
+
+.. list-table:: ``logger`` at ``WARNING`` level
+
+    * - ``logger.warning("message")``
+      - recorded (a LogRecord is created)
+    * - ``logger.info("message")``
+      - ignored
+
+3️⃣ Configure the **destination** - handler
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 17-22
+    :caption: Attach a handler that outputs to a stream
+    :linenos:
+    :lineno-start: 4
+    :emphasize-lines: 1,6
+
+.. code-block:: txt
+    :caption: Now we can see logs from the httpxyz logger!
+
+    % uv run example.py
+    HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"
+
+Handlers dispatch LogRecords to destinations
+--------------------------------------------------
+
+* Streams
+* Files
+* And more (`logging.handlers <https://docs.python.org/3/library/logging.handlers.html>`__)
+
+4️⃣ Configure the **appearance** - formatter
+--------------------------------------------------
+
+* A formatter applies a format to a LogRecord; the handler outputs that formatted string
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 18-21
+    :linenos:
+    :lineno-start: 4
+
+Formats specify **LogRecord attribute names**
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
+    :language: python
+    :lines: 18-21
+    :linenos:
+    :lineno-start: 4
+    :emphasize-lines: 2
+
+.. code-block:: txt
+
+    2026-05-15 18:43:35,429 | INFO (httpxyz) | _client.py:_send_single_request:1032 - HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"
+
+`LogRecord attributes <https://docs.python.org/3/library/logging.html#logrecord-attributes>`__
+
+.. revealjs-break::
+    :notitle:
+
+.. list-table:: Attribute names
+
+    * - asctime
+      - Time when the LogRecord was created
+    * - levelname
+      - Text logging level
+    * - name
+      - Logger name
+    * - filename
+      - File name
+    * - funcName
+      - Function name
+    * - lineno
+      - Source line number
+    * - message
+      - logged message (by formatters)
+
+5️⃣ Filter (only the name for now; it appears in Chapter 3)
+------------------------------------------------------------
+
+* Attach it to a logger or handler
+* Give the filter a logger name
+* Only LogRecords from that logger and its *child loggers* pass through
+
+Recap🥟 A library author records events
+======================================================================
+
+.. image:: ../_static/pyconus/pyconjp-library-creator-logger.drawio.png
+    :scale: 150%
+
+* Operates a logger by specifying an event **level** and **message**
+
+Recap🥟 A library user views logs
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-library-user-logger.drawio.png
+    :scale: 150%

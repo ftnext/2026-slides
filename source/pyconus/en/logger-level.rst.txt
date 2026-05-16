@@ -1,0 +1,159 @@
+.. プロポーザル
+    2. How is a logger's level determined? — NOTSET (5 minutes)
+    - Log records are created for calls at or above the logger's level
+    - What is the level when you `getLogger()` in library code?
+    - Logger hierarchy
+    - **Changing a parent logger's level changes its children's levels too**
+
+Review: a logger **records** messages whose importance is **at or above its own level**
+------------------------------------------------------------------------------------------------
+
+.. list-table:: ``logger`` at ``INFO`` level
+
+    * - ``logger.warning()``
+      - recorded
+    * - ``logger.info()``
+      - recorded
+    * - ``logger.debug()``
+      - ignored
+
+Chapter 2: How is a logger's level decided? [#chapter2-base-en]_
+======================================================================
+
+.. [#chapter2-base-en] Based on my blog post: `自作のPythonライブラリでloggingを使うとき、ロガーにsetLevelしない？ ログレベルNOTSETのロガーの動きを理解する <https://nikkie-ftnext.hatenablog.com/entry/python-configuring-logging-for-library-log-level-notset>`__
+
+.. code-block:: python
+    :caption: ❓ What is the level of the ``httpxyz`` logger? [#httpxyz-get-logger-line-en]_
+
+    logger = logging.getLogger("httpxyz")
+
+``DEBUG``, ``INFO``, ``WARNING``, ``ERROR`` or ``CRITICAL``? 🤔
+
+.. _Logger.setLevel(): <https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
+
+**NOTSET**
+--------------------------------------------------
+
+    When a logger is created, the level is set to ``NOTSET``
+
+`Logger.setLevel()`_
+
+.. code-block:: pycon
+
+    >>> import logging
+    >>> httpxyz_logger = logging.getLogger("httpxyz")
+    >>> logging.getLevelName(httpxyz_logger.level)
+    'NOTSET'
+
+What does ``NOTSET`` mean?
+--------------------------------------------------
+
+   if a logger has a level of ``NOTSET``, its chain of ancestor loggers is traversed until either an ancestor with a level other than ``NOTSET`` is found, or the root is reached. (`Logger.setLevel()`_)
+
+Ancestor loggers?
+
+📌Logger hierarchy
+======================================================================
+
+Loggers have **parent-child relationships determined by their names**
+
+Names can be **dot-separated**
+--------------------------------------------------
+
+    Logger names can be anything you want, and indicate the area of an application in which a logged message originates. (`Advanced Logging Tutorial <https://docs.python.org/3/howto/logging.html#advanced-logging-tutorial>`__)
+
+.. code-block:: python
+
+    logging.getLogger("spam")
+    logging.getLogger("spam.ham")
+
+Parent-child relationships
+--------------------------------------------------
+
+.. code-block:: python
+
+    logger = logging.getLogger("spam.ham")
+
+* The **parent** of the ``spam.ham`` logger is the ``spam`` logger
+* The parent of every logger is the *root logger* (``logging.getLogger()`` with no arguments)
+
+.. revealjs-break::
+
+.. image:: ../_static/pyconus/pyconjp-logger-ancestors.drawio.png
+    :scale: 120%
+
+Use ``__name__`` as the logger name 🏃‍♂️
+--------------------------------------------------
+
+.. これは少し脱線的な話
+
+.. code-block:: python
+
+    logger = logging.getLogger(__name__)
+
+* This is a "good convention to use when naming loggers" (`Advanced Logging Tutorial <https://docs.python.org/3/howto/logging.html#advanced-logging-tutorial>`__) [#why-name-good-en]_
+
+.. [#why-name-good-en] Because you can configure logging by touching the logger for an upper-level module. Today's discussion applies for the same logic.
+
+💡Change the root logger's level
+======================================================================
+
+When you change the level of the top parent logger, *children loggers' levels also change*
+
+.. _getEffectiveLevel(): https://docs.python.org/3/library/logging.html#logging.Logger.getEffectiveLevel
+
+Effective level: `getEffectiveLevel()`_
+--------------------------------------------------
+
+    Otherwise, the hierarchy is traversed towards the root until a value other than ``NOTSET`` is found, and that value is returned.
+
+The root logger's level is ``WARNING``
+--------------------------------------------------
+
+.. code-block:: pycon
+
+    >>> import logging
+    >>> root_logger = logging.getLogger()
+    >>> logging.getLevelName(root_logger.level)
+    'WARNING'
+
+The same ``WARNING`` as the root logger
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-root-default-warning.drawio.png
+    :scale: 120%
+
+.. code-block:: pycon
+
+    >>> httpxyz_logger = logging.getLogger("httpxyz")
+    >>> logging.getLevelName(httpxyz_logger.getEffectiveLevel())
+    'WARNING'
+
+When the root logger's level changes
+------------------------------------------------------------
+
+.. code-block:: pycon
+
+    >>> root_logger.setLevel(logging.DEBUG)
+    >>> logging.getLevelName(root_logger.level)
+    'DEBUG'
+
+The child logger's **effective level has changed**
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-root-setlevel-debug.drawio.png
+    :scale: 120%
+
+.. code-block:: pycon
+
+    >>> logging.getLevelName(httpxyz_logger.getEffectiveLevel())
+    'DEBUG'
+
+Summary🥟 how is a logger's level decided?
+======================================================================
+
+* A library logger's level is ``NOTSET``
+
+    * If you do nothing, its effective level is the same ``WARNING`` as the root logger
+
+* **Changing the root logger's level also changes its children's effective levels too** (we will use this💡)

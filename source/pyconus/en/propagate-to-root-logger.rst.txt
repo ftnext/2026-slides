@@ -1,0 +1,206 @@
+.. プロポーザル
+    3. Let's log to the root logger (8 minutes)
+    - Library authors don't care about logging format or output destination
+    - **propagate**: Log records created by child loggers are passed to parent loggers
+    - Attach Handler to the root logger (the ultimate parent logger)
+    - Attach Formatter to that Handler
+    - Example with multiple Handlers: "Log INFO+ to file, ERROR+ to console too"
+    - Example of swapping Formatter: Output logs in JSON format
+
+.. _propagate: https://docs.python.org/3/library/logging.html#logging.Logger.propagate
+
+Chapter 3: Log through the root logger - ``propagate``
+======================================================================
+
+In logger ancestor chain, there is one more important thing besides the ``NOTSET`` level
+
+The logger's `propagate`_ attribute
+========================================================================================================================
+
+    If this attribute evaluates to true, events logged to this logger will be passed to the handlers of higher level (ancestor) loggers, in addition to any handlers attached to this logger. 
+
+After ``getLogger()``, ``propagate`` is ``True``
+------------------------------------------------------------
+
+.. code-block:: pycon
+
+    >>> import logging
+    >>> httpxyz_logger = logging.getLogger("httpxyz")
+    >>> httpxyz_logger.propagate
+    True
+
+Logger parent-child relationships (again)
+--------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-logger-ancestors-part.drawio.png
+    :scale: 120%
+
+``propagate``
+--------------------------------------------------
+
+* A method at or above the ``httpxyz`` logger's logging level is called
+* That LogRecord is also **passed to the parent logger's handlers** (propagation)
+
+With ``propagate``, a LogRecord goes **to the parent logger's handlers**
+------------------------------------------------------------------------
+
+.. image:: ../_static/pyconus/pyconjp-logger-propagate-handlers.drawio.png
+    :scale: 120%
+
+📌During propagation, **the parent logger's level is not checked** [#reload1-en]_
+------------------------------------------------------------------------------------------------
+
+.. [#reload1-en] If it seems not to load, reload the page. This is a simplified version of `Logging Flow <https://docs.python.org/3/howto/logging.html#logging-flow>`__ (Logger flow). I also omitted parent logger filters; those are not checked either.
+
+.. mermaid:: logging-propagate-flow.mmd
+    :zoom:
+    :config: {"themeVariables": {"lineColor": "#fff"}}
+
+In the loop on the right, the parent logger's level is not checked
+
+💡Attach handlers to the root logger and you can log!
+======================================================================
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_hard.py
+    :language: python
+    :lines: 14-22
+    :emphasize-lines: 1,4,9
+    :caption: `One logging pattern shown in this talk <https://github.com/ftnext/2026-slides/blob/bf69de8716d7d16000aeb4911b129f80e93fe020/samplecode/python-logging/library_logger/root_logging_hard.py>`__
+
+Attach a formatter to the handler
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_hard.py
+    :language: python
+    :lines: 14-22
+    :emphasize-lines: 4-8
+
+Log output from **all** loggers [#httpxyz-guide-logging-en]_
+------------------------------------------------------------
+
+.. literalinclude:: all-logger-log.txt
+    :caption: Both the ``httpxyz`` logger and the ``httpcorexyz`` logger have effective level ``DEBUG``
+
+.. [#httpxyz-guide-logging-en] https://httpxyz.org/logging/
+
+🍰 Configure the root logger easily with `logging.basicConfig()`_
+----------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_easy.py
+    :language: python
+    :lines: 14-17
+    :caption: `Whole basicConfig sample <https://github.com/ftnext/2026-slides/blob/bf69de8716d7d16000aeb4911b129f80e93fe020/samplecode/python-logging/library_logger/root_logging_easy.py>`__
+
+* Configures a handler on the root logger (``StreamHandler`` by default)
+* Configures a formatter on that handler (the ``format`` argument)
+
+Use filters when there is too much output
+--------------------------------------------------
+
+* Configure a filter on the **root logger's handler**, not on the root logger itself
+* Output only logs from the ``httpxyz`` logger
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_hard.py
+    :language: python
+    :lines: 23
+
+Why attach the filter to the handler? [#reload2-en]_
+------------------------------------------------------------
+
+.. mermaid:: logging-handler-flow.mmd
+    :config: {"themeVariables": {"lineColor": "#fff"}}
+
+The **handler's level and filters** are checked
+
+.. [#reload2-en] If it seems not to load, reload the page. `Logging Flow <https://docs.python.org/3/howto/logging.html#logging-flow>`__ (Handler flow)
+
+During propagation, the parent logger's level (and filters) are not checked
+-------------------------------------------------------------------------------
+
+.. mermaid:: logging-propagate-flow.mmd
+    :zoom:
+    :config: {"themeVariables": {"lineColor": "#fff"}}
+
+* The root logger's filters are not checked (diagram repeated) [#reload1-en]_
+* The **root logger handler's filters** are checked (previous slide)
+
+Summary🥟 logging through the root logger
+======================================================================
+
+* A library logger's effective level, for example HTTPXYZ, is the same as the root logger's level (``NOTSET``)
+* A library logger has ``propagate=True`` (it propagates to the root logger)
+* You can log by **attaching handlers (with filters) and formatters** to the root logger!
+
+Examples of logging through the root logger [#appendix-note-en]_
+======================================================================
+
+Two examples using ``NOTSET`` and ``propagate``
+
+.. [#appendix-note-en] This talk explains configuration on the root logger, but I think the same discussion applies if you configure a top-level logger for a specific module instead.
+
+Example 1️⃣ **multiple handlers** on the root logger
+======================================================================
+
+Example: "log ``INFO`` and above to a file, and also output ``ERROR`` and above to the console"
+
+* ``StreamHandler`` at ``ERROR`` level
+* ``FileHandler`` at ``INFO`` level
+
+``DEBUG`` and above to a file; ``INFO`` and above to the console
+----------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_multi_handlers.py
+    :language: python
+    :lines: 15-32
+    :linenos:
+    :caption: `Example with multiple handlers on the root logger <https://github.com/ftnext/2026-slides/blob/bf69de8716d7d16000aeb4911b129f80e93fe020/samplecode/python-logging/library_logger/root_logging_multi_handlers.py>`__
+
+DEBUG+ to a file
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_multi_handlers.py
+    :language: python
+    :lines: 15-32
+    :emphasize-lines: 9-13
+
+INFO+ to the console
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_multi_handlers.py
+    :language: python
+    :lines: 15-32
+    :emphasize-lines: 5-7
+
+Example 2️⃣ JSON logging [#json-format-blog-en]_
+======================================================================
+
+* Just **replace the root logger handler's formatter** with one that outputs JSON
+* ``JsonFormatter`` from `python-json-logger <https://github.com/nhairs/python-json-logger>`__
+
+.. [#json-format-blog-en] My blog post `PythonでログをJSON形式で出力したいなら、python-json-logger があるじゃな〜い！と思い出して触ったメモ <https://nikkie-ftnext.hatenablog.com/entry/python-json-logger-formatter-for-json-logging-quickstart>`__
+
+Replace it with ``JsonFormatter``
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_jsonformat.py
+    :language: python
+    :lines: 13,15-25
+    :emphasize-lines: 7
+    :caption: `JSON logging example <https://github.com/ftnext/2026-slides/blob/bf69de8716d7d16000aeb4911b129f80e93fe020/samplecode/python-logging/library_logger/root_logging_jsonformat.py>`__
+
+.. code-block:: json
+
+    {"asctime": "2026-05-15 21:01:33,998", "levelname": "INFO", "name": "httpxyz", "filename": "_client.py", "funcName": "_send_single_request", "lineno": 1032, "message": "HTTP Request: GET https://peps.python.org/api/peps.json \"HTTP/1.1 200 OK\""}
+
+Two examples of logging through the root logger
+======================================================================
+
+* Route destinations by level -> multiple handlers with each level
+* JSON format -> replace the formatter
+* IMO: starting from the Lego-like combination pattern, we are **changing only specific components**
+
+Logging is beautiful when you understand its components, but...
+----------------------------------------------------------------
+
+* Logging like HTTPXYZ's is **rare in the real world** 😢
+* Many libraries make it hard to apply the root-logger pattern directly (from experience). I'll share some tools for dealing with them.

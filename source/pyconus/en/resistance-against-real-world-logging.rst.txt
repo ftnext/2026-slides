@@ -1,0 +1,160 @@
+.. プロポーザル
+    4. Dealing with problematic logging in real-world libraries (6 minutes)
+    *Message: "Please implement logging properly so we don't need these hacks"*
+    - `print()` is not logging (can only avoid using such libraries)
+        - Differences between print and logging
+        - For colored logging: Introduce Formatter replacement
+    - Don't touch the root logger in libraries
+        - The secret of basicConfig: It touches the root logger!
+        - Resulting double output due to propagate
+        - How to fix it (manipulate root logger's handlers)
+
+Chapter 4: Logging implementations with room to improve, and how to deal with them
+==================================================================================
+
+📣 For library authors, treat these two examples as lessons, **implement logging properly** (mentioned in this talk) so we don't need any workarounds
+
+Case 1: Calling ``print`` is NEVER logging [#anti-pattern-print-en]_
+================================================================================
+
+.. code-block:: python
+    :caption: A "logger" that outputs colored text to a stream (`crawl4ai v0.4.24 <https://github.com/unclecode/crawl4ai/blob/v0.4.24/crawl4ai/async_logger.py#L147>`__)
+
+    class AsyncLogger:
+        def _log(
+            self,
+            level: LogLevel,
+            message: str,
+        ):
+            if self.verbose or kwargs.get("force_verbose", False):
+                print(log_line)
+
+.. [#anti-pattern-print-en] `Python で書かれたライブラリ各位に告ぐ。組み込み関数 print の呼び出しは、決してロギングではありません <https://nikkie-ftnext.hatenablog.com/entry/use-logger-instead-of-print-in-python-libraries>`__ (my blog post)
+
+``print`` and ``logger`` [#when-to-use-logging-en]_
+------------------------------------------------------------
+
+.. [#when-to-use-logging-en] `When to use logging (Basic logging tutorial)`_
+
+.. reporting events is never to display output!
+
+.. list-table::
+
+    * - Task
+      - Best tool
+    * - Display console output for ordinary usage of a command line script or program
+      - ``print()``
+    * - Report events that occur during normal operation of a program
+      - ``logger.info()`` (or ``logger.debug()``)
+
+Unlike ``print``, ``logger.info("message")`` can be...
+------------------------------------------------------------
+
+* Suppressed by changing the **logger level**
+* Written to a file by changing the **handler**
+* Timestamped with the LogRecord **asctime attribute** + formatter
+
+Options for colored logging
+--------------------------------------------------
+
+* ``RichHandler`` from `Rich <https://github.com/Textualize/rich/blob/master/README.md>`__ [#rich-handler-blog-en]_
+* Follow uvicorn's logging, whose levels are colored by a `custom Formatter <https://github.com/Kludex/uvicorn/blob/0.37.0/uvicorn/logging.py#L14-L65>`__
+
+.. [#rich-handler-blog-en] My blog post: `Python でコンソールに色付きでロギングしたいときの選択肢、Rich の Logging Handler を触る <https://nikkie-ftnext.hatenablog.com/entry/python-colorful-console-logging-by-richhandler>`__
+
+Case 2: Do not touch the root logger **in a library**
+======================================================================
+
+DON'T🙅‍♂️ call ``basicConfig()`` in a library
+
+The secret of ``basicConfig()``
+----------------------------------------------------------------------
+
+    This function does nothing if the root logger already has handlers configured,
+
+`logging.basicConfig()`_
+
+Experiment script
+--------------------------------------------------
+
+.. code-block:: python
+
+    import logging
+
+    # Simulates library code imported first
+    logging.basicConfig(level=logging.INFO)
+    logging.info("as expected")
+    logging.warning("a little dangerous")
+
+    # Simulates configuration by the library user
+    logging.basicConfig(level=logging.WARNING)  # does not work😭
+    logging.info("as expected")
+    logging.warning("a little dangerous")
+
+Configure the root logger "only once"
+--------------------------------------------------
+
+.. code-block:: python
+    :caption: `Implementation of basicConfig() <https://github.com/python/cpython/blob/v3.14.5/Lib/logging/__init__.py#L2083>`__
+
+    def basicConfig(**kwargs):
+
+        with _lock:
+            if len(root.handlers) == 0:
+                ...
+            # does nothing if handlers already exist
+
+If a library configures handlers on the root logger, **calling basicConfig from application code later does nothing** 😭
+
+Functions such as ``logging.warning()`` also call ``basicConfig()``
+----------------------------------------------------------------------
+
+    if the root logger has no handlers, then ``basicConfig()`` is called, prior to calling ``debug`` on the root logger.
+
+`logging.debug() <https://docs.python.org/3/library/logging.html#logging.debug>`__
+
+Do not use them in libraries, just like ``basicConfig()``
+------------------------------------------------------------
+
+.. code-block:: python
+    :caption: `Implementation of logging.debug() <https://github.com/python/cpython/blob/v3.14.5/Lib/logging/__init__.py#L2199>`__
+
+    def debug(msg, *args, **kwargs):
+        if len(root.handlers) == 0:
+            basicConfig()
+        root.debug(msg, *args, **kwargs)
+
+Even Google's libraries have done this😭
+--------------------------------------------------
+
+* `google-genai <https://github.com/googleapis/python-genai>`__ (`fixed <https://github.com/googleapis/python-genai/issues/278>`__) [#google-genai-issue-blog-en]_
+* `google-adk <https://github.com/google/adk-python>`__ [#google-adk-issue-blog-en]_
+
+Let's send pull requests!
+
+.. [#google-genai-issue-blog-en] My blog post: `google-genaiよ、ライブラリはルートロガーを触ってはいけません (v1.3.0で解消済み) <https://nikkie-ftnext.hatenablog.com/entry/google-genai-fixed-issue-call-logging-info-not-logger-info>`__
+
+.. [#google-adk-issue-blog-en] My blog post: `Agent Development Kit (1.10.0) のWeb UIやAPIサーバは DEBUG レベルでロギングして送られているプロンプトを確認できますが、その実装には伸びしろがあります（Workaroundを添えて） <https://nikkie-ftnext.hatenablog.com/entry/google-adk-python-cli-debug-logging-noisy-and-workaround>`__
+
+Workaround: the ``force`` argument of ``basicConfig()``
+------------------------------------------------------------
+
+.. code-block:: python
+    :emphasize-lines: 7
+
+    import logging
+
+    logging.basicConfig(level=logging.INFO)
+    logging.info("as expected")
+    logging.warning("a little dangerous")
+
+    logging.basicConfig(level=logging.WARNING, force=True)
+    logging.info("as expected")
+    logging.warning("a little dangerous")
+
+📣 **Do not touch the root logger in a library**
+--------------------------------------------------
+
+    It is strongly advised that you *do not log to the root logger* in your library. 
+
+Note in `Configuring Logging for a Library <https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library>`__

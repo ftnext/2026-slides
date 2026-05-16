@@ -13,10 +13,10 @@ Chapter 1: loggingモジュールの構成要素 [#chapter1-base]_
 HTTPXを例に **実際のログを見ながら** [#pep723]_ 構成要素を紹介
 ----------------------------------------------------------------------
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 10-12,23-25
-    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpx_logging.py>`__ [#logging-percent-format]_
+    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpxyz_logging.py>`__ [#logging-percent-format]_
 
 .. [#pep723] `PyCon JP 2024 で話した inline script metadata <https://2024.pycon.jp/ja/talk/89F3RQ>`__ を使っています
 
@@ -116,11 +116,11 @@ HTTPXの中にあるロギング
 HTTPXに仕込まれたログを見るためのコード
 --------------------------------------------------
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 13-21
     :linenos:
-    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpx_logging.py>`__
+    :caption: `サンプルスクリプト <https://github.com/ftnext/2025-slides/blob/9a87155e4d4923ba0e957a7e2e9e1c9cdd91cd73/samplecode/python-logging/library_logger/httpxyz_logging.py>`__
 
 1️⃣ ユーザもロガーを取得
 --------------------------------------------------
@@ -129,7 +129,7 @@ HTTPXに仕込まれたログを見るためのコード
 
 .. [#singleton] ロガーはシングルトン（`「避けるべきパターン」の「ロガーをクラスの属性にするか、パラメータで渡す」 <https://docs.python.org/ja/3/howto/logging-cookbook.html#using-loggers-as-attributes-in-a-class-or-passing-them-as-parameters>`__）
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 13-14
     :emphasize-lines: 1
@@ -140,7 +140,7 @@ HTTPXに仕込まれたログを見るためのコード
 * ロガーのレベル以上の重要度のメッセージを記録、未満は無視
 * 今回は ``DEBUG`` レベル以上を記録する（``INFO`` 含む）
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 13-14
     :emphasize-lines: 2
@@ -158,7 +158,7 @@ HTTPXに仕込まれたログを見るためのコード
 3️⃣ **出力先** を設定 - ハンドラ
 --------------------------------------------------
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 16-21
     :caption: ストリームに出力するハンドラをロガーに取り付け
@@ -188,7 +188,7 @@ HTTPXに仕込まれたログを見るためのコード
 
 * フォーマッタがログレコードに書式を適用し、それをハンドラが出力
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 17-20
     :linenos:
@@ -197,7 +197,7 @@ HTTPXに仕込まれたログを見るためのコード
 書式は **ログレコードの属性名** を指定
 --------------------------------------------------
 
-.. literalinclude:: ../../samplecode/python-logging/library_logger/httpx_logging.py
+.. literalinclude:: ../../samplecode/python-logging/library_logger/httpxyz_logging.py
     :language: python
     :lines: 17-20
     :linenos:

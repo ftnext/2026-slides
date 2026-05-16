@@ -1,0 +1,189 @@
+.. プロポーザル
+    5. Gleanings (4 minutes)
+    - If no handler is attached to library loggers: "handler of last resort" outputs WARNING+ messages
+    - Configuration via files instead of code
+    - Introduce easier libraries like loguru
+
+Chapter 5: Gleanings
+======================================================================
+
+1. The last resort handler
+2. Configuration options, including file-based configuration
+3. Alternatives to standard library ``logging`` such as loguru
+
+1️⃣ The last resort handler
+======================================================================
+
+.. literalinclude:: ../../samplecode/python-logging/last_resort_example/mylib.py
+    :language: python
+    :lines: 1-6,8
+    :caption: Warning-level logging in a library
+
+Actually, logging works without ``basicConfig()``
+--------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/last_resort_example/app.py
+    :language: python
+    :caption: Application code that does not configure the root logger
+
+.. code-block:: txt
+
+    a little dangerous
+
+When no handler is added to a logger
+--------------------------------------------------
+
+    The event is output using a ‘handler of last resort’, stored in ``lastResort``.
+
+    The handler’s level is set to ``WARNING``, (omitted)
+
+`What happens if no configuration is provided <https://docs.python.org/3/howto/logging.html#what-happens-if-no-configuration-is-provided>`__
+
+Use ``NullHandler`` if you do not want the last resort handler
+--------------------------------------------------------------
+
+    If for some reason you *don’t* want these messages printed in the absence of any logging configuration, you can attach a do-nothing handler to the top-level logger for your library.
+
+`Configuring Logging for a Library <https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library>`__
+
+Do not attach anything except ``NullHandler`` 🙅‍♂️
+------------------------------------------------------------
+
+* Output from the library logger's handler
+* Propagation to the parent root logger, where the root logger's handler also processes it: **duplicate** output
+
+2️⃣ Configuration options
+======================================================================
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_hard.py
+    :language: python
+    :lines: 14-23
+
+.. _dictConfig(): https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig
+
+`dictConfig()`_
+------------------------------------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_dictconfig.py
+    :language: python
+    :lines: 8,14-40
+    :caption: `Root-logger logging with dictConfig <https://github.com/ftnext/2026-slides/blob/9efad94336cebf0dcd17afdb0a7c4abbcb2f52f1/samplecode/python-logging/library_logger/root_logging_dictconfig.py>`__
+
+.. _fileConfig(): https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig
+
+`fileConfig()`_ instead of code
+----------------------------------------------------------------------------------------------------------------
+
+* Configure logging with a `configparser <https://docs.python.org/3/library/configparser.html>`__ style file [#configparser-file-en]_
+
+    The file must contain sections called ``[loggers]``, ``[handlers]`` and ``[formatters]`` (omitted) (`Configuration file format <https://docs.python.org/3/library/logging.config.html#configuration-file-format>`__)
+
+.. [#configparser-file-en] `Configuring Logging <https://docs.python.org/3/howto/logging.html#configuring-logging>`__
+
+💡YAML file [#other-file-options]_ + ``dictConfig`` [#yaml-dictconfig-blog-en]_
+--------------------------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/root_logging_yamlconfig.py
+    :language: python
+    :lines: 17-20
+    :caption: `Root-logger logging by loading a dictionary from a file <https://github.com/ftnext/2026-slides/blob/9efad94336cebf0dcd17afdb0a7c4abbcb2f52f1/samplecode/python-logging/library_logger/root_logging_yamlconfig.py>`__
+
+I learned this from uvicorn's logging implementation
+
+.. [#other-file-options] Other options: JSON (with stdlib `json <https://docs.python.org/3/library/json.html>`__), TOML (with stdlib `tomllib <https://docs.python.org/3/library/tomllib.html>`__)
+
+.. [#yaml-dictconfig-blog-en] My blog post: `Pythonのライブラリに用意されたロガーをlogging.configで設定する（httpxを例に、辞書やYAMLで設定） <https://nikkie-ftnext.hatenablog.com/entry/configure-python-librarys-logger-logging-config-dict-or-yaml>`__
+
+3️⃣ Alternatives to standard library ``logging``
+======================================================================
+
+Listed in `Logging on vinta/awesome-python <https://github.com/vinta/awesome-python?tab=readme-ov-file#logging>`__
+
+* loguru
+* structlog
+
+IMO: each has its own strong worldview
+
+.. _loguru: https://github.com/Delgan/loguru
+
+`loguru`_
+--------------------------------------------------
+
+    Python logging made (stupidly) simple
+
+* You can output logs produced through HTTPX's standard-library logging using loguru
+* From `Entirely compatible with standard logging <https://github.com/Delgan/loguru/tree/0.7.3?tab=readme-ov-file#entirely-compatible-with-standard-logging>`__, implement an *InterceptHandler* and configure it as a root logger handler (next slide)
+
+.. revealjs-break::
+    :notitle:
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/loguru_example.py
+    :language: python
+    :lines: 18-37
+    :caption: `Logging with loguru <https://github.com/ftnext/2026-slides/blob/9efad94336cebf0dcd17afdb0a7c4abbcb2f52f1/samplecode/python-logging/library_logger/loguru_example.py>`__ [#loguru-with-logging-blog-en]_
+
+.. [#loguru-with-logging-blog-en] My blog post `HTTPX を例に、標準ライブラリ logging によるログを loguru で出力するには <https://nikkie-ftnext.hatenablog.com/entry/loguru-compatibility-with-stdlib-logging-example-httpx>`__
+
+.. _structlog: https://github.com/hynek/structlog
+
+`structlog`_
+--------------------------------------------------
+
+    Simple, powerful, and fast logging for Python.
+
+* It can replace standard library ``logging``, but is also `compatible <https://www.structlog.org/en/stable/standard-library.html#suggested-configurations>`__ (*structlog.stdlib.ProcessorFormatter*)
+* PyCon JP 2024: `実践structlog <https://2024.pycon.jp/en/talk/RRRAAT>`__ (Practical structlog)
+
+.. revealjs-break::
+    :notitle:
+
+.. literalinclude:: ../../samplecode/python-logging/library_logger/structlog_example.py
+    :language: python
+    :lines: 23-39,49-55
+    :caption: `Logging with structlog <https://github.com/ftnext/2026-slides/blob/9efad94336cebf0dcd17afdb0a7c4abbcb2f52f1/samplecode/python-logging/library_logger/structlog_example.py>`__ [#structlog-with-logging-blog-en]_
+
+.. [#structlog-with-logging-blog-en] My blog post `HTTPX を例に、標準ライブラリ logging によるログを structlog で出力するには <https://nikkie-ftnext.hatenablog.com/entry/structlog-integration-with-stdlib-logging-example-httpx>`__
+
+One more thing
+======================================================================
+
+.. _happy-python-logging: https://pypi.org/project/happy-python-logging/
+
+My package: `happy-python-logging`_
+----------------------------------------------------------------------
+
+☝️ ``PYTHON_LOG=httpxyz=debug happy-python-logging run script.py``
+
+Set up logging for your script **with zero logging code**
+
+✌️ ``uvx --with happy-python-logging[flake8] flake8``
+
+Lint rules that **points out use of logging.basicConfig()**
+
+Try ``happy-python-logging run`` [#pep723-support]_ 🏃‍♂️
+----------------------------------------------------------------------
+
+.. [#pep723-support] I will support PEP 723 (inline script metadata) soon
+
+.. code-block:: console
+
+    % PYTHON_LOG=httpxyz=debug happy-python-logging run script.py
+    2026-05-12 19:41:01,563 | DEBUG (httpxyz) | __init__.py:<module>:122 - httpx not found in sys.modules — aliased to httpxyz
+    2026-05-12 19:41:01,921 | INFO (httpxyz) | _client.py:_send_single_request:1032 - HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"
+
+.. code-block:: python
+    :caption: script.py (no logging code!)
+
+    from datetime import datetime
+
+    import httpxyz
+    from rich.pretty import pprint
+
+    resp = httpxyz.get("https://peps.python.org/api/peps.json")
+    data = resp.json()
+    peps_desc_created = sorted(
+        data.items(),
+        key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+        reverse=True,
+    )
+    pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])
