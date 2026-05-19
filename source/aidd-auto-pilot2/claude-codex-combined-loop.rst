@@ -33,14 +33,16 @@
 
 .. [#2026-auto-pilot-article] `散文：夜に駆ける <https://nikkie-ftnext.hatenablog.com/entry/memorandum-auto-pilot-coding-agent-at-night-202602>`__
 
-最近の自走トピック：Codex Appの **自動レビュー**
+.. _自動レビュー: https://alignment.openai.com/auto-review
+
+最近の自走トピック：Codex Appの `自動レビュー`_
 ----------------------------------------------------------------------
 
 .. raw:: html
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">Auto-review is a new mode that lets Codex work longer with fewer approvals and safer execution.<br><br>It helps Codex keep moving through tests, builds, and more, including during long tasks and automations, while a separate agent checks higher-risk steps in context before they run. <a href="https://t.co/TCcNC5yB0H">pic.twitter.com/TCcNC5yB0H</a></p>&mdash; OpenAI Developers (@OpenAIDevs) <a href="https://twitter.com/OpenAIDevs/status/2047436655863464011?ref_src=twsrc%5Etfw">2026年4月23日</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-人間の承認を不要にする流れ🔥
+人間の **承認を不要に** する流れ🔥
 ------------------------------------------------------------
 
 * Codex Appの自動レビュー（前頁） [#codex-auto-review-episode]_
@@ -138,29 +140,35 @@ Claude Code のプラグインとしてインストール [#codex-plugin-cc-vers
     10. Stop (1)             Right before Claude concludes its response
     16. SessionEnd (1)  When a session is ending
 
-Claude Codeの実装が終わると、Codexがレビュー！
+Stopフックによるレビューゲート
 ------------------------------------------------------------
 
-* Opus 4.7 (1M)と一緒にプラン
-* レビューゲートを有効にして、実装開始（オートモード）
-* Opusが実装を終える [#why-advisor-tool]_ と、 **Codex(GPT-5.5)がレビュー** （``codex review`` 相当）
+* 直前のClaude Codeのターンをレビューする
+* ALLOW または BLOCK
+* プロンプトは `stop-review-gate.md <https://github.com/openai/codex-plugin-cc/blob/v1.0.4/plugins/codex/prompts/stop-review-gate.md>`__
 
-.. [#why-advisor-tool] セッションを遡ったところ、私の環境だけかもしれませんが、Opusモデルもなぜか `advisor <https://platform.claude.com/docs/ja/agents-and-tools/tool-use/advisor-tool>`__ にレビュー求めてました。「*advisor に最終チェックしてもらってから*」
-
-もう1つのレビュー：adversarial-review
+2つのレビュー
 ------------------------------------------------------------
 
-* ``codex review`` とは別に、**プロンプトを組み立てる** レビュー
-* https://github.com/openai/codex-plugin-cc/blob/v1.0.4/plugins/codex/prompts/adversarial-review.md
-* **厳しい** 印象。30分超えでレビューループが走っていた [#adversarial-review-story]_
+:review: ``codex review`` 相当
+:adversarial-review: プロンプト `adversarial-review.md <https://github.com/openai/codex-plugin-cc/blob/v1.0.4/plugins/codex/prompts/adversarial-review.md>`__ を使ったレビュー（厳しめな印象）
 
-.. [#adversarial-review-story] 私の環境だけな気がしますが、Claude Codeはreview gateが通ってないのに止まってしまった（「*正直に言うと、まだ確認取れてない*」）ので、adversarial-reviewに叩き込みました（Stopフック未発火？）
+Opus 4.7 (1M)とCodex(GPT-5.5)の一コマ
+------------------------------------------------------------
+
+* レビューゲートとオートモードを有効にして、プランを実装
+* 実装を終える [#why-advisor-tool]_ たびにレビュー！ [#adversarial-review-story]_
+* adversarial-reviewに叩き込み、30分超えで走った
+
+.. [#why-advisor-tool] `advisor <https://platform.claude.com/docs/ja/agents-and-tools/tool-use/advisor-tool>`__ にOpusもなぜかレビュー求めるんですよね。「*advisor に最終チェックしてもらってから*」
+
+.. [#adversarial-review-story] Claude Codeはreview gateが通ってないのに止まることあり（「*正直に言うと、まだ確認取れてない*」。Stopフック未発火？）
 
 taktに代わるレビューループを手に入れた！が
 ------------------------------------------------------------
 
-* PCが占拠される（閉じれらない）
-* そのままでは眩しくて **眠れない** ...（MacBookのディスプレイ一番暗くして一晩放置）
+* PCが占拠される（閉じれない）
+* そのままでは眩しくて **眠れない** ...🥱（MacBookのディスプレイ一番暗くして一晩放置）
 
 2️⃣ Web環境の利用
 ============================================================
@@ -220,7 +228,7 @@ nice to have: 私は ``gh`` も追加してます [#sorry-no-ablation]_
 
 .. [#oikon-san-gh-setup-hooks] https://x.com/oikon48/status/2009948087574536490
 
-.. [#sorry-no-ablation] ⚠️ ``gh`` を入れないと壊れるのかablationできていません
+.. [#sorry-no-ablation] ``gh`` がなくても ``autofix-pr`` は動くと思いますが、``gh issue`` など打てるのが便利で入れてます
 
 Codex web (Codex cloud)
 ============================================================
@@ -308,7 +316,7 @@ Codex web (Codex cloud)
 ご清聴ありがとうございました
 ------------------------------------------------------------
 
-Happy Development ❤️🤖
+Happy Development ❤️🤖（ステッカードゾー）
 
 何か1つでも試そうというものがあったら嬉しいです！
 
