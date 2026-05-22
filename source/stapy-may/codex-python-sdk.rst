@@ -1,3 +1,9 @@
+:ogp_title: Pythonから使うCodex CLI
+:ogp_event_name: stapy-may
+:ogp_slide_name: codex-python-sdk
+:ogp_description: みんなのPython勉強会#121 LT
+:ogp_image_name: stapy-may
+
 .. Wake pet してデモの準備
 
 ======================================================================
