@@ -130,7 +130,6 @@ Code to see logs embedded in HTTPXYZ
     :language: python
     :lines: 14-22
     :linenos:
-    :lineno-start: 1
     :caption: `Sample script <https://github.com/ftnext/2026-slides/blob/8e0f6f3e86e3c3cbf25e7acd060a199cabf917db/samplecode/python-logging/library_logger/httpxyz_logging.py>`__
 
 1️⃣ The user also gets the logger
