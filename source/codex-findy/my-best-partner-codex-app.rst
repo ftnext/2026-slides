@@ -132,10 +132,11 @@ Codex Cloudのレビューのここが推し！
 ローカルのCodex {CLI,App}
 ==================================================
 
-* ``/review``（``/コードレビュー``）
+* ``/review`` （``/コードレビュー``）
 * ``codex review``
 
 .. TODO 仕組みの情報を追加したい
+    https://github.com/openai/codex/blob/rust-v0.136.0/codex-rs/core/review_prompt.md
 
 Codex以外でも（Cursor、VS Code）
 ------------------------------------------------------------
@@ -169,14 +170,16 @@ Codexのレビューを極め抜け
 * コードリーディング
 * 開発ワークフロー
 
-自動レビュー
+.. _自動レビュー: https://developers.openai.com/codex/concepts/sandboxing/auto-review
+
+`自動レビュー`_
 ==================================================
 
 * Codexが **実装** するのを大きくサポート
 * コマンド実行の *許可を求めてこなくなる*
 * プルリクエストや差分の **コードレビューではない** です
 
-Codex App「代理で承認」（自動レビュー）
+Codex App「代理で承認」（旧称 自動レビュー）
 ------------------------------------------------------------
 
 .. raw:: html
@@ -203,9 +206,16 @@ codex-cli 0.136.0-alpha.2
 ------------------------------------------------------------
 
 * LLMがコマンドの **実行許可を人間の代わりに** 見てくれる [#auto-review-reject-example]_
-* サブエージェントによる実装（``guardian_subagent``）
+* サブエージェント + プロンプトによる実装（``guardian_subagent``）
 
 .. [#auto-review-reject-example] トランクベース開発と伝えていないメインブランチpushは弾かれました
+
+.. revealjs-break::
+    :notitle:
+
+.. raw:: html
+
+    <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="ja" dir="ltr">Codex Appの自動レビューにめちゃめちゃ助けられていて、でもこれって企業秘密っぽいよなーと思ってましたが、なんと仕組み公開されてました。<br>プロンプトで判定させてるだけ、パクれる！！<a href="https://t.co/ASkqHfswHq">https://t.co/ASkqHfswHq</a><br>App Serverもサポートしているみたいで、Codex Appに限らず使えそう。ありがたい限り</p>&mdash; nikkie(にっきー) / にっP (@ftnext) <a href="https://x.com/ftnext/status/2059055723657809960?ref_src=twsrc%5Etfw">2026年5月25日</a></blockquote>
 
 .. TODO 仕組みをのぞいたネタが追加できそう
 
@@ -247,8 +257,10 @@ codex-cli 0.136.0-alpha.2
 ==================================================
 
 * ChatGPTのモバイルアプリ使ってる方？🙋（私はiPhoneで）
-* ChatGPTのモバイルアプリから、あなたの **PCのCodex Appに接続** できます
+* ChatGPTのモバイルアプリから、あなたの **PCのCodex Appに接続** できます [#codex-remote-connections-docs]_
 * （Codex Cloudとは別の話）
+
+.. [#codex-remote-connections-docs] https://developers.openai.com/codex/remote-connections
 
 .. revealjs-break::
     :notitle:
@@ -318,28 +330,48 @@ App Server **SDK** [#app-server-sdk-docs]_
 ------------------------------------------------------------
 
 * TypeScript
-* **Python** (NEW!!)
+* **Python** (NEW!!) 🔥
 
 .. [#app-server-sdk-docs] https://developers.openai.com/codex/sdk
 
 App Server SDK
 ------------------------------------------------------------
 
-* npm `@openai/codex-sdk <https://www.npmjs.com/package/@openai/codex-sdk>`__ （例：`nrslib/takt <https://github.com/nrslib/takt/blob/v0.43.0/package.json#L67>`__）
+* npm `@openai/codex-sdk <https://www.npmjs.com/package/@openai/codex-sdk>`__ （例：`nrslib/takt <https://github.com/nrslib/takt/blob/v0.43.0/package.json#L67>`__ [#findy-nrslib-takt]_ ）
 * PyPI `openai-codex <https://pypi.org/project/openai-codex/>`__
 
-TODO レビューもさせる例
+.. [#findy-nrslib-takt] `AIに疲れたプログラマが、OSSを始めるまで <https://findy-code.io/media/articles/codesidechat-nrslib>`__
+
+Codexに実装&レビューさせるワークフロー実装例
 ------------------------------------------------------------
+
+.. code-block:: console
+    :caption: `review_loop_idea.py <https://github.com/ftnext/2026-slides/blob/main/samplecode/codex-sdk-example/review_loop_idea.py>`__
+
+    % uv run review_loop_idea.py 
+    Sample project: /.../codex-sdk-implementation-review-ayzpy2am
+    Implementation/review CLI. Type /diff to show the current diff.
+    Type /exit or /quit to stop.
+
+    task> calculatorに冪乗を実装して
+
+    Implementation:
+    実装しました。
+
+    Review cycle 1:
+    Review summary: No actionable correctness, regression, missing-test, or unsafe-behavior issues found in the uncommitted changes. `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v` passes.
+    Review findings: none
 
 ぜひ構築してみてください！
 ==================================================
 
-* `Awesome Codex App Server <https://posfie.com/@ftnext/p/SpkW6rS>`__ （更新中） 
+* OpenAIによる `Python SDK Examples <https://github.com/openai/codex/tree/main/sdk/python/examples>`__
+* nikkieまとめ `Awesome Codex App Server <https://posfie.com/@ftnext/p/SpkW6rS>`__ （更新中） 
 
 まとめ🌯 わたしの、最高の相棒、Codex
 ==================================================
 
-:自動レビュー: **自走** が簡単に
+:自動レビュー: **自走** が簡単に（+定評あるコードレビュー）
 :モバイル: スマホ片手にどこからでも **コードリーディング**
 :App Server: **開発ワークフロー** も組める！
 
