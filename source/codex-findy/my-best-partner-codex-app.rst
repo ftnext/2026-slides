@@ -18,8 +18,6 @@
 
 .. image:: ../_static/uzabase-white-logo.png
 
-.. （仕事はペアプロ環境）個人開発の事例中心
-
 3月 [#codex-findy-march]_ にもお話ししました
 ------------------------------------------------------------
 
@@ -29,6 +27,14 @@
         title="わたしの、最高の相棒、Codex CLI"></iframe>
 
 .. [#codex-findy-march] アーカイブ https://findy-code.io/events/VL_rdU3iJcEoP
+
+おことわり
+------------------------------------------------------------
+
+* ユーザベースのSpeeda開発チームは *常時ペアプログラミング* で開発しています [#uzabase-pair-programming]_
+* Codexの利用事例は、私の **個人開発から** が中心です
+
+.. [#uzabase-pair-programming] `僕らのペアプログラミングにはまだ伸びしろがある ─ ペアプロガイドラインを策定したユーザベースはどんなペアプロをしているのか？ <https://agilejourney.uzabase.com/entry/2025/01/24/103000>`__
 
 3月からの差分：**Codex App** [#why-app]_
 ==================================================
@@ -49,12 +55,14 @@ Codexの提供形態 [#codex-quickstart-doc]_ (私の利用量)
 
 .. [#codex-quickstart-doc] https://developers.openai.com/codex/quickstart#setup
 
-Appって何ができるの？ ー おすすめ動画
+Appって何ができるの？ ー おすすめ動画 [#findy-kyohei-san]_
 ------------------------------------------------------------
 
 .. raw:: html
 
     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/LoX9_dnXthc?si=pzwvD_FUClL1bzcg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+.. [#findy-kyohei-san] `オレオレ神関数のOSS化で人生が変わった。pdfme開発者 kyoheiさんがOSS活動に取り組む理由 <https://findy-code.io/engineer-lab/pdfme>`__
 
 イチオシ機能：**ペット** と一緒 🏃‍♂️
 ------------------------------------------------------------
@@ -73,15 +81,15 @@ Appって何ができるの？ ー おすすめ動画
 
 .. [#ambassador-disclaimer] Codex Ambassadorといっても私はめちゃめちゃ知っているわけではありません。紹介されなかったけどこれが便利というものがある方はぜひ発信を🙏（拡散します）
 
-レビュー
+レビュー [#why-ai-review]_
 ==================================================
 
-ひとつのことを極め抜け
+`ひとつのことを極め抜け <https://kimetsu.com/anime/story/detail/?ep=17&series=risshi>`__ ⚡️
 
 1. Codex Cloud
 2. ローカルでの開発
 
-.. （なぜレビューさせるのか。人間が見るところを減らしたい。）
+.. [#why-ai-review] AIが生産するコードを全部見切れないので、人間が見る箇所を可能な限り減らしたくて取り組んでます
 
 OpenAIはCodexでレビュー [#example-codex-github]_
 ------------------------------------------------------------
@@ -98,7 +106,7 @@ https://x.com/lennysan/status/2022121036364529702
 ==================================================
 
 * Codex Cloud は **簡単** にGitHubと連携設定できます
-* PRにpushされるたびにCodexがレビュー
+* 私の設定：PRにpushされるたびにレビュー
 * レビューは本当に頼りにしています（例：GitHub Actionsのセキュリティ面）
 
 設定例（画像は設定画面へのリンクです）
@@ -112,12 +120,19 @@ Codex Cloudのレビューのここが推し！
 ------------------------------------------------------------
 
 * 差分を読むだけにあらず
-* **Cloudの環境を使ってコマンド実行**。仮説を持ったレビュー
+* `Cloudの環境を使って <https://chatgpt.com/codex/cloud?tab=code_reviews>`__ **コマンド実行**。仮説を持ったレビュー
+* この動画の受け売り：`Automatic code reviews with OpenAI Codex <https://youtu.be/HwbSWVg5Ln4?si=v4gCsn58o9nMh0fF&t=168>`__
+
+自動コードレビュー ✖️ PRの面倒
+------------------------------------------------------------
+
+* ``/autofix-pr`` (Claude Code on the web)（`プルリクエストの自動修正 <https://code.claude.com/docs/ja/claude-code-on-the-web#%E3%83%97%E3%83%AB%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E8%87%AA%E5%8B%95%E4%BF%AE%E6%AD%A3>`__）
+* Devin
 
 ローカルのCodex {CLI,App}
 ==================================================
 
-* ``/review``
+* ``/review``（``/コードレビュー``）
 * ``codex review``
 
 .. TODO 仕組みの情報を追加したい
@@ -136,23 +151,15 @@ Codex以外でも（Cursor、VS Code）
 
 * OpenAIによるClaude Codeプラグイン
 * Claude CodeからCodexを呼び出せる（スキルやフックを提供）
-* 例：Claude CodeがStopするとCodexがレビュー（レビューゲート）
-
-.. （/goalでもいける説 PRの面倒のアイデア？）
-
-PRの面倒 ✖️ 自動コードレビュー
-------------------------------------------------------------
-
-Codex Cloudの自動コードレビューと組合せる
-
-* ``/autofix-pr`` (Claude Code on the web)
-* Devin
+* 例：Claude CodeがStopするとCodexがレビュー（``/codex:setup --enable-review-gate``）
 
 Codexのレビューを極め抜け
 ==================================================
 
 * Codex CloudでGitHubのプルリクレビュー設定はおすすめ
-* ローカルでの開発でも、Codex(GPT)のレビューを求めに行く
+* ローカルでの開発でも、Codex(GPT)のレビューを求めに行く [#goal-review-gate-idea]_
+
+.. [#goal-review-gate-idea] ``/goal`` でもレビューゲートのような動きはできてそう
 
 🔖開発フローの中で活かすCodex
 ------------------------------------------------------------
@@ -169,7 +176,7 @@ Codexのレビューを極め抜け
 * コマンド実行の *許可を求めてこなくなる*
 * プルリクエストや差分の **コードレビューではない** です
 
-Codex App「自動レビュー」（代理で承認）
+Codex App「代理で承認」（自動レビュー）
 ------------------------------------------------------------
 
 .. raw:: html
@@ -181,7 +188,9 @@ Codex App「自動レビュー」（代理で承認）
 Codex CLIは ``/permissions``
 ------------------------------------------------------------
 
-TODO
+.. image:: ../_static/codex-findy/codex-cli-permissions-0-136-0.png
+
+codex-cli 0.136.0-alpha.2
 
 自走例
 ------------------------------------------------------------
@@ -193,10 +202,10 @@ TODO
 自動レビューは何をするのか
 ------------------------------------------------------------
 
-* LLMがコマンドの **実行許可を人間の代わりに** 見てくれる
+* LLMがコマンドの **実行許可を人間の代わりに** 見てくれる [#auto-review-reject-example]_
 * サブエージェントによる実装（``guardian_subagent``）
 
-.. メインブランチpushは弾かれる
+.. [#auto-review-reject-example] トランクベース開発と伝えていないメインブランチpushは弾かれました
 
 .. TODO 仕組みをのぞいたネタが追加できそう
 
@@ -206,12 +215,6 @@ TODO
 * Claude Code `auto mode <https://code.claude.com/docs/ja/auto-mode-config>`__
 * Cursor (3.6) `Auto-review Run Mode <https://cursor.com/ja/docs/agent/tools/terminal#auto-review>`__
 
-2026年最高の発明、自動レビュー
-==================================================
-
-* Codex {App,CLI}（や他のコーディングエージェント）でぜひ設定しましょう
-* 仕組み：LLMにプロンプトで代理に承認させています
-
 コーディングエージェント自走が圧倒的に簡単に
 ------------------------------------------------------------
 
@@ -219,8 +222,14 @@ TODO
 
     <iframe class="speakerdeck-iframe" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/6f8da4e8af70435693f4fdd940e956e4?slide=3" title="夜を制する者が “AI Agent 大民主化時代” を制する" allowfullscreen="true" allow="web-share" data-ratio="1.7777777777777777"></iframe>
 
-CM：導入するなら
+2026年最高の発明、自動レビュー
 ==================================================
+
+* Codex {App,CLI}（や他のコーディングエージェント）でぜひ設定しましょう
+* 仕組み：LLMにプロンプトで代理に承認させています
+
+**CM**：導入するなら
+------------------------------------------------------------
 
 .. raw:: html
 
@@ -238,7 +247,7 @@ CM：導入するなら
 ==================================================
 
 * ChatGPTのモバイルアプリ使ってる方？🙋（私はiPhoneで）
-* ChatGPTのモバイルアプリから、あなたのPCのCodex Appに接続できます
+* ChatGPTのモバイルアプリから、あなたの **PCのCodex Appに接続** できます
 * （Codex Cloudとは別の話）
 
 .. revealjs-break::
@@ -248,13 +257,6 @@ CM：導入するなら
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">You&#39;ve been asking for this one...<br><br>Now in preview: Codex in the ChatGPT mobile app.<br><br>Start new work, review outputs, steer execution, and approve next steps, all from the ChatGPT mobile app. Codex will keep running on your laptop, Mac mini, or devbox. <a href="https://t.co/9i2Jckjt9z">pic.twitter.com/9i2Jckjt9z</a></p>&mdash; OpenAI (@OpenAI) <a href="https://x.com/OpenAI/status/2055016850849993072?ref_src=twsrc%5Etfw">2026年5月14日</a></blockquote>
 
-モバイルでCodex
-------------------------------------------------------------
-
-* あなたのPCで動くCodex Appにモバイルから接続
-* 私はPCでCodex Appで常時作業
-* スマホさえ持っていれば、PCにcloneしたコードについて質問して **PCが手元になくても** 回答を得られる
-
 元々Codexでソースコード読んでました
 ------------------------------------------------------------
 
@@ -263,17 +265,23 @@ CM：導入するなら
     <iframe width="800" height="480" src="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html"
         title="Codex CLIで加速するコードリーディング"></iframe>
 
+モバイルでCodex
+------------------------------------------------------------
+
+* 私はPCでCodex Appで常時作業
+* スマホさえ持っていれば、PCにcloneしたコードについて質問して **PCが手元になくても** 回答を得られる
+
 仕事中
 ------------------------------------------------------------
 
-* 通勤中は投げておいた質問の回答を読みながら
-* 仕事中常時ペアプロ。休憩時間に使ってるライブラリへの疑問をモバイルから自宅のCodexに投げる
+:通勤中: 投げておいた質問の回答を読みながら
+:仕事中: 休憩時間に使ってるライブラリへのニッチな疑問を、モバイルから自宅のCodexに投げる
 
 モバイルで超快適コードリーディング
 ==================================================
 
-* Codex AppにChatGPTモバイルアプリから接続する設定をぜひ！
-* ここでもポイントは「自動レビュー」
+* **Codex AppにChatGPTモバイルアプリから接続** する設定をぜひ！
+* ここでもポイントは「自動レビュー（代理で承認）」
 * なおMacBookは画面ロックせず低電力モードで待機（*最適化の余地あり*）
 
 🔖開発フローの中で活かすCodex
@@ -302,9 +310,9 @@ Codexを使った *開発ワークフローをカスタマイズ* できる
 記事 `Codex ハーネスの解放：App Server を構築した方法`_
 ------------------------------------------------------------
 
-* **JSON-RPC** プロトコル
+* サーバとクライアント間の **JSON-RPC** プロトコル
 * 異なるクライアント（CLI、App、IDE拡張、...）が同じCodexハーネスを使用できる
-* CLIで ``codex app-server``
+* CLIで ``codex app-server`` したらサーバ起動
 
 App Server **SDK** [#app-server-sdk-docs]_
 ------------------------------------------------------------
@@ -349,10 +357,14 @@ Appendix：開発フローの中でさらに活かすCodex
 助けてCodexえもん〜
 ==================================================
 
-落ちた GitHub Actions の調査
+* 落ちた GitHub Actions の調査
+* ローカルPCから ``gh`` コマンドでworkflowのログを確認
 
-TODO
+自走して適切に修正
 ------------------------------------------------------------
+
+:権限設定ミス解決: https://github.com/ftnext/agents-cli-source-mirror/commit/aa7f9d2063e84b47eecde7a37a85d919b5d32cae
+:メジャーバージョンアップに伴う依存の更新: https://github.com/ftnext/adk-python-db-schema-history/commit/ea6bbb4a56e0c83730dee7a2fc01ad71c11ae30f
 
 自動化
 ==================================================
@@ -362,12 +374,16 @@ TODO
 3月に話しました
 ------------------------------------------------------------
 
-TODO
+.. raw:: html
+
+    <iframe width="800" height="480" src="https://ftnext.github.io/2026-slides/codex-findy/my-best-partner-codex-cli.html#/7/2"
+        title="わたしの、最高の相棒、Codex CLI"></iframe>
 
 直近ではLLMを使おうとしたら綺麗にシェルスクリプトに収められた
 ----------------------------------------------------------------------
 
-* TODO：Claude Code Actionからシェルスクリプトにした例
+* Claude Code Actionを使っていたが、「その必要ないです」とCodexがシェルスクリプトにした例
+* https://github.com/ftnext/agents-cli-source-mirror/commit/6a50f60772c2b11782c113be69715a2e63392863
 
 EOF
 ===
