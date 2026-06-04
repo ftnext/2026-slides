@@ -10,13 +10,15 @@
 :Event: 開発フローの中で活かすCodex ``#codex_findy``
 :Presented: 2026/06/04 nikkie（スペース連打 or 矢印キーでめくります）
 
-お前、誰よ（Python使いの自己紹介）
+お前、誰よ [#omae-dareyo]_
 ==================================================
 
-* nikkie（にっきー）・Python歴8年・ **Codex Ambassador** (Tokyo)
+* nikkie（にっきー）・Python歴8年・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__
 * 機械学習エンジニア（`We're hiring! <https://hrmos.co/pages/uzabase/jobs/1829077236709650481>`__）・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A提供 <https://jp.ub-speeda.com/news/20260319/>`__）
 
 .. image:: ../_static/uzabase-white-logo.png
+
+.. [#omae-dareyo] Pythonコミュニティにおける自己紹介のことです
 
 3月 [#codex-findy-march]_ にもお話ししました
 ------------------------------------------------------------
@@ -31,8 +33,8 @@
 おことわり
 ------------------------------------------------------------
 
-* ユーザベースのSpeeda開発チームは *常時ペアプログラミング* で開発しています [#uzabase-pair-programming]_
 * Codexの利用事例は、私の **個人開発から** が中心です
+* ユーザベースのSpeeda開発チームは *常時ペアプログラミング* で開発しています [#uzabase-pair-programming]_ 。featureブランチでプルリクエストはありません
 
 .. [#uzabase-pair-programming] `僕らのペアプログラミングにはまだ伸びしろがある ─ ペアプロガイドラインを策定したユーザベースはどんなペアプロをしているのか？ <https://agilejourney.uzabase.com/entry/2025/01/24/103000>`__
 
@@ -43,7 +45,7 @@
     :alt: https://developers.openai.com/images/codex/app/app-screenshot-light.webp
     :target: https://developers.openai.com/codex/app
 
-.. [#why-app] 理解していなくても `git worktreeが簡単に使えた <https://developers.openai.com/codex/app/worktrees>`__ ので、CLIから乗り換えが進みました
+.. [#why-app] 理解していなくても `git worktreeが簡単に使えた <https://developers.openai.com/codex/app/worktrees>`__ り、並列作業が管理しやすかったりで乗り換え
 
 Codexの提供形態 [#codex-quickstart-doc]_ (私の利用量)
 ------------------------------------------------------------
@@ -64,24 +66,26 @@ Appって何ができるの？ ー おすすめ動画 [#findy-kyohei-san]_
 
 .. [#findy-kyohei-san] `オレオレ神関数のOSS化で人生が変わった。pdfme開発者 kyoheiさんがOSS活動に取り組む理由 <https://findy-code.io/engineer-lab/pdfme>`__
 
-イチオシ機能：**ペット** と一緒 🏃‍♂️
+イチオシ機能：**ペット** と一緒 [#codex-pet-blog]_ 🏃‍♂️
 ------------------------------------------------------------
 
 .. raw:: html
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">Pets. Now in Codex.<br><br>Use /pet to wake your pet. <a href="https://t.co/aAm4lLP4LW">pic.twitter.com/aAm4lLP4LW</a></p>&mdash; OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2050275713824211041?ref_src=twsrc%5Etfw">2026年5月1日</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
+.. [#codex-pet-blog] 拙ブログ `Codex App で"ペットが飼える"ようになったと聞きまして <https://nikkie-ftnext.hatenablog.com/entry/codex-app-pet-feature-hatch-pet-skill-realize-my-idol>`__
+
 本題へ：開発フローの中で活かすCodex (IMO [#ambassador-disclaimer]_)
 ======================================================================
 
-* レビュー
+* コードレビュー
 * 実装
 * コードリーディング
 * 開発ワークフロー
 
 .. [#ambassador-disclaimer] Codex Ambassadorといっても私はめちゃめちゃ知っているわけではありません。紹介されなかったけどこれが便利というものがある方はぜひ発信を🙏（拡散します）
 
-レビュー [#why-ai-review]_
+コードレビュー [#why-ai-review]_
 ==================================================
 
 `ひとつのことを極め抜け <https://kimetsu.com/anime/story/detail/?ep=17&series=risshi>`__ ⚡️
@@ -91,12 +95,12 @@ Appって何ができるの？ ー おすすめ動画 [#findy-kyohei-san]_
 
 .. [#why-ai-review] AIが生産するコードを全部見切れないので、人間が見る箇所を可能な限り減らしたくて取り組んでます
 
-OpenAIはCodexでレビュー [#example-codex-github]_
+OpenAIはCodexでコードレビュー [#example-codex-github]_
 ------------------------------------------------------------
 
     Every pull request at OpenAI is now reviewed by Codex before human eyes see it,
 
-https://x.com/lennysan/status/2022121036364529702
+https://x.com/lennysan/status/2022121036364529702 (2026/02)
 
 .. [#example-codex-github] 例：https://github.com/openai/codex/pulls chatgpt-codex-connector[bot]
 
@@ -105,35 +109,39 @@ https://x.com/lennysan/status/2022121036364529702
 `Codex code review in GitHub`_
 ==================================================
 
-* Codex Cloud は **簡単** にGitHubと連携設定できます
-* 私の設定：PRにpushされるたびにレビュー
-* レビューは本当に頼りにしています（例：GitHub Actionsのセキュリティ面）
+* Codex Cloudは **簡単** にGitHubと連携設定できます
+* 私の設定：PRにpushされるたびにコードレビュー
+* 本当に頼りにしています（例：GitHub Actionsのセキュリティ面）
 
-設定例（画像は設定画面へのリンクです）
+設定例（画像クリックで設定画面へ）
 ------------------------------------------------------------
 
 .. image:: ../_static/aidd-auto-pilot2/codex-web-review-easy-setting.png
     :target: https://chatgpt.com/codex/cloud/settings/code-review
     :scale: 60%
 
-Codex Cloudのレビューのここが推し！
+Codex Cloud のコードレビューのここが推し！
 ------------------------------------------------------------
 
 * 差分を読むだけにあらず
-* `Cloudの環境を使って <https://chatgpt.com/codex/cloud?tab=code_reviews>`__ **コマンド実行**。仮説を持ったレビュー
+* `Cloudの環境を使って <https://chatgpt.com/codex/cloud?tab=code_reviews>`__ **コマンド実行**。仮説を持ったコードレビュー
 * この動画の受け売り：`Automatic code reviews with OpenAI Codex <https://youtu.be/HwbSWVg5Ln4?si=v4gCsn58o9nMh0fF&t=168>`__
 
 自動コードレビュー ✖️ PRの面倒
 ------------------------------------------------------------
 
-* ``/autofix-pr`` (Claude Code on the web)（`プルリクエストの自動修正 <https://code.claude.com/docs/ja/claude-code-on-the-web#%E3%83%97%E3%83%AB%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E8%87%AA%E5%8B%95%E4%BF%AE%E6%AD%A3>`__）
+* ``/autofix-pr`` (Claude Code on the web)（`プルリクエストの自動修正 <https://code.claude.com/docs/ja/claude-code-on-the-web#%E3%83%97%E3%83%AB%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E8%87%AA%E5%8B%95%E4%BF%AE%E6%AD%A3>`__） [#codex-claude-loop-blog]_
 * Devin
+
+.. [#codex-claude-loop-blog] 拙ブログ `Claude Code on the web の auto-fix × Codex cloud の PR レビュー で pull request を自動修正 <https://nikkie-ftnext.hatenablog.com/entry/claude-code-on-the-web-auto-fix-codex-cloud-github-integration-review-loop>`__
 
 ローカルのCodex {CLI,App}
 ==================================================
 
 * ``/review`` （``/コードレビュー``）
 * ``codex review``
+
+現在の差分やブランチをレビューできる
 
 .. TODO 仕組みの情報を追加したい
     https://github.com/openai/codex/blob/rust-v0.136.0/codex-rs/core/review_prompt.md
@@ -142,8 +150,8 @@ Codex以外でも（Cursor、VS Code）
 ------------------------------------------------------------
 
 * CursorのComposer 2.5で実装
-* レビュー目的で私は **新規セッションでGPTを呼び出す**
-* plan(Opus 4.8)、実装(Composer 2.5)、レビュー(GPT-5.5)と切り替えるのを試してます
+* コードレビュー目的で私は **新規セッションでGPTを呼び出す**
+* plan(Opus 4.8)、実装(Composer 2.5)、コードレビュー(GPT-5.5)と切り替えるのを試し中
 
 .. _Codex plugin for Claude Code: https://github.com/openai/codex-plugin-cc
 
@@ -151,21 +159,21 @@ Codex以外でも（Cursor、VS Code）
 ------------------------------------------------------------
 
 * OpenAIによるClaude Codeプラグイン
-* Claude CodeからCodexを呼び出せる（スキルやフックを提供）
-* 例：Claude CodeがStopするとCodexがレビュー（``/codex:setup --enable-review-gate``）
+* **Claude CodeからCodexを呼び出せる** （スキルやフックを提供）
+* 例：Claude CodeがStopするとCodexがコードレビュー（``/codex:setup --enable-review-gate``）
 
-Codexのレビューを極め抜け
+Codexのコードレビューを極め抜け
 ==================================================
 
 * Codex CloudでGitHubのプルリクレビュー設定はおすすめ
-* ローカルでの開発でも、Codex(GPT)のレビューを求めに行く [#goal-review-gate-idea]_
+* ローカルでの開発でも、Codex(GPT)のコードレビューを求めに行く [#goal-review-gate-idea]_
 
-.. [#goal-review-gate-idea] ``/goal`` でもレビューゲートのような動きはできてそう
+.. [#goal-review-gate-idea] ``/goal`` でもコードレビューゲートのような動きはできてそう
 
 🔖開発フローの中で活かすCodex
 ------------------------------------------------------------
 
-* レビュー
+* コードレビュー
 * **実装**
 * コードリーディング
 * 開発ワークフロー
@@ -186,8 +194,6 @@ Codex App「代理で承認」（旧称 自動レビュー）
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">Auto-review is a new mode that lets Codex work longer with fewer approvals and safer execution.<br><br>It helps Codex keep moving through tests, builds, and more, including during long tasks and automations, while a separate agent checks higher-risk steps in context before they run. <a href="https://t.co/TCcNC5yB0H">pic.twitter.com/TCcNC5yB0H</a></p>&mdash; OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2047436655863464011?ref_src=twsrc%5Etfw">2026年4月23日</a></blockquote>
 
-.. https://developers.openai.com/codex/concepts/sandboxing/auto-review
-
 Codex CLIは ``/permissions``
 ------------------------------------------------------------
 
@@ -206,7 +212,7 @@ codex-cli 0.136.0-alpha.2
 ------------------------------------------------------------
 
 * LLMがコマンドの **実行許可を人間の代わりに** 見てくれる [#auto-review-reject-example]_
-* サブエージェント + プロンプトによる実装（``guardian_subagent``）
+* サブエージェント + プロンプトによる実装（``guardian_approval``）
 
 .. [#auto-review-reject-example] トランクベース開発と伝えていないメインブランチpushは弾かれました
 
@@ -236,7 +242,7 @@ codex-cli 0.136.0-alpha.2
 ==================================================
 
 * Codex {App,CLI}（や他のコーディングエージェント）でぜひ設定しましょう
-* 仕組み：LLMにプロンプトで代理に承認させています
+* 仕組み：LLMにプロンプトで **代理承認** させています
 
 **CM**：導入するなら
 ------------------------------------------------------------
@@ -248,7 +254,7 @@ codex-cli 0.136.0-alpha.2
 🔖開発フローの中で活かすCodex
 ------------------------------------------------------------
 
-* レビュー
+* コードレビュー
 * 実装
 * **コードリーディング**
 * 開発ワークフロー
@@ -258,9 +264,11 @@ codex-cli 0.136.0-alpha.2
 
 * ChatGPTのモバイルアプリ使ってる方？🙋（私はiPhoneで）
 * ChatGPTのモバイルアプリから、あなたの **PCのCodex Appに接続** できます [#codex-remote-connections-docs]_
-* （Codex Cloudとは別の話）
+* （Codex Cloudとは別の話 [#codex-cloud-source-reading]_ ）
 
 .. [#codex-remote-connections-docs] https://developers.openai.com/codex/remote-connections
+
+.. [#codex-cloud-source-reading] Codex Cloudでのコードリーディングは御しきれておらず、体験が私にはイマイチでした
 
 .. revealjs-break::
     :notitle:
@@ -299,7 +307,7 @@ codex-cli 0.136.0-alpha.2
 🔖開発フローの中で活かすCodex
 ------------------------------------------------------------
 
-* レビュー
+* コードレビュー
 * 実装
 * コードリーディング
 * **開発ワークフロー**
@@ -322,15 +330,17 @@ Codexを使った *開発ワークフローをカスタマイズ* できる
 記事 `Codex ハーネスの解放：App Server を構築した方法`_
 ------------------------------------------------------------
 
-* サーバとクライアント間の **JSON-RPC** プロトコル
+* サーバとクライアント間の **JSON-RPC** プロトコル [#app-server-raw-json-rpc-blog]_
 * 異なるクライアント（CLI、App、IDE拡張、...）が同じCodexハーネスを使用できる
 * CLIで ``codex app-server`` したらサーバ起動
+
+.. [#app-server-raw-json-rpc-blog] 拙ブログ `Codex App Server に Python SDK に代わって JSON-RPC を人力で送って Hello world <https://nikkie-ftnext.hatenablog.com/entry/codex-app-server-waits-json-rpc-from-stdin>`__
 
 App Server **SDK** [#app-server-sdk-docs]_
 ------------------------------------------------------------
 
 * TypeScript
-* **Python** (NEW!!) 🔥
+* **Python** (NEW!!) `今週 <https://x.com/reach_vb/status/2061569472792572163>`__ 🔥
 
 .. [#app-server-sdk-docs] https://developers.openai.com/codex/sdk
 
@@ -342,7 +352,7 @@ App Server SDK
 
 .. [#findy-nrslib-takt] `AIに疲れたプログラマが、OSSを始めるまで <https://findy-code.io/media/articles/codesidechat-nrslib>`__
 
-Codexに実装&レビューさせるワークフロー実装例
+実装例：Codexに実装&コードレビューさせる
 ------------------------------------------------------------
 
 .. code-block:: console
