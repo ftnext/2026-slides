@@ -16,6 +16,15 @@
 :Event: 開発フローの中で活かすCodex ``#codex_findy``
 :Presented: 2026/06/04 nikkie（スペース連打 or 矢印キーでめくります）
 
+*It's time to fly* [#codex-brand-movie-nba]_
+==================================================
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bJcA23ckzcY?si=ic7hHrVxJDQehIhh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+.. [#codex-brand-movie-nba] `OpenAIは今夜のNBAファイナル第1戦でこのブランドムービーを流すそうです <https://x.com/thsottiaux/status/2062310660806205901>`__
+
 お前、誰よ [#omae-dareyo]_
 ==================================================
 
