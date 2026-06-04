@@ -405,6 +405,95 @@ App Server SDK
 
 Happy Development♪
 
+お知らせとAppendixが続きます
+
+.. revealjs-break::
+    :notitle:
+
+.. raw:: html
+
+    <style>
+      .reveal .slides section:has(> .nikkie-announcement) {
+        background: #f8f8f8;
+      }
+      .reveal .nikkie-announcement {
+        box-sizing: border-box;
+        width: 100%;
+        height: 680px;
+        padding: 0.3em 0.45em;
+        color: #3f3f46;
+        font-size: 0.58em;
+        text-align: left;
+      }
+      .reveal .nikkie-announcement h2 {
+        margin: 0 0 1.15em;
+        color: #3f3f46;
+        font-size: 1.14em;
+        line-height: 1.15;
+        letter-spacing: 0;
+      }
+      .reveal .nikkie-announcement h3 {
+        margin: 0 0 0.1em;
+        color: #3f3f46;
+        font-size: 1.06em;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+      .reveal .nikkie-announcement ul {
+        margin: 0 0 1.05em 1.35em;
+        padding: 0;
+      }
+      .reveal .nikkie-announcement li {
+        margin: 0.03em 0;
+        padding-left: 0.08em;
+        color: #3f3f46;
+        font-size: 1em;
+        line-height: 1.22;
+      }
+      .reveal .nikkie-announcement strong {
+        color: #3f3f46;
+        font-weight: 800;
+      }
+      .reveal .nikkie-announcement a,
+      .reveal .nikkie-announcement a:visited {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 0.06em;
+        text-underline-offset: 0.12em;
+      }
+      .reveal .nikkie-announcement .event-date {
+        display: inline-block;
+        min-width: 3.75em;
+        margin-right: 0.25em;
+      }
+      .reveal .nikkie-announcement .closing {
+        margin: 1.25em 0 0;
+        color: #3f3f46;
+        font-size: 1.08em;
+        line-height: 1.25;
+        font-weight: 800;
+      }
+    </style>
+    <div class="nikkie-announcement">
+      <h2>nikkieさんからのお知らせ（再現）</h2>
+
+      <h3>会えるAmbassador(?)勉強会情報（かいつまんで紹介します）</h3>
+      <ul>
+        <li><span class="event-date">6/16(火)</span><a href="https://lancersagent.connpass.com/event/391220/" target="_blank" rel="noopener">Claude Code、どこまで任せられる？失敗事例から任せ方を学ぶLT会（オンライン）</a> <strong>LTも募集中</strong></li>
+        <li><span class="event-date">6/23(火)</span><a href="https://syncable.connpass.com/event/395070/" target="_blank" rel="noopener">小規模開発のリアルを語ろう〜試行錯誤を持ち寄る会〜（渋谷）</a></li>
+      </ul>
+
+      <h3>皆さんのお近くを訪れるかも</h3>
+      <ul>
+        <li><span class="event-date">6/5(金)</span><a href="https://lycorptech-fukuoka.connpass.com/event/392050/" target="_blank" rel="noopener">Python Meetup <strong>Fukuoka #7</strong></a></li>
+        <li><span class="event-date">6/28(日)</span><a href="https://kinoko.connpass.com/event/381321/" target="_blank" rel="noopener">きのこカンファレンス2026（6/28本編）</a></li>
+        <li><span class="event-date">7/18(土)</span><a href="https://startpython.connpass.com/event/391712/" target="_blank" rel="noopener">みんなのPython勉強会 in <strong>長野 #5</strong></a></li>
+        <li><span class="event-date">8/21(金)22(土)</span><a href="https://pyconjp.connpass.com/event/391006/" target="_blank" rel="noopener">PyCon JP 2026 (<strong>広島</strong>)</a></li>
+      </ul>
+
+      <p class="closing">近い将来Codex関係のイベント開催する時は、ぜひお越しください！</p>
+    </div>
+
 Appendix：開発フローの中でさらに活かすCodex
 ==================================================
 
