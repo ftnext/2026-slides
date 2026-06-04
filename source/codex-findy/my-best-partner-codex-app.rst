@@ -1,3 +1,9 @@
+:ogp_title: わたしの、最高の相棒、Codex
+:ogp_event_name: codex-findy
+:ogp_slide_name: my-best-partner-codex-app
+:ogp_description: 開発フローの中で活かすCodex - 実践者3名が語る使いどころと改善
+:ogp_image_name: codex-findy2
+
 ==================================================
 わたしの、最高の相棒、Codex
 ==================================================
