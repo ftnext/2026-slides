@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Reveal.js Slide"
+  short_description: "Draft and polish reST slides for Reveal.js."
+  default_prompt: "Create or polish a Reveal.js slide deck from reStructuredText, then build and verify the generated HTML."
