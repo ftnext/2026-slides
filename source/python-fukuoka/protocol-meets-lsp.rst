@@ -4,36 +4,24 @@
 :ogp_description: typing.Protocolをインターフェースとして捉え、ISPで小さく設計するLT
 
 ======================================================================
-Protocol meets ISP
+``typing.Protocol`` とインターフェース分離原則
 ======================================================================
 
-``typing.Protocol`` を
-インターフェースとして捉えてみる
-
-:Event: Python Fukuoka
+:Event: [特集:型] Python Meetup Fukuoka #7
 :Presented: 2026/06/05 nikkie
 
-今日の前提
+伝えたいこと
 ======================================================================
 
-* Pythonの型ヒントは少し知っている
-* ``Protocol`` は名前を聞いたことがある
-* 5分なので、型システムの細部には踏み込みません
-
-話したいこと
-======================================================================
-
-``Protocol`` は
-**使い方を示すインターフェース**
-として見られるのでは？
-
-そしてインターフェースなら
-**小さく** したい
+* ``typing.Protocol`` は **インターフェース** と捉えられる
+* インターフェースは **使い方を示す** もの
+* 色々知らなくても使えるよう「インターフェースは小さく」（インターフェース分離原則。SOLID原則のI）
 
 ``typing.Protocol``
 ======================================================================
 
 .. code-block:: python
+    :caption: `ドキュメント <https://docs.python.org/ja/3/library/typing.html#typing.Protocol>`__ の例
 
     from typing import Protocol
 
@@ -41,26 +29,28 @@ Protocol meets ISP
     class Proto(Protocol):
         def meth(self) -> int: ...
 
-クラスを継承して定義します
-
-でも、使う側のクラスは
-``Proto`` を継承しなくてよい
-
-静的ダックタイピング
+何のためのもの？ー静的ダックタイピング🐤
 ======================================================================
 
-``Protocol`` は、
-型チェッカに伝わるダックタイピング
+* ダックタイピング 「アヒルのように見えて、アヒルのように鳴けば、それはアヒルである。」
 
-* どのクラスを継承したか、ではなく
-* どのメソッドを持っているか、を見る
+    * 型を見ない。振る舞い優先
 
-構造で型を見ている
+* ``typing.Protocol`` で **型チェッカに伝わるダックタイピング**
 
-例：``SupportsClose``
+ABC（抽象基底クラス）とは違う？
+----------------------------------------------------------------------
+
+:ABC: どのクラスを継承したか（名前）
+:typing.Protocol: どのメソッドを持っているか
+
+Structural Subtyping（**構造** で型を見る）
+
+例：``SupportsClose`` protocol
 ======================================================================
 
 .. code-block:: python
+    :caption: ``close()`` できるもの [#protocol-example-ref]_
 
     from typing import Protocol
 
@@ -68,13 +58,13 @@ Protocol meets ISP
     class SupportsClose(Protocol):
         def close(self) -> None: ...
 
-``close()`` できるもの、
-というインターフェース
+.. [#protocol-example-ref] 例はこちらから https://typing.python.org/en/latest/reference/protocols.html#simple-user-defined-protocols
 
-``close_all()``
-======================================================================
+``SupportsClose`` で型ヒント
+----------------------------------------------------------------------
 
 .. code-block:: python
+    :caption: ``close_all()`` は ``close()`` できるものを受け取る
 
     from collections.abc import Iterable
 
@@ -83,50 +73,39 @@ Protocol meets ISP
         for item in items:
             item.close()
 
-``close_all()`` が知りたいのは
-**closeできるか** だけ
-
-継承していなくてもOK
-======================================================================
+静的ダックタイピング！
+----------------------------------------------------------------------
 
 .. code-block:: python
+    :caption: ``close(self) -> None`` を持つので **型チェッカは受け入れる**
 
-    class Resource:
+    class Resource:  # SupportsCloseを継承していない
         def close(self) -> None:
             self.resource.release()
 
 
-    close_all([Resource(), open("some/file")])
+    close_all([Resource(), open("some/file")])  # 型チェッカはOK
 
-``close() -> None`` を持つので
-型チェッカは受け入れる
-
-ここで気づいた
+💡 ``SupportsClose`` は **使い方** を表している
 ======================================================================
-
-``SupportsClose`` は
-「実装」ではなく **使い方** を表している
 
 ``close_all()`` から見える世界：
 
-* ``close()`` が呼べる
+* ``close()`` が呼べる（使い方）
 * それ以外は関心がない
 
-Protocol meets ISP
+ISP：インターフェース分離原則
 ======================================================================
 
-ISP：インターフェース分離原則
-
-インターフェースは
-利用時の概念の最小単位にする
-
-``Protocol`` がインターフェースなら、
-``Protocol`` も小さくしたい
+* SOLID原則（5つの設計原則）の1つ
+* 私の理解：**インターフェースは使い方を過不足無く示す**
+* ``typing.Protocol`` による protocol はインターフェースと捉えられる！
 
 大きすぎるProtocol
-======================================================================
+----------------------------------------------------------------------
 
 .. code-block:: python
+    :caption: ``close_all()`` が使わない ``other_method()``
 
     class BigProtocolExample(Protocol):
         def close(self) -> None: ...
@@ -137,49 +116,35 @@ ISP：インターフェース分離原則
         for item in items:
             item.close()
 
-``other_method()`` は使っていない
-
-小さく分ける
-======================================================================
+提案：ISPに沿って、小さく分けましょう
+----------------------------------------------------------------------
 
 .. code-block:: python
+    :caption: **最小の使い方** （protocol）で使う側へ示す
 
     class SupportsClose(Protocol):
         def close(self) -> None: ...
 
 
-    class SupportsOtherMethod(Protocol):
+    class OtherProtocol(Protocol):
         def other_method(self) -> None: ...
 
-使う側が必要とする
-最小のProtocolを受け取る
-
-今日の主張
+まとめ🌯 ``typing.Protocol`` とインターフェース分離原則
 ======================================================================
 
-``Protocol`` は
-**使い方を示す小さなインターフェース**
-として書ける
+* ``typing.Protocol`` はインターフェースとして気づき、ISPを適用した
+* Protocol を小さくして、使い方を表してみては
 
-* 継承関係ではなく、できることを見る
-* 関数が使うメソッドだけをProtocolにする
-* 大きくなったら、使い方ごとに分ける
+ご清聴ありがとうございました！
+----------------------------------------------------------------------
 
-まとめ
-======================================================================
+* nikkie（にっきー）・Python使い・:fab:`github` `@ftnext <https://github.com/ftnext>`__ `ブログ <https://nikkie-ftnext.hatenablog.com/>`__ 連続1250日突破
+* 機械学習エンジニア。 `Speeda AI Agent <https://jp.ub-speeda.com/news/speeda-promotion-gallery/>`__ 開発（`We're hiring! <https://hrmos.co/pages/uzabase/jobs/1829077236709650481>`__）
 
-``typing.Protocol`` を
-インターフェースとして捉えると、
-ISPが自然に使える
-
-``close_all()`` には
-``SupportsClose`` だけで十分
-
-小さなProtocolで、
-使う側の関心を表そう
+.. image:: ../_static/uzabase-white-logo.png
 
 参考
-======================================================================
+----------------------------------------------------------------------
 
 * `typing.Protocol <https://docs.python.org/ja/3/library/typing.html#typing.Protocol>`__
 * `Protocols and structural subtyping <https://typing.python.org/en/latest/reference/protocols.html>`__
