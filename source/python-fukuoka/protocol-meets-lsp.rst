@@ -1,13 +1,14 @@
-:ogp_title: Protocol meets ISP
+:ogp_title: typing.Protocolとインターフェース分離原則
 :ogp_event_name: python-fukuoka
 :ogp_slide_name: protocol-meets-lsp
-:ogp_description: typing.Protocolをインターフェースとして捉え、ISPで小さく設計するLT
+:ogp_description: [特集:型] Python Meetup Fukuoka #7 LT
+:ogp_image_name: python-fukuoka-7
 
 ======================================================================
 ``typing.Protocol`` とインターフェース分離原則
 ======================================================================
 
-:Event: [特集:型] Python Meetup Fukuoka #7
+:Event: [特集:型] Python Meetup Fukuoka #7 LT
 :Presented: 2026/06/05 nikkie
 
 伝えたいこと
