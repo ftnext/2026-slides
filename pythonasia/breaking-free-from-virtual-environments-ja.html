@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>仮想環境からの脱却：2026年に向けたPythonの新しいパラダイム</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides//.html">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境からの脱却：2026年に向けたPythonの新しいパラダイム</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境からの脱却：2026年に向けたPythonの新しいパラダイム</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PythonAsia 2026</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/03/22 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">こんにちは、PythonAsia！（お前、誰よ）</h2>
+<ul class="simple">
+<li><p>東京で機械学習エンジニア。<a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供</a>） <a class="footnote-reference brackets" href="#uzabase-south-asia-news" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p><span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a> <a class="reference external" href="https://github.com/Uberi/speech_recognition" rel="noreferrer" target="_blank">SpeechRecognition</a> (9k⭐️)メンテナ</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uzabase-south-asia-news" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://uzabaseglobal.com/press-release/uzabase-expands-southeast-asia-expert-network-with-acquisition-of-sealed-network" rel="noreferrer" target="_blank">Acquisition of Sealed Network</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">昔はいつも管理していたのに、今ではほとんど管理しなくてよいもの、なに？</h2>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">答えは <strong>仮想環境</strong></h3>
+<p>みなさん、自分の手で仮想環境を管理していますか？🙋</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境を開発者が管理する必要はなくなっている</h3>
+<ul class="simple">
+<li><p>種々のPythonプロジェクト管理ツール</p></li>
+<li><p><em>一時的な仮想環境</em> を使ったCommand Line Interface (CLI)実行</p></li>
+<li><p><em>inline script metadata</em> (PEP 723)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">BREAKING NEWS!!</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="en"><p dir="ltr" lang="en">We've reached an agreement to acquire Astral.<br/><br/>After we close, OpenAI plans for <a href="https://twitter.com/astral_sh?ref_src=twsrc%5Etfw">@astral_sh</a> to join our Codex team, with a continued focus on building great tools and advancing the shared mission of making developers more productive.<a href="https://t.co/V0rDo0G8h9">https://t.co/V0rDo0G8h9</a></p>— OpenAI Newsroom (@OpenAINewsroom) <a href="https://twitter.com/OpenAINewsroom/status/2034616934671724639?ref_src=twsrc%5Etfw">2026年3月19日</a></blockquote> <script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境からの脱却 目次</h2>
+<ol class="arabic simple">
+<li><p>仮想環境の基礎</p></li>
+<li><p>手動で仮想環境管理のつらさ</p></li>
+<li><p>解決策の進化（メインパート）</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">2026年現在可能になった解決策</h3>
+<ol class="arabic simple">
+<li><p><em>一時的な仮想環境</em> を使ったCLI実行</p></li>
+<li><p><em>inline script metadata</em> (PEP 723)</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">1️⃣仮想環境の基礎</h2>
+<p>仮想環境はなぜ私たち（Python開発者）に必要なのか</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Pythonチュートリアルより</h3>
+<pre data-id="id9"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install sampleproject</code></pre>
+<p><a class="reference external" href="https://docs.python.org/3/tutorial/venv.html#creating-virtual-environments" rel="noreferrer" target="_blank">12.2. Creating Virtual Environments (The Python Tutorial)</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境とは <strong>ディレクトリ</strong></h3>
+<pre data-id="id10"><code class="shell" data-noescape="" data-trim="">% python -m venv --help
+usage: venv ENV_DIR [ENV_DIR ...]</code></pre>
+<div class="literal-block-wrapper docutils container" id="id68">
+<div class="code-block-caption"><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">.venv/</span></code> というディレクトリができている</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">% ls -al
+drwxr-xr-x@  7 nikkie  staff  224 Mar 20 12:42 .venv</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">なぜディレクトリを作るのか</h3>
+<ul class="simple">
+<li><p><strong>サードパーティライブラリ</strong> のインストール先にするため</p></li>
+<li><p>仮に仮想環境を使わない場合、インストール先はマシンの中に1箇所</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">.venv/</span></code> には何がある？ <a class="footnote-reference brackets" href="#python314-easter-egg" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id69">
+<div class="code-block-caption"><span class="caption-text">python.org からmacOSにインストール</span></div>
+<pre><code class="txt" data-line-numbers="2,7,11,12" data-noescape="" data-trim="">.venv
+├── bin
+│   ├── activate
+│   ├── pip
+│   ├── pip3
+│   ├── pip3.14
+│   ├── python -&gt; python3.14
+│   ├── python3 -&gt; python3.14
+│   ├── python3.14 -&gt; /Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14
+│   └── 𝜋thon -&gt; python3.14
+├── lib
+│   └── python3.14/
+└── pyvenv.cfg</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="python314-easter-egg" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id12" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>easter egg: 𝜋thon <a class="reference external" href="https://github.com/python/cpython/pull/125035" rel="noreferrer" target="_blank">https://github.com/python/cpython/pull/125035</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">.venv/bin/python</span></code></h3>
+<ul class="simple">
+<li><p>マシンにインストールしたPython処理系への <strong>シンボリックリンク</strong></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">activate</span></code> では環境変数 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> を更新して、この処理系が見つかるようにしている</p></li>
+<li><p>処理系と標準ライブラリはこちらを使う</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">.venv/lib/python3.14/site-packages/</span></code></h3>
+<ul class="simple">
+<li><p>サードパーティライブラリのインストール先のディレクトリ</p></li>
+<li><p>仮想環境ごとに分かれているので、<strong>バージョン違いが共存</strong> する</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2️⃣俺たちが、仮想環境管理ツールなんだ</h2>
+<pre data-id="id13"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install sampleproject</code></pre>
+<p>人力管理のつらみを挙げていく（全4つ）</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境の再現：<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code></h3>
+<pre data-id="pip-freeze"><code class="shell" data-noescape="" data-trim="">(.venv) $ python -m pip freeze &gt; requirements.txt</code></pre>
+<pre data-id="pip-freeze"><code class="shell" data-noescape="" data-trim="">$ python -m venv recreate-env --upgrade-deps
+$ source recreate-env/bin/activate
+(recreate-env) $ python -m pip install -r requirements.txt</code></pre>
+<p><a class="reference external" href="https://docs.python.org/3/tutorial/venv.html#managing-packages-with-pip" rel="noreferrer" target="_blank">12.3. Managing Packages with pip (The Python Tutorial)</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">依存ライブラリには2種類ある</h3>
+<div class="literal-block-wrapper docutils container" id="id70">
+<div class="code-block-caption"><span class="caption-text">直接(direct)依存</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">(.venv) $ % python -m pip install httpx</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id71">
+<div class="code-block-caption"><span class="caption-text">推移的(transitive)依存</span></div>
+<pre><code class="shell" data-line-numbers="2,3,4,5,7" data-noescape="" data-trim="">(.venv) $ python -m pip freeze
+anyio==4.12.1
+certifi==2026.2.25
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.11</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">課題1: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> の出力は扱いが難しい</h3>
+<ul class="simple">
+<li><p>directな依存もtransitiveな依存も1つの <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> にまとまる</p></li>
+<li><p>directな依存にextraを指定 <a class="footnote-reference brackets" href="#specify-extra-install" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> していた場合、<code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> では <strong>extraの情報は失われる</strong></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="specify-extra-install" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id16" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>例 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">SpeechRecognition[audio]</span></code></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">課題2: 特定のパッケージをアンインストールしづらい</h3>
+<ul class="simple">
+<li><p>directな依存を消す際、<strong>transitiveな依存の削除</strong> が大変</p></li>
+<li><p>直接の依存1は libA, libB に依存</p></li>
+<li><p>直接の依存2は libA, libC に依存</p></li>
+</ul>
+</section>
+<section>
+<img alt="../_images/remove-direct-dependency.drawio.png" src="../_images/remove-direct-dependency.drawio.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">課題3: スクリプトごとの仮想環境が増殖</h3>
+<ul class="simple">
+<li><p>気になるライブラリをquickstartしたいだけだが、毎回仮想環境を作ることになる</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id72">
+<div class="code-block-caption"><span class="caption-text">このようなディレクトリがいくつも</span></div>
+<pre><code class="txt" data-noescape="" data-trim="">.
+├── .venv/
+└── script.py</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">課題4: リンタやフォーマッタが仮想環境ごとに</h3>
+<ul class="simple">
+<li><p>開発中に使うCLIを <strong>どの仮想環境にも都度</strong> インストールする</p></li>
+<li><p>どのプロジェクトでも最新に保つのが大変</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境管理ツール、俺たちが抱えるペイン</h3>
+<ol class="arabic simple">
+<li><p>directもtransitiveも1つにまとまる <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code></p></li>
+<li><p>directを消すとき一緒にどのtransitiveも消せる？</p></li>
+<li><p>スクリプト用の仮想環境いくつも</p></li>
+<li><p>CLIを仮想環境に都度インストールして最新化</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣コミュニティがこれらの課題にどう対応してきたか</h2>
+<ol class="arabic simple">
+<li><p>directもtransitiveも1つにまとまる <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code></p></li>
+<li><p>directを消すとき一緒にどのtransitiveも消せる？</p></li>
+<li><p>スクリプト用の仮想環境いくつも</p></li>
+<li><p>CLIを仮想環境に都度インストールして最新化</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/jazzband/pip-tools" rel="noreferrer" target="_blank">pip-tools</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> に代えて <strong class="command">pip-compile</strong> &amp; <strong class="command">pip-sync</strong> <a class="footnote-reference brackets" href="#pip-tools-overview-reference" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<img alt="../_images/pip-tools-overview.svg" src="../_images/pip-tools-overview.svg"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pip-tools-overview-reference" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id23" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/jazzband/pip-tools/blob/v7.5.3/img/pip-tools-overview.svg" rel="noreferrer" target="_blank">https://github.com/jazzband/pip-tools/blob/v7.5.3/img/pip-tools-overview.svg</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools のワークフロー</h3>
+<div class="literal-block-wrapper docutils container" id="id73">
+<div class="code-block-caption"><span class="caption-text">directな依存を <code class="file docutils literal notranslate"><span class="pre">requirements.in</span></code> に書く</span></div>
+<pre><code class="txt" data-noescape="" data-trim="">httpx</code></pre>
+</div>
+<p>課題1: directもtransitiveもまとまるが解消します</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools のワークフロー</h3>
+<div class="literal-block-wrapper docutils container" id="id74">
+<div class="code-block-caption"><span class="caption-text"><strong class="command">pip-compile</strong> で <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> (direct &amp; transitive)を生成</span></div>
+<pre><code class="txt" data-noescape="" data-trim="">anyio==4.12.1
+    # via httpx
+certifi==2026.2.25
+    # via
+    #   httpcore
+    #   httpx
+h11==0.16.0
+    # via httpcore
+httpcore==1.0.9
+    # via httpx
+httpx==0.28.1
+    # via -r requirements.in
+idna==3.11
+    # via
+    #   anyio
+    #   httpx</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pip-tools のワークフロー</h3>
+<ul class="simple">
+<li><p><strong class="command">pip-sync</strong> で <code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> に仮想環境を一致させる</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">requirements.in</span></code> の <strong>directな依存の指定を変えて</strong>、<code class="file docutils literal notranslate"><span class="pre">requirements.txt</span></code> も仮想環境も変える（課題2も解消）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/python-poetry/poetry" rel="noreferrer" target="_blank">Poetry</a></h3>
+<div class="literal-block-wrapper docutils container" id="id75">
+<div class="code-block-caption"><span class="caption-text">直接の依存を指定する（＝課題1・2へのアプローチ）</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ poetry new
+$ poetry add httpx
+$ ls
+poetry.lock     pyproject.toml</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境をより意識しない <a class="footnote-reference brackets" href="#poetry-uses-project-venv" id="id26" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id76">
+<div class="code-block-caption"><span class="caption-text">コマンドの先頭に <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span></code> とつけるだけで仮想環境で実行</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ poetry run python -m pip freeze</code></pre>
+</div>
+<ul class="simple">
+<li><p>Pythonプロジェクト開発で受け入れられてきた印象（2020年前後） <a class="footnote-reference brackets" href="#poetry-alternative-pipenv" id="id28" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="poetry-uses-project-venv" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id26" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://python-poetry.org/docs/configuration/#virtualenvsin-project" rel="noreferrer" target="_blank">use the {project-dir}/.venv directory if one already exists.</a></p>
+</aside>
+<aside class="footnote brackets" id="poetry-alternative-pipenv" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id28" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/pypa/pipenv" rel="noreferrer" target="_blank">Pipenv</a> もPythonプロジェクト開発で受け入れられていました</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/astral-sh/rye" rel="noreferrer" target="_blank">Rye</a> <a class="footnote-reference brackets" href="#rye-sunset" id="id29" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>Rust製（Python製ツールより高速）</p></li>
+<li><p><strong>Python自体の管理</strong> + 仮想環境管理</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="rye-sunset" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id29" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p>mitsuhiko-sanが作り、Astralに移管された後、2026年2月にアーカイブされていました。お疲れさまでした</p>
+</aside>
+</aside>
+<div class="literal-block-wrapper docutils container" id="id77">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://rye.astral.sh/guide/basics/" rel="noreferrer" target="_blank">https://rye.astral.sh/guide/basics/</a> <a class="footnote-reference brackets" href="#rye-interesting-point" id="id31" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ rye init
+$ rye add httpx
+$ rye sync</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="rye-interesting-point" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id31" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p>pipのない仮想環境をpip-toolsで管理しているのが、技術的に興味深かったです</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">そしてuv</h3>
+<ul class="simple">
+<li><p>pipのRust実装として登場。<a class="reference external" href="https://astral.sh/blog/uv" rel="noreferrer" target="_blank">drop-in replacement for pip and pip-tools workflows.</a></p></li>
+<li><p>Pythonもプロジェクトの仮想環境も管理できるように <a class="footnote-reference brackets" href="#uv-unified-python-packaging" id="id32" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-unified-python-packaging" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id32" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://astral.sh/blog/uv-unified-python-packaging" rel="noreferrer" target="_blank">https://astral.sh/blog/uv-unified-python-packaging</a></p>
+</aside>
+</aside>
+<div class="literal-block-wrapper docutils container" id="id78">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://docs.astral.sh/uv/guides/projects/" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/guides/projects/</a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv init
+$ uv add httpx
+$ uv sync</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uvへと至る流れ</h3>
+<ul class="simple">
+<li><p>Poetry（やPipenv）が <strong>Pythonプロジェクトの仮想環境管理</strong> を簡単に</p></li>
+<li><p>Rust製のRye：<strong>Pythonの管理</strong> も（仮想環境管理はpip-tools）</p></li>
+<li><p>Ryeの機能に <em>pipx</em> や <em>PEP 723</em> を取り込んだuvへ（このあと紹介）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣-1️⃣ 仮想環境管理不要のCLI実行</h2>
+<ul class="simple">
+<li><p>課題4「<strong>CLI</strong> を仮想環境に都度インストールして最新化」へのアプローチ</p></li>
+<li><p>Ruffを例にしますが、PyPI上のあらゆるCLIに適用可能</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Before：仮想環境にインストールしてからCLI実行</h3>
+<pre data-id="before-cli"><code class="shell" data-noescape="" data-trim="">$ # python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate  # プロジェクトの仮想環境
+(.venv) $ python -m pip install ruff
+(.venv) $ ruff format</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">今は一時的な仮想環境を使ったCLI実行が可能</h3>
+<ul class="simple">
+<li><p><strong class="command">uvx ruff format</strong> （<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">tool</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">format</span></code>） <a class="footnote-reference brackets" href="#fyi-uv-format" id="id35" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a></p></li>
+<li><p>または <strong class="command">pipx run ruff format</strong></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="fyi-uv-format" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id35" role="doc-backlink">10</a><span class="fn-bracket">]</span></span>
+<p>experimentalな <a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-format" rel="noreferrer" target="_blank">uv format</a> もあります （<a class="reference external" href="https://github.com/astral-sh/uv/releases/tag/0.8.13" rel="noreferrer" target="_blank">0.8.13</a> で追加）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">インストール方法</h3>
+<div class="literal-block-wrapper docutils container" id="id79">
+<div class="code-block-caption"><span class="caption-text">uv (for macOS &amp; Linux) <a class="footnote-reference brackets" href="#uv-installation-doc" id="id37" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id80">
+<div class="code-block-caption"><span class="caption-text">pipx は <code class="docutils literal notranslate"><span class="pre">brew</span></code> など <strong>システムのパッケージマネージャ優先</strong> で <a class="footnote-reference brackets" href="#pipx-installation-doc" id="id38" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">python3 -m pip install --user pipx</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id37" role="doc-backlink">11</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/getting-started/installation/</a></p>
+</aside>
+<aside class="footnote brackets" id="pipx-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id38" role="doc-backlink">12</a><span class="fn-bracket">]</span></span>
+<p>For detail, see <a class="reference external" href="https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx" rel="noreferrer" target="_blank">https://pipx.pypa.io/stable/how-to/install-pipx/#installing-pipx</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ツールが一時的な仮想環境にインストールしている</h3>
+<ul class="simple">
+<li><p>パッケージをインストールした一時的な仮想環境を用意して <a class="footnote-reference brackets" href="#uv-doc-cache-tool-environments" id="id40" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a></p></li>
+<li><p>CLI実行 <a class="footnote-reference brackets" href="#pipx-doc-explanation-run" id="id41" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uv-doc-cache-tool-environments" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id40" role="doc-backlink">13</a><span class="fn-bracket">]</span></span>
+<p>毎回仮想環境を作るわけでなく、 <em>キャッシュ</em> もされる <a class="reference external" href="https://docs.astral.sh/uv/concepts/tools/#tool-environments" rel="noreferrer" target="_blank">https://docs.astral.sh/uv/concepts/tools/#tool-environments</a></p>
+</aside>
+<aside class="footnote brackets" id="pipx-doc-explanation-run" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id41" role="doc-backlink">14</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run" rel="noreferrer" target="_blank">https://pipx.pypa.io/stable/explanation/how-pipx-works/#pipx-run</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>デモ</strong> 手動 venv vs <code class="docutils literal notranslate"><span class="pre">uvx</span></code></h3>
+<div class="literal-block-wrapper docutils container" id="id81">
+<div class="code-block-caption"><span class="caption-text">Before</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ python -m venv format-env --upgrade-deps
+$ source format-env/bin/activate
+(format-env) $ python -m pip install ruff
+(format-env) $ ruff format</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id82">
+<div class="code-block-caption"><span class="caption-text">After</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uvx ruff format</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">uvx</span></code> や <code class="docutils literal notranslate"><span class="pre">pipx</span> <span class="pre">run</span></code> のススメ</h3>
+<ul class="simple">
+<li><p>私たちが仮想環境を触ることがない（ツールが代わってくれる）</p></li>
+<li><p><strong>管理の手間なくCLIの最新バージョン</strong> が使える</p></li>
+<li><p>複数プロジェクトで横断的に使える（課題4解消）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私はこんなところで使ってます <a class="footnote-reference brackets" href="#awesome-pipx-uvx" id="id42" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a></h3>
+<pre data-id="id43"><code class="shell" data-noescape="" data-trim="">$ uvx cookiecutter gh:simonw/llm-plugin</code></pre>
+<pre data-id="id43"><code class="shell" data-noescape="" data-trim="">$ uvx --from sphinx --with sphinx-new-tab-link \
+    sphinx-build -M html source build</code></pre>
+<div class="literal-block-wrapper docutils container" id="id83">
+<div class="code-block-caption"><span class="caption-text"><strong>GitHub Actions</strong> のUbuntuイメージにはpipxがインストール済み <a class="footnote-reference brackets" href="#github-actions-pipx-python-build" id="id44" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ pipx run build
+$ pipx run twine check dist/*</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="awesome-pipx-uvx" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id42" role="doc-backlink">15</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/awesome-pipx-uvx" rel="noreferrer" target="_blank">https://github.com/ftnext/awesome-pipx-uvx</a> (WIP)</p>
+</aside>
+<aside class="footnote brackets" id="github-actions-pipx-python-build" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id44" role="doc-backlink">16</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml" rel="noreferrer" target="_blank">https://github.com/ftnext/sphinx-new-tab-link/blob/v0.8.1/.github/workflows/publish.yml</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">FYI：マシンにグローバルインストールもできます</h3>
+<ul class="simple">
+<li><p><strong class="command">uv tool install</strong></p></li>
+<li><p><strong class="command">pipx install</strong> (<a class="reference external" href="https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/" rel="noreferrer" target="_blank">Installing stand alone command line tools</a>)</p></li>
+</ul>
+<p>ただし手動でアップグレードが必要（<a class="reference external" href="https://docs.astral.sh/uv/concepts/tools/#upgrading-tools" rel="noreferrer" target="_blank">uv tool upgrade</a>・<a class="reference external" href="https://pipx.pypa.io/stable/reference/cli/#pipx-upgrade-all" rel="noreferrer" target="_blank">pipx upgrade-all</a>）</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣-2️⃣ inline script metadata</h2>
+<ul class="simple">
+<li><p>課題3「<strong>スクリプト</strong> 用の仮想環境いくつも」へのアプローチ</p></li>
+<li><p>あらゆるPythonスクリプトに適用可能</p></li>
+</ul>
+<p><a class="reference external" href="https://packaging.python.org/en/latest/specifications/inline-script-metadata/" rel="noreferrer" target="_blank">https://packaging.python.org/en/latest/specifications/inline-script-metadata/</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">サードパーティライブラリを使ったスクリプト</h3>
+<div class="literal-block-wrapper docutils container" id="id84">
+<div class="code-block-caption"><span class="caption-text">最新のPEP 10件のタイトルを取得</span></div>
+<pre><code class="python" data-noescape="" data-trim="">from datetime import datetime
+
+import httpx
+from rich.pretty import pprint
+
+resp = httpx.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])
+</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Before：仮想環境に依存をインストールしてからスクリプト実行</h3>
+<pre data-id="before"><code class="shell" data-noescape="" data-trim="">$ python -m venv .venv --upgrade-deps
+$ source .venv/bin/activate
+(.venv) $ python -m pip install httpx rich
+(.venv) $ python script.py</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://peps.python.org/pep-0723/" rel="noreferrer" target="_blank">PEP 723</a> – Inline script metadata <a class="footnote-reference brackets" href="#pep723-author-is-hatch-creator" id="id46" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id85">
+<div class="code-block-caption"><span class="caption-text"><strong>コメント</strong> としてTOML形式のメタデータを書く</span></div>
+<pre><code class="python" data-noescape="" data-trim=""># /// script
+# requires-python = "&gt;=3.13"
+# dependencies = [
+#     "httpx",
+#     "rich",
+# ]
+# ///
+</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pep723-author-is-hatch-creator" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id46" role="doc-backlink">17</a><span class="fn-bracket">]</span></span>
+<p>PEP 723の著者はHatchの作者です</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">inline script metadataをサポートするツールで実行するだけ</h3>
+<ul class="simple">
+<li><p>uv run script.py</p></li>
+<li><p>pipx run script.py</p></li>
+<li><p>hatch run script.py <a class="footnote-reference brackets" href="#hatch-installation-doc" id="id48" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a></p></li>
+<li><p>pdm run script.py <a class="footnote-reference brackets" href="#pdm-installation-doc" id="id49" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hatch-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id48" role="doc-backlink">18</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://hatch.pypa.io/dev/install/" rel="noreferrer" target="_blank">https://hatch.pypa.io/dev/install/</a></p>
+</aside>
+<aside class="footnote brackets" id="pdm-installation-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id49" role="doc-backlink">19</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://pdm-project.org/en/latest/#installation" rel="noreferrer" target="_blank">https://pdm-project.org/en/latest/#installation</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ツールが依存をインストールした仮想環境を用意して実行</h3>
+<ul class="simple">
+<li><p>ツールがmetadataを読み</p></li>
+<li><p><em>requires-python</em> に沿った <strong>Python処理系</strong> で</p></li>
+<li><p><em>dependencies</em> をインストールした <strong>一時的な仮想環境</strong> を用意して、スクリプト実行</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uvはinline script metadataを書き込む！ <a class="footnote-reference brackets" href="#alternative-uv-init-script" id="id51" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a></h3>
+<p><a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-add--script" rel="noreferrer" target="_blank">uv add --script</a> script.py httpx rich <a class="footnote-reference brackets" href="#uv-add-script-write-lower-bound" id="id52" role="doc-noteref"><span class="fn-bracket">[</span>21<span class="fn-bracket">]</span></a></p>
+<pre data-id="uvinline-script-metadata"><code class="python" data-noescape="" data-trim=""># /// script
+# requires-python = "&gt;=3.13"
+# dependencies = [
+#     "httpx&gt;=0.28.1",
+#     "rich&gt;=14.3.3",
+# ]
+# ///</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="alternative-uv-init-script" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id51" role="doc-backlink">20</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/uv/reference/cli/#uv-init--script" rel="noreferrer" target="_blank">uv init --script</a> でinline script metadata付きの空スクリプトができる</p>
+</aside>
+<aside class="footnote brackets" id="uv-add-script-write-lower-bound" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id52" role="doc-backlink">21</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/astral-sh/uv/releases/tag/0.9.16" rel="noreferrer" target="_blank">uv 0.9.16</a> からlower boundが書かれるように。ref: <a class="reference external" href="https://github.com/astral-sh/uv/issues/15544" rel="noreferrer" target="_blank">https://github.com/astral-sh/uv/issues/15544</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>デモ</strong> 手動 venv vs <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">script.py</span></code></h3>
+<div class="literal-block-wrapper docutils container" id="id86">
+<div class="code-block-caption"><span class="caption-text">Before</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ python -m venv script-env --upgrade-deps
+$ source script-env/bin/activate
+(script-env) $ python -m pip install httpx rich
+(script-env) $ python script.py</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id87">
+<div class="code-block-caption"><span class="caption-text">After <a class="footnote-reference brackets" href="#pip-26-requirements-from-script" id="id53" role="doc-noteref"><span class="fn-bracket">[</span>22<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv add --script script.py httpx rich
+$ uv run script.py</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pip-26-requirements-from-script" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id53" role="doc-backlink">22</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://ichard26.github.io/blog/2026/01/whats-new-in-pip-26.0/#installing-from-inline-script-metadata-pep-723" rel="noreferrer" target="_blank">pip install --requirements-from-script script.py</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">inline script metadataのススメ</h3>
+<ul class="simple">
+<li><p>私たちが仮想環境を触ることがない（ツールが代わってくれる）（課題3解消）</p></li>
+<li><p>スクリプトが依存を語る</p></li>
+<li><p>別のマシンでも <strong>簡単に再現実行</strong> できる <a class="footnote-reference brackets" href="#execute-from-url-inline-script-metadata" id="id55" role="doc-noteref"><span class="fn-bracket">[</span>23<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="execute-from-url-inline-script-metadata" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id55" role="doc-backlink">23</a><span class="fn-bracket">]</span></span>
+<p>uv run <a class="reference external" href="https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py" rel="noreferrer" target="_blank">https://gist.githubusercontent.com/ftnext/d9a2094ca2a54e84d3677217e607c783/raw/5438023012cef1957801b95b6b9685d0a0e01e6f/unlock_pdf.py</a> （信頼できないスクリプトにはオススメしません）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私はこんなところで使ってます</h3>
+<ul class="simple">
+<li><p>SlackやDiscordでスクリプトを共有する際</p></li>
+<li><p>PyPIで配布しているライブラリであればexamplesに提案 <a class="footnote-reference brackets" href="#nikkie-inline-script-metadata-example" id="id57" role="doc-noteref"><span class="fn-bracket">[</span>24<span class="fn-bracket">]</span></a></p></li>
+<li><p>コーディングエージェントのフック（シバンで <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code>） <a class="footnote-reference brackets" href="#coding-agent-hooks-shebang-uv-run-example" id="id58" role="doc-noteref"><span class="fn-bracket">[</span>25<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-inline-script-metadata-example" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id57" role="doc-backlink">24</a><span class="fn-bracket">]</span></span>
+<p>例 <a class="reference external" href="https://github.com/argilla-io/synthetic-data-generator/pull/23" rel="noreferrer" target="_blank">https://github.com/argilla-io/synthetic-data-generator/pull/23</a></p>
+</aside>
+<aside class="footnote brackets" id="coding-agent-hooks-shebang-uv-run-example" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id58" role="doc-backlink">25</a><span class="fn-bracket">]</span></span>
+<p>with <a class="reference external" href="https://github.com/GowayLee/cchooks" rel="noreferrer" target="_blank">cchooks</a> <a class="reference external" href="https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49" rel="noreferrer" target="_blank">https://gist.github.com/ftnext/ccc020832e1d753554428ff520c3ea49</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">最後に、ツール選定</h2>
+<p>Poetry以来のPythonプロジェクト管理も踏まえて</p>
+<ul class="simple">
+<li><p>uv🏅</p></li>
+<li><p>Hatch❤️</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Poetry</h3>
+<ul>
+<li><p>Poetryがだいぶ楽にしてくれた（CLI実行やスクリプト実行の課題が残った）</p></li>
+<li><p>最新の仕様に即時追従できていない状況（オススメしづらい）</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://peps.python.org/pep-0621/" rel="noreferrer" target="_blank">PEP 621</a> (<code class="docutils literal notranslate"><span class="pre">[project]</span></code>)サポートが4年後の <a class="reference external" href="https://github.com/python-poetry/poetry/releases/tag/2.0.0" rel="noreferrer" target="_blank">2.0.0</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">uv🏅</h3>
+<div class="literal-block-wrapper docutils container" id="id88">
+<div class="code-block-caption"><span class="caption-text">Pythonプロジェクト管理もサポート（<code class="file docutils literal notranslate"><span class="pre">pyproject.toml</span></code> を強制）</span></div>
+<pre><code class="shell" data-noescape="" data-trim="">$ uv add httpx
+$ uv sync</code></pre>
+</div>
+<ul class="simple">
+<li><p>1つのツールで <code class="docutils literal notranslate"><span class="pre">uvx</span></code> や inline script metadata まで <strong>広くサポート</strong> するので現時点で最有力</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Hatch</h3>
+<ul class="simple">
+<li><p>Pythonプロジェクト管理もサポートするが、<strong>複数の仮想環境</strong> を管理する形式</p></li>
+<li><p>inline script metadata も使えるが、<code class="docutils literal notranslate"><span class="pre">uvx</span></code> 相当の機能はない</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Hatchは興味深い❤️</h3>
+<pre data-id="id62"><code class="console" data-noescape="" data-trim="">$ hatch env show
+Standalone
+┏━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Name    ┃ Type    ┃ Dependencies ┃ Scripts ┃
+┡━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━┩
+│ default │ virtual │              │         │
+├─────────┼─────────┼──────────────┼─────────┤
+│ types   │ virtual │ mypy&gt;=1.0.0  │ check   │
+└─────────┴─────────┴──────────────┴─────────┘</code></pre>
+<p>uvはじめ多くはPythonプロジェクトに1つだけの仮想環境</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 仮想環境 <strong>人力管理</strong> からの脱却</h2>
+<ul class="simple">
+<li><p>サードパーティライブラリのインストール先として仮想環境の重要性は変わらない</p></li>
+<li><p>しかし現在では、仮想環境を <strong>開発者が管理する必要はなくなって</strong> いる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">開発者は手動の仮想環境管理から <strong>解放</strong> されている</h3>
+<ul class="simple">
+<li><p>CLI実行：ツールが一時的な仮想環境にインストールして</p></li>
+<li><p>スクリプト実行：inline script metadata</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">早速試して <strong>楽して</strong> こーぜ</h3>
+<ul class="simple">
+<li><p>uv (<code class="docutils literal notranslate"><span class="pre">uvx</span></code>, <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code>)</p></li>
+<li><p>pipx (<code class="docutils literal notranslate"><span class="pre">pipx</span> <span class="pre">run</span></code>)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仮想環境を作るコマンドって初学者チュートリアルに必要？</h3>
+<ul class="simple">
+<li><p>Pythonチュートリアルや入門書は見直すタイミングではないか</p></li>
+<li><p>IMO：Pythonで <strong>スクリプトを書きたい初学者にはスキップ</strong> していいのでは（inline script metadata）</p></li>
+<li><p>プロのPython開発者には仮想環境を理解するのを推奨</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Happy Python Development</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
