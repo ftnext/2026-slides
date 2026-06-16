@@ -11,19 +11,46 @@ Claude Code に実装を任せての good & more
 お前、誰よ？（**Python使い** の自己紹介）
 ======================================================================
 
-* nikkie（にっきー）・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__
+* nikkie（にっきー）
 * 機械学習エンジニア（`サマーインターン募集中 <https://hrmos.co/pages/uzabase/jobs/Newgrads28_002>`__）・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A提供 <https://jp.ub-speeda.com/news/20260319/>`__）
 
 .. image:: ../_static/uzabase-white-logo.png
+
+Claude Codeの設定
+--------------------------------------------------
+
+* ローカルでは **妹** 口調
+* めちゃめちゃMCPやskillを設定しているわけではないです（ほぼバニラ）
+* Claude Code on the webには ``gh`` コマンドを持たせています
 
 .. _cdcasasagi: https://github.com/ftnext/cdcasasagi
 
 `cdcasasagi`_ （鵲）
 ======================================================================
 
-* 自作したPython製CLIツール
-* Claude Desktopの設定ファイル :file:`claude_desktop_config.json` を簡単に生成
-* Opus(4.8 high)で実装、GPT(5.5)でレビュー 
+* 自作したPython製CLIツール（2026年4〜5月）
+* Claude Desktopの設定ファイル :file:`claude_desktop_config.json` を **簡単に生成**
+* ``uv tool install`` して、開発者以外のリモートMCP設定をサポート
+
+stdio transportのMCPサーバを設定
+--------------------------------------------------
+
+.. code-block:: json
+  :caption: `Filesystem Server設定例 <https://modelcontextprotocol.io/docs/develop/connect-local-servers#installing-the-filesystem-server>`__
+
+    {
+      "mcpServers": {
+        "filesystem": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-filesystem",
+            "/Users/username/Desktop",
+            "/Users/username/Downloads"
+          ]
+        }
+      }
+    }
 
 mcp-proxy [#mcp-proxy-diagram]_
 --------------------------------------------------
@@ -46,7 +73,7 @@ mcp-proxyを使う :file:`claude_desktop_config.json`
 ------------------------------------------------------------
 
 .. code-block:: json
-    :caption: commandは環境ごとのパス
+    :caption: commandは **環境ごとのパス** になる
 
     {
       "mcpServers": {
@@ -61,61 +88,44 @@ mcp-proxyを使う :file:`claude_desktop_config.json`
       }
     }
 
-cdcasasagiで設定を簡単に
-------------------------------------------------------------
+cdcasasagiで設定を簡単に [#experimental-cdcasasagi-skill]_
+----------------------------------------------------------------------
 
 .. code-block:: console
 
     $ cdcasasagi add https://developers.openai.com/mcp --name openai-developer-docs --write
 
-.. code-block:: json
+はじまりのissue：`v0.1: cdcasasagi add #1 <https://github.com/ftnext/cdcasasagi/issues/1>`__
 
-    {
-      "mcpServers": {
-        "openai-developer-docs": {
-          "command": "/Users/nikkie/.local/bin/mcp-proxy",
-          "args": [
-            "--transport",
-            "streamablehttp",
-            "https://developers.openai.com/mcp"
-          ]
-        }
-      }
-    }
+.. [#experimental-cdcasasagi-skill] Claude Desktop向けのスキル `cdcasasagi.zip <https://github.com/ftnext/cdcasasagi/releases/tag/0.7.1>`__
 
 cdcasasagiの開発
 ======================================================================
 
-* 実装はClaude、レビューはGPT
-* **33本** のプルリクエストをOpusに出させた
-* 私（人間）は細かいところは見ずにコマンドを動作確認して検収
+* **Opus** (4.6~4.8 high) **で実装** 、GPT(5.5)でレビュー 
+* Opusから **33本** のプルリクエスト（ローカル、web合わせて）
+* GPTのレビューを通ったら、私（人間）は細かいところは見ずにコマンドを動作確認だけして検収
 
-はじまりのissue
+実装とレビューの **ループ** を回す
 --------------------------------------------------
 
-* `v0.1: cdcasasagi add #1 <https://github.com/ftnext/cdcasasagi/issues/1>`__
-* ここからコマンドは増えていった：``import``, ``delete``, ``eject`` e.t.c.
+* 簡単設定：GitHubのPRへのpushをトリガーに `Codex cloudがレビュー <https://developers.openai.com/codex/integrations/github>`__ するように設定
+* これにClaude Codeの `/autofix-pr <https://code.claude.com/docs/ja/commands#%E3%81%99%E3%81%B9%E3%81%A6%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89>`__ を組合せる [#alternative-commands]_
 
-実装はClaude
+.. [#alternative-commands] ``/loop`` や ``/goal`` もPRのベビーシッティングに使えそうですよね
+
+通勤中の一コマ（PRの半分以上）
 --------------------------------------------------
 
-* 半分以上は **通勤中** に開発
-* webでplan。実装後、プルリクエストの面倒を（人力交え）見させる
-* ローカルで開発した後、 ``/autofix-pr`` でwebに面倒見させる
+* **モバイル** のClaude Code（web）でplan。そのための質問にも回答
+* planを承認後、実装してPRを出させる
+* PRへのGPTの自動レビューがあったら、人力で「コメント確認して」
 
-レビューはGPT
+ローカル開発の1コマ
 --------------------------------------------------
 
-* `Codex plugin for Claude Code <https://github.com/openai/codex-plugin-cc>`__ を使い、Stop hookでCodexレビュー発火
-* GitHubのPRへのpushをトリガーに `Codex cloudがレビュー <https://developers.openai.com/codex/integrations/github>`__ するように設定
-
-私に **簡単** だったのでこの形
---------------------------------------------------
-
-* Claude ``/autofix-pr``
-* GPT レビュー設定が簡単（特にcloud）
-
-.. ``/loop`` ``/goal``
+* `Codex plugin for Claude Code <https://github.com/openai/codex-plugin-cc>`__ を使い、 **Stop hookでGPTレビュー** 発火
+* PRが作れたあとは ``/autofix-pr`` でwebに面倒見させる（就寝前など）
 
 実装をClaudeに任せてみて
 ======================================================================
@@ -128,7 +138,7 @@ cdcasasagiの開発
 Opusのplan
 --------------------------------------------------
 
-* planは一通りレビュー。「その設計判断はあかんでしょ」がたまにある
+* planは一通り人間がレビュー。「その設計判断はあかんでしょ」がたまにある
 
     * 複雑に考えすぎて設計を汚くしている
 
@@ -154,8 +164,15 @@ Opusのplan
 GPTのレビュー雑感
 --------------------------------------------------
 
-* Opusは実装する際の指示やplanから、そこにない要素（例：セキュリティ面）に注意を払っていない可能性
-* GPTのレビューはめちゃめちゃ細かいところを拾う（融通が効かないので :file:`AGENTS.md` で調整）
+* **めちゃめちゃ細かいところまでも拾う**
+* :file:`claude_desktop_config.json` が壊れている時を想定してP2指摘
+* 融通が効かなくもあるので `AGENTS.md <https://github.com/ftnext/cdcasasagi/blob/0.7.1/AGENTS.md>`__ で調整した
+
+GPTのレビューから見るOpus
+--------------------------------------------------
+
+* Opusは実装する際の私の指示やplanから、そこにない要素（例：セキュリティ面）に注意を払っていない可能性
+* 破壊的変更をするときにOpusは人間に楯突いてこない。GPTのレビューになって顕在化する（P1指摘）
 
 .. ペアプロのドライバー（動くコードを書くのは難しい）とナビゲーター（設計判断などができる）？
 
@@ -163,7 +180,9 @@ Fabel？
 ======================================================================
 
 * GPTのポジションが要らなくなる期待（モドテコイ！）
-* Fabelが監督し、OpusやSonnet（やGPT）に実装させる
+* Fabelが **監督** し、OpusやSonnet（やGPT）に実装させる [#dynamic-workflow]_
+
+.. [#dynamic-workflow] dynamic workflow に少し期待しています
 
 なぜかGPT-5.5がFabelにもっともな指摘
 --------------------------------------------------
@@ -177,8 +196,8 @@ Fabel？
 まとめ🌯：Claude Codeに実装を任せてのgood & more
 ======================================================================
 
-:good: 小さなCLIは作れる！（通勤中に出来上がる開館）
-:more: Opus単体には任せられない感触。人やGPTのレビューがいる
+:good: 小さなCLIは作れる！（通勤中に出来上がる快感）
+:more: **Opus単体には任せられない感触**。人やGPTのレビューが要る（+使いこなし力強化）
 
 ご清聴ありがとうございました
 ------------------------------------------------------------
@@ -190,7 +209,7 @@ OSSサポートに感謝申し上げます
 
 * `SpeechRecognition <https://github.com/Uberi/speech_recognition>`__ (9k star) メンテナ
 * `Claude for Open Source <https://claude.com/contact-sales/claude-for-oss>`__
-* `Codex for Open Source <https://openai.com/ja-JP/form/codex-for-oss/>`__
+* `Codex for Open Source <https://openai.com/ja-JP/form/codex-for-oss/>`__ （`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__）
 
 EOF
 ===
