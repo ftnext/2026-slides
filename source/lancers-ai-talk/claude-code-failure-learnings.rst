@@ -1,3 +1,9 @@
+:ogp_title: Claude Codeに実装を任せてのgood & more
+:ogp_event_name: lancers-ai-talk
+:ogp_slide_name: claude-code-failure-learnings
+:ogp_description: Claude Code、どこまで任せられる？失敗事例から任せ方を学ぶLT会
+:ogp_image_name: lancers-ai-talk-cc-failure
+
 ======================================================================
 Claude Codeに実装を任せてのgood & more
 ======================================================================
