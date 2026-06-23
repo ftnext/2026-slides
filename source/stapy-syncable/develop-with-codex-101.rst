@@ -64,9 +64,9 @@ Codex [#codex-jp-page]_
 料金体系
 ---------------------------------------------------
 
-* ChatGPT Plus以上だと **5時間** 利用枠と **1週間** 利用枠がある
+* **5時間** 利用枠と **1週間** 利用枠がある
 * 両方の枠内でなら追加課金不要
-* 5月に試したところ、Plusの5時間利用枠は20$ APIキーに課金する元が十分取れた
+* 5時間ぶん回して$40超えるAPIキー消費（Plus($20)の元十分取れる。5月時点）
 
 Codex Appインストール（みなさんは済み）
 ---------------------------------------------------
@@ -149,13 +149,13 @@ https://developers.openai.com/codex/app#getting-started
 .. Django 6 の目玉機能を教えて
     どのように実装されているか教えて
 
-Codexのイメージはシェル芸人 [#2025-lunchwithai-codex2]_
+Codexのイメージはシェル芸人 [#lunchwithai-2025-codex2]_
 ------------------------------------------------------------
 
 * プロジェクトのルートディレクトリしか知らない
 * **コマンドを実行して調査**。回答を返す
 
-.. [2025-lunchwithai-codex2] 過去のLTより https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/4
+.. [#lunchwithai-2025-codex2] 過去のLTより https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/4
 
 もちろん **開発** もできます
 ---------------------------------------------------
