@@ -15,13 +15,13 @@ Codex Appインストール
 ---------------------------------------------------
 
 * Appタブ https://developers.openai.com/codex/quickstart#setup
-* macOSまたはWindows（Linuxの方ごめんなさい）
+* macOSまたはWindows（Linuxの方ごめんなさい🙏）
 * ChatGPTのアカウントでサインイン
 
 お前、誰よ
 ======================================================================
 
-* nikkie（にっきー） [#nikkie-uuid]_
+* nikkie（にっきー） [#nikkie-uuid]_ ・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__
 * 機械学習エンジニア（`サマーインターン募集中 <https://hrmos.co/pages/uzabase/jobs/Newgrads28_002>`__）・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A提供 <https://jp.ub-speeda.com/news/20260319/>`__）
 
 .. image:: ../_static/uzabase-white-logo.png
@@ -31,7 +31,7 @@ Codex Appインストール
 Codex App触っていきましょう
 ======================================================================
 
-ユースケースを体験しましょう
+**ユースケースを体験** しましょう
 
 .. TODO 導入方法を$openai-docsで聞いてスライドに反映
 
@@ -71,10 +71,10 @@ https://developers.openai.com/codex/app#getting-started
 ---------------------------------------------------
 
 * Settings（左下） > Settings > General > General > Language > 日本語
-* 設定（左下） > 設定 > 一般 > 一般 > 言語 > 日本語
+* 設定（左下） > 設定 > 個人設定の一般 > 一般 > 言語 > 日本語
 * 副作用として *コマンドまで日本語化* されます
 
-チャットしてみる
+0️⃣チャットしてみる
 ======================================================================
 
 .. image:: ../_static/stapy-syncable/codex-app-chat.png
@@ -87,22 +87,30 @@ https://developers.openai.com/codex/app#getting-started
 モデルと推論（例「5.5 中」）
 ---------------------------------------------------
 
-* モデル：GPT-5.5（過去のモデルも選べます）
-* 推論：低(low)・中(medium)・**高(high)**・非常に高い(xhigh)
+* モデル：GPT-5.5の選択
+* 過去のモデルも選べますが、 **5.5から始めましょう**
+
+.. revealjs-break::
+
+* 推論：低(low)・中(medium)・高(high)・非常に高い(xhigh)
+* mediumがバランス取れていてデフォルト
+* 私の場合は **high** がしっくりきました
+
+.. https://developers.openai.com/codex/codex-manual.md 「#### Choosing models and reasoning」
 
 「速度」に注意⚠️
 ---------------------------------------------------
 
 * 「高速」はここぞというときに（デフォルトでONかも）
 * **「標準」で十分** です
-* 設定の 一般 > 速度
+* 個人設定の一般 > 一般 > 速度
 
 スレッドという概念
 ---------------------------------------------------
 
 * **1つのチャットが1スレッド**
 * 話題が変わったら新しいチャット（スレッド）にしましょう
-* 何スレッドも同時にやりやすくてApp推し（*git worktree* との相性もよし）
+* 複数スレッドを並行して扱いやすくてApp推し（*git worktree* との相性もよし）
 
 .. https://developers.openai.com/codex/prompting#threads
 
@@ -113,12 +121,12 @@ https://developers.openai.com/codex/app#getting-started
 * ピン
 * :kbd:`⌘+K` :kbd:`Ctrl+K` のメニューで移動
 
-コードベースを理解する
+1️⃣コードベースを理解する
 ======================================================================
 
 .. 「コードを書かずに簡単なものを作ってみましょう」に代えて
 
-.. https://developers.openai.com/codex/use-cases/codebase-onboarding
+ユースケース `Understand large codebases <https://developers.openai.com/codex/use-cases/codebase-onboarding>`__
 
 **プロジェクト** 設定
 ---------------------------------------------------
@@ -126,8 +134,6 @@ https://developers.openai.com/codex/app#getting-started
 * チャットではなくその上の「プロジェクト」
 * 「既存のフォルダーを使用」から読ませたいディレクトリを選択
 * 例：`Django <https://github.com/django/django>`__ をcloneしてきた
-
-.. Playgroundプロジェクト
 
 自然言語でコードベースに質問
 ---------------------------------------------------
@@ -137,28 +143,43 @@ https://developers.openai.com/codex/app#getting-started
 .. Django 6 の目玉機能を教えて
     どのように実装されているか教えて
 
-Codexのイメージはシェル芸人
----------------------------------------------------
+Codexのイメージはシェル芸人 [#2025-lunchwithai-codex2]_
+------------------------------------------------------------
 
 * プロジェクトのルートディレクトリしか知らない
 * **コマンドを実行して調査**。回答を返す
 
-もちろん開発もできます
+.. [2025-lunchwithai-codex2] 過去のLTより https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/4
+
+もちろん **開発** もできます
 ---------------------------------------------------
 
 * コードを書かせる（+ ``/プランモード``）
 * `/コードレビュー <https://developers.openai.com/codex/app/review>`__
+* バグの調査
+* 開発の自動化
 
-**代理で承認**
+.. https://developers.openai.com/codex/overview.md
+
+.. _代理で承認: https://developers.openai.com/codex/concepts/sandboxing/auto-review
+
+`代理で承認`_ （イチオシ！）
 ---------------------------------------------------
 
 * Codexがコマンドを実行したいとき、人間に許可を求める
 * 「代理で承認」は、人間の代わりに（別の）Codexが許可・拒否を判断する（おすすめ）
 * 設定 > 権限 > 自動レビュー（有効にする）
 
-.. https://developers.openai.com/codex/concepts/sandboxing
+.. sandbox (workspace-write)・approval policy（on-request）
+    workspaceのtrusted
+    インタラクティブなレビューをuserの代わりにreviewer agentへ
+    https://developers.openai.com/codex/concepts/sandboxing
 
-.. 詳しくは permission と workspace の権限
+.. revealjs-break::
+    :notitle:
+
+.. image:: ../_static/stapy-syncable/openai-docs-auto-review-image.png
+    :target: https://developers.openai.com/codex/concepts/sandboxing#how-you-control-it
 
 .. Slash command /init 紹介
 
@@ -174,7 +195,7 @@ https://developers.openai.com/codex/app/features
 
     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/LoX9_dnXthc?si=pzwvD_FUClL1bzcg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-Codexに専門知識を与える
+2️⃣Codexに専門知識を与える
 ======================================================================
 
 *Agent Skills*
@@ -195,7 +216,7 @@ OpenAIのドキュメントに質問できる
 
     extending AI agent capabilities with specialized knowledge and workflows.
 
-* どんな専門知識があるかだけ知っている（nameとdescription）。詳細を参照するのは必要になった時
+* どんな専門知識があるかだけ知っている（nameとdescription）。   **詳細を参照するのは必要になった時**
 
 $openai-docs
 ---------------------------------------------------
@@ -215,7 +236,7 @@ $openai-docs にはCodexの質問も可能
 
 https://developers.openai.com/codex/codex-manual.md に基づいて回答する仕組みあり
 
-IMO：この世は *スキルゲー*（**専門知識の装備**）
+IMO：この世は *スキルゲー* （**専門知識の装備**）
 ---------------------------------------------------
 
 * `$find-skills <https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md>`__
@@ -229,7 +250,7 @@ IMO：この世は *スキルゲー*（**専門知識の装備**）
 * Vercelによる npx `skills <https://www.npmjs.com/package/skills>`__
 * `gh skills <https://cli.github.com/manual/gh_skill>`__ や `apm <https://github.com/microsoft/apm>`__ もある（どれか1ツールで十分です）
 
-プラグインでCodexに開発させる
+3️⃣プラグインを設定してCodexに開発させる
 ======================================================================
 
 例：OpenAIのAPIを使ったアプリケーション開発
@@ -241,33 +262,46 @@ IMO：この世は *スキルゲー*（**専門知識の装備**）
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">Use the OpenAI Developers plugin in Codex to build faster with OpenAI tools by setting up API keys, finding the right docs, and debugging along the way. <a href="https://t.co/ztBd3h3oeb">pic.twitter.com/ztBd3h3oeb</a></p>&mdash; OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2066634415955136728?ref_src=twsrc%5Etfw">2026年6月15日</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script> 
 
-プラグインとは
----------------------------------------------------
+プラグイン [#codex-plugin-doc]_ とは、**まとめ** てワークフローを提供
+----------------------------------------------------------------------
 
 * MCPサーバ
 * Agent Skill
-* *アプリ*
+* *アプリ* (?)
+
+.. [#codex-plugin-doc] https://developers.openai.com/codex/plugins
 
 OpenAI Developersプラグイン
 ---------------------------------------------------
+
+.. image:: ../_static/stapy-syncable/codex-app-plugin-openai.png
 
 .. _APIキー: https://platform.openai.com/api-keys
 
 Codexに指示して `APIキー`_ を作る
 ---------------------------------------------------
 
-    Create a new API key.
+    OpenAIのAPIキーを新しく作って
 
-OpenAIにクレジットカード登録が必要と思われます
+.. Create a new API key.
+
+* Playgroundプロジェクト（Gitリポジトリではない）
+* OpenAIにクレジットカード登録が必要と思われます
 
 Responses APIを使ったチャットアプリ
 ---------------------------------------------------
 
-    Implement a chatbot using responses API and a voice chat mode using Realtime API
+    Responses APIを使ったチャットボットをPythonで実装して。Realtime APIを使った音声チャットモードも合わせて。
 
-Pythonで
+.. Implement a chatbot using responses API and a voice chat mode using Realtime API
 
-.. hatch-pet
+OpenAI Developersプラグインを使って
+---------------------------------------------------
+
+* APIキー作成（アプリ。要所は人間が許可する）
+* ``$openai-docs`` で必要なドキュメント参照
+
+Codexが **自分で調べて実装を進めていける**
 
 Codex Appで業務自動化も
 ======================================================================
@@ -282,13 +316,22 @@ Codex Appで業務自動化も
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">Show Codex a workflow once. Reuse it as a skill.<br><br>Record &amp; Replay lets you show Codex a recurring task, like filing an expense report or submitting a time-off request.<br><br>Codex turns that demo into an inspectable, editable skill.<br><br>You control when recording starts and stops. <a href="https://t.co/UqSGaO7XUs">pic.twitter.com/UqSGaO7XUs</a></p>&mdash; OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2067681320281723113?ref_src=twsrc%5Etfw">2026年6月18日</a></blockquote>
 
+ペットはいいぞ
+---------------------------------------------------
+
+.. _$hatch-pet: https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet
+
+* 設定 > 個人設定のPets > **選べます**
+* `$hatch-pet`_ で自作できます
+* 拙ブログ `Codex App で"ペットが飼える"ようになったと聞きまして <https://nikkie-ftnext.hatenablog.com/entry/codex-app-pet-feature-hatch-pet-skill-realize-my-idol>`__
+
 まとめ🌯：Codex開発基礎
 ======================================================================
 
 * Codex Appをインストール
 * 既存のコードベースをプロジェクトに開き自然言語で質問
 * Agent Skillsで専門知識を与える
-* OpenAI Developersプラグインでアプリ開発
+* 自分で開発するのに必要な一式を設定（プラグイン）
 
 Codex App以外にも適用できる考え方
 ---------------------------------------------------
