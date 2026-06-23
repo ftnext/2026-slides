@@ -1,3 +1,9 @@
+:ogp_title: Codex Ambassador直伝！Codex開発基礎
+:ogp_event_name: stapy-syncable
+:ogp_slide_name: develop-with-codex-101
+:ogp_description: 小規模開発のリアルを語ろう
+:ogp_image_name: stapy-syncable
+
 ======================================================================
 Codex開発基礎
 ======================================================================
