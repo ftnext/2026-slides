@@ -1,3 +1,9 @@
+:ogp_title: "週に3億ダウンロード"のStarletteに見つかった脆弱性、BadHost
+:ogp_event_name: security-any
+:ogp_slide_name: 11-starlette-badhost
+:ogp_description: Security.any #11 灼熱の攻防セキュリティLT
+:ogp_image_name: security-any11
+
 ======================================================================
 "週に3億ダウンロード"のStarletteに見つかった脆弱性、BadHost
 ======================================================================
