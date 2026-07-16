@@ -48,7 +48,7 @@ GIGAZINE「週に3億回超ダウンロード〜〜」
 
 * FastAPIは **10万スター超え** のPython Webフレームワーク（非同期対応）
 * FastAPI = Starlette + Pydantic
-* 👉「週に3億回超ダウンロード」
+* 👉（Starletteは）「週に3億回超ダウンロード」
 
 FastAPIのWebサーバ部分は **ほとんどStarlette**
 ---------------------------------------------------
@@ -57,8 +57,10 @@ FastAPIのWebサーバ部分は **ほとんどStarlette**
 
     # https://github.com/fastapi/fastapi/blob/0.139.0/fastapi/applications.py#L42
     from starlette.applications import Starlette
-
     class FastAPI(Starlette):
+
+    # https://github.com/fastapi/fastapi/blob/0.139.0/fastapi/requests.py#L2
+    from starlette.requests import Request as Request
 
 Starletteの脆弱性がそのままFastAPI（や依存するライブラリ [#many-libs-depend-on-fastapi]_ ）に波及した
 
@@ -101,7 +103,7 @@ BadHost
 ======================================================================
 
 * 「週に3億回超ダウンロード」や「1文字で認証バイパス」にげんなり（後者はセキュリティ機関なのにバズ欲しいんですか？）
-* BadHostより前に `GHSA-86qp-5c8j-p5mr <https://github.com/Kludex/starlette/security/advisories/GHSA-86qp-5c8j-p5mr>`_ で指摘・修正済み
+* BadHostより前に `GHSA-86qp-5c8j-p5mr <https://github.com/Kludex/starlette/security/advisories/GHSA-86qp-5c8j-p5mr>`__ で指摘・修正済み
 
 Missing Host header validation poisons request.url.path, bypassing path-based security checks
 ------------------------------------------------------------------------------------------------------
@@ -126,7 +128,7 @@ Missing Host header validation poisons request.url.path, bypassing path-based se
 ---------------------------------------------------
 
 .. code-block:: diff
-    :caption: *This* `PR <https://github.com/Kludex/starlette/pull/3279>`_ *validates the Host header against an allowlist regex (matching Werkzeug's and Django's approach) before using it*
+    :caption: *This* `PR <https://github.com/Kludex/starlette/pull/3279>`__ *validates the Host header against an allowlist regex (matching Werkzeug's and Django's approach) before using it*
 
     -if host_header is not None:
     +if host_header is not None and _HOST_RE.fullmatch(host_header):
