@@ -1,3 +1,9 @@
+:ogp_title: 私の担当、エミリー スチュアートさん
+:ogp_event_name: engineers-anime
+:ogp_slide_name: my-dear-emily-chang
+:ogp_description: アニメから得た学びを発表会
+:ogp_image_name: engineers-anime-july-emily
+
 ============================================================
 私の担当、エミリー スチュアートさん
 ============================================================
