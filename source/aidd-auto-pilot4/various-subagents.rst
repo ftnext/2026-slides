@@ -41,11 +41,13 @@ https://aid.connpass.com/event/399888/
 1/3 `obra/superpowers`_
 ============================================================
 
-* ソフトウェア開発のやり方を強制（例えば、red/green TDD）
-* 多様なコーディングエージェントをサポート
+* ソフトウェア開発のやり方を強制（例えば、red/green TDD） [#using-superpowers]_
+* 多様なコーディングエージェントをサポート [#superpowers-plugins]_
 * サブエージェントを並列で走らせるのを体験した
 
-.. Claude plugin, Codex plugin
+.. [#using-superpowers] ``/using-superpowers`` が常に発火するようになるので、ちょっと我は強いです
+
+.. [#superpowers-plugins] `Claude plugin <https://claude.com/plugins/superpowers>`__, `Codex plugin <https://github.com/openai/plugins/tree/main/plugins/superpowers>`__
 
 強制する流れ
 ---------------------------------------------------
@@ -64,7 +66,9 @@ planをサブエージェントで分担して実装
 2/3 orchestrator (Fable 5)
 ============================================================
 
-* superpowersを設定しなくてもサブエージェント並列呼び出しができるようになってきた
+* superpowersを設定しなくてもサブエージェント並列呼び出しができるようになってきた [#oikon-san-fable-tweet]_
+
+.. [#oikon-san-fable-tweet] 関連：https://x.com/oikon48/status/2074667273009385790
 
 .. revealjs-break::
     :notitle:
@@ -89,21 +93,22 @@ planをサブエージェントで分担して実装
 
 * Fableに指示「Sonnet 5をサブエージェントとし、それぞれにプルリクエストを作らせ、あなたは監督に当たってください」
 
-.. Oikonさんツイートでうまくやる方法を見た https://x.com/oikon48/status/2074667273009385790
-
 3/3 Codexからもサブエージェント
 ============================================================
 
 * PDFとJSONの内容突き合わせを100回
-* GPT-5.6 Sol (高)にタスクを監督させてサブエージェントに処理させた（ChatGPT.app）
+* GPT-5.6 Sol (高)にタスクを監督させてサブエージェントに処理させた（ChatGPT.app） [#codex-subagent]_
 
-.. サブエージェントを指定してないのでSolになる
+.. [#codex-subagent] 指定していないのでサブエージェントはSolになります
 
 Codexの設定
 ---------------------------------------------------
 
-* configの ``[agents]`` (``max_threads = 6``)
-* 指示は :file:`AGENTS.md` に記載。各エージェントが自動で読み込むため
+* configの ``[agents]`` (``max_threads = 6``・``max_depth = 1``) [#codex-config-agents]_
+* 指示はプロジェクトの :file:`AGENTS.md` に記載。各エージェントが自動で読み込むため [#codex-agents-md]_
+
+.. [#codex-config-agents] https://learn.chatgpt.com/docs/agent-configuration/subagents?surface=app#app-global-settings
+.. [#codex-agents-md] https://learn.chatgpt.com/docs/agent-configuration/agents-md
 
 共通点：巨大な1タスクを **分割** して作業
 ============================================================
@@ -117,7 +122,9 @@ Codexの設定
 
 * 「Issue自動生成 → タスク分解 → 複数エージェントによるPR作成」(connpass)
 * 巨大な1タスクと性質が異なる感触。事前に定義できる？
-* 可能性？：Agent Team、Dynamic Workflow
+* 可能性？：`Agent Team <https://code.claude.com/docs/ja/agent-teams>`__、`Dynamic Workflows <https://code.claude.com/docs/ja/workflows>`__ [#boris-ai-levels]_
+
+.. [#boris-ai-levels] https://x.com/bcherny/status/2077929379661844559 Step3からClaudeがサブエージェントを呼ぶ！
 
 まとめ🌯：困難は分割せよ
 ============================================================
