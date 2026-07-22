@@ -1,3 +1,9 @@
+:ogp_title: 困難は分割せよ
+:ogp_event_name: aidd-auto-pilot4
+:ogp_slide_name: various-subagents
+:ogp_description: 【AI駆動開発】AI自走環境整備・運用スペシャル #4
+:ogp_image_name: aidd-auto-pilot4
+
 ============================================================
 困難は分割せよ
 ============================================================
