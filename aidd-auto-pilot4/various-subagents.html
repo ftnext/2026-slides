@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>困難は分割せよ</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/aidd-auto-pilot4/various-subagents.html">
+    <meta property="og:title" content="困難は分割せよ">
+    <meta property="og:description" content="【AI駆動開発】AI自走環境整備・運用スペシャル #4">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/aidd-auto-pilot4.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">困難は分割せよ</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>【AI駆動開発】AI自走環境整備・運用スペシャル #4</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/07/21 nikkie （スペース連打 or 矢印キーでめくります）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー） <a class="footnote-reference brackets" href="#nikkie-uuid" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a>・Devin Ambassador</p></li>
+<li><p>機械学習エンジニア・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260701/" rel="noreferrer" target="_blank">MCP</a> 提供）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-uuid" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>UUID <a class="reference external" href="https://x.com/ftnext/status/2041119610368602138" rel="noreferrer" target="_blank">28fb3f96-a221-462c-93bd-567b431715b9</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">本日公開のインタビューより</h3>
+<img alt="../_images/nikkie-findy-python.png" src="../_images/nikkie-findy-python.png"/>
+<p><a class="reference external" href="https://findy-code.io/media/articles/chotto-wakaru-python" rel="noreferrer" target="_blank">https://findy-code.io/media/articles/chotto-wakaru-python</a></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">「複数コーディングエージェントを並列で走らせる」</h2>
+<blockquote>
+<div><p>今回は、レビュー中心の議論から軸を変え、Issue自動生成 → タスク分解 → 複数エージェントによるPR作成までを、どこまでAIに自走させられるか</p>
+</div></blockquote>
+<p><a class="reference external" href="https://aid.connpass.com/event/399888/" rel="noreferrer" target="_blank">https://aid.connpass.com/event/399888/</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">サブエージェント</h3>
+<ul class="simple">
+<li><p>コーディングエージェントを長く自走させたい！</p></li>
+<li><p><strong>コンテキストウィンドウ管理</strong>：メインが詳細を知る必要がなければサブに振る</p></li>
+<li><p>経験した事例を3つ紹介</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">1/3 <a class="reference external" href="https://github.com/obra/superpowers" rel="noreferrer" target="_blank">obra/superpowers</a></h2>
+<ul class="simple">
+<li><p>ソフトウェア開発のやり方を強制（例えば、red/green TDD） <a class="footnote-reference brackets" href="#using-superpowers" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+<li><p>多様なコーディングエージェントをサポート <a class="footnote-reference brackets" href="#superpowers-plugins" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+<li><p>サブエージェントを並列で走らせるのを体験した</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="using-superpowers" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><code class="docutils literal notranslate"><span class="pre">/using-superpowers</span></code> が常に発火するようになるので、ちょっと我は強いです</p>
+</aside>
+<aside class="footnote brackets" id="superpowers-plugins" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://claude.com/plugins/superpowers" rel="noreferrer" target="_blank">Claude plugin</a>, <a class="reference external" href="https://github.com/openai/plugins/tree/main/plugins/superpowers" rel="noreferrer" target="_blank">Codex plugin</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">強制する流れ</h3>
+<ol class="arabic simple">
+<li><p>brainstorming (<code class="file docutils literal notranslate"><span class="pre">specs/design.md</span></code>)</p></li>
+<li><p>writing-plans (<code class="file docutils literal notranslate"><span class="pre">plans/&lt;feature&gt;.md</span></code>)</p></li>
+<li><p><strong>subagent-driven-development</strong></p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">planをサブエージェントで分担して実装</h3>
+<ul class="simple">
+<li><p>コードベース探索+人間に質問で <code class="file docutils literal notranslate"><span class="pre">design.md</span></code> ができる</p></li>
+<li><p>どのファイルがどんな差分になるかを <code class="file docutils literal notranslate"><span class="pre">plans</span></code> に書き出す（<strong>1000行</strong>〜）</p></li>
+<li><p>サブエージェントに委譲して、クリアなコンテキストで動作するまで実装</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2/3 orchestrator (Fable 5)</h2>
+<ul class="simple">
+<li><p>superpowersを設定しなくてもサブエージェント並列呼び出しができるようになってきた <a class="footnote-reference brackets" href="#oikon-san-fable-tweet" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="oikon-san-fable-tweet" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id11" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>関連：<a class="reference external" href="https://x.com/oikon48/status/2074667273009385790" rel="noreferrer" target="_blank">https://x.com/oikon48/status/2074667273009385790</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-conversation="none" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">A second strategy: use Fable 5 as an orchestrator.<br/><br/>Fable 5 plans and delegates to workers (Sonnet 5).<br/><br/>Most tokens are billed at the lower worker rate. <a href="https://t.co/cwDZJSXekn">pic.twitter.com/cwDZJSXekn</a></p>— ClaudeDevs (@ClaudeDevs) <a href="https://x.com/ClaudeDevs/status/2074606061567574181?ref_src=twsrc%5Etfw">2026年7月7日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">リファクタリング計画</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">6月22日までしかサブスクで使えない期間限定で登場した最強のFable 5を全力で活かすプロンプトをお教えします<br/><br/>「今このコードベースには長年蓄積した大量の無駄がある。フェーズに分けて完全なリファクタリングを行うための詳細なプランを書いてほしい」<br/><br/>これで徹底的に内部解析した出力を得ておく…</p>— Kenn Ejima (@kenn) <a href="https://x.com/kenn/status/2064590494106317289?ref_src=twsrc%5Etfw">2026年6月10日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">サブエージェントで実装</h3>
+<ul>
+<li><p>実装計画 <a class="reference external" href="https://github.com/ftnext/kurenai/issues/4" rel="noreferrer" target="_blank">https://github.com/ftnext/kurenai/issues/4</a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>フェーズ1〜3</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Fableに指示「Sonnet 5をサブエージェントとし、それぞれにプルリクエストを作らせ、あなたは監督に当たってください」</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3/3 Codexからもサブエージェント</h2>
+<ul class="simple">
+<li><p>PDFとJSONの内容突き合わせを100回</p></li>
+<li><p>GPT-5.6 Sol (高)にタスクを監督させてサブエージェントに処理させた（ChatGPT.app） <a class="footnote-reference brackets" href="#codex-subagent" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-subagent" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>指定していないのでサブエージェントはSolになります</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codexの設定</h3>
+<ul class="simple">
+<li><p>configの <code class="docutils literal notranslate"><span class="pre">[agents]</span></code> (<code class="docutils literal notranslate"><span class="pre">max_threads</span> <span class="pre">=</span> <span class="pre">6</span></code>・<code class="docutils literal notranslate"><span class="pre">max_depth</span> <span class="pre">=</span> <span class="pre">1</span></code>) <a class="footnote-reference brackets" href="#codex-config-agents" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+<li><p>指示はプロジェクトの <code class="file docutils literal notranslate"><span class="pre">AGENTS.md</span></code> に記載。各エージェントが自動で読み込むため <a class="footnote-reference brackets" href="#codex-agents-md" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-config-agents" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id16" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://learn.chatgpt.com/docs/agent-configuration/subagents?surface=app#app-global-settings" rel="noreferrer" target="_blank">https://learn.chatgpt.com/docs/agent-configuration/subagents?surface=app#app-global-settings</a></p>
+</aside>
+<aside class="footnote brackets" id="codex-agents-md" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id17" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" rel="noreferrer" target="_blank">https://learn.chatgpt.com/docs/agent-configuration/agents-md</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">共通点：巨大な1タスクを <strong>分割</strong> して作業</h2>
+<ul class="simple">
+<li><p>1000行のplan</p></li>
+<li><p>リファクタリング計画の実装</p></li>
+<li><p>100回繰り返し</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自走環境に向けて（私自身未開）</h3>
+<ul class="simple">
+<li><p>「Issue自動生成 → タスク分解 → 複数エージェントによるPR作成」(connpass)</p></li>
+<li><p>巨大な1タスクと性質が異なる感触。事前に定義できる？</p></li>
+<li><p>可能性？：<a class="reference external" href="https://code.claude.com/docs/ja/agent-teams" rel="noreferrer" target="_blank">Agent Team</a>、<a class="reference external" href="https://code.claude.com/docs/ja/workflows" rel="noreferrer" target="_blank">Dynamic Workflows</a> <a class="footnote-reference brackets" href="#boris-ai-levels" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="boris-ai-levels" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id20" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://x.com/bcherny/status/2077929379661844559" rel="noreferrer" target="_blank">https://x.com/bcherny/status/2077929379661844559</a> Step3からClaudeがサブエージェントを呼ぶ！</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：困難は分割せよ</h2>
+<ul class="simple">
+<li><p>巨大な1タスクを分割してサブエージェントに実装させてきた</p></li>
+<li><p>superpowersから始め、最近のモデルではサブエージェントは簡単に</p></li>
+<li><p>Open Question: 複数のタスクをつないで自走させるには？</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Happy Development ❤️🤖（ステッカードゾー）</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OSSサポートに感謝申し上げます</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Uberi/speech_recognition" rel="noreferrer" target="_blank">SpeechRecognition</a> (9k star) メンテナ</p></li>
+<li><p><a class="reference external" href="https://claude.com/contact-sales/claude-for-oss" rel="noreferrer" target="_blank">Claude for Open Source</a></p></li>
+<li><p><a class="reference external" href="https://openai.com/ja-JP/form/codex-for-oss/" rel="noreferrer" target="_blank">Codex for Open Source</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h2>
+</section>
+</section>
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

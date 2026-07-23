@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>わたしの、最高の相棒、Codex</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/codex-findy/my-best-partner-codex-app.html">
+    <meta property="og:title" content="わたしの、最高の相棒、Codex">
+    <meta property="og:description" content="開発フローの中で活かすCodex - 実践者3名が語る使いどころと改善">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/codex-findy2.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">わたしの、最高の相棒、Codex</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">わたしの、最高の <strong>相棒</strong>、Codex</h2>
+<p>自動レビュー、モバイル、App Server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>開発フローの中で活かすCodex <code class="docutils literal notranslate"><span class="pre">#codex_findy</span></code></p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/06/04 nikkie（スペース連打 or 矢印キーでめくります）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><em>It's time to fly</em> <a class="footnote-reference brackets" href="#codex-brand-movie-nba" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></h2>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/bJcA23ckzcY?si=ic7hHrVxJDQehIhh" title="YouTube video player" width="560"></iframe><aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-brand-movie-nba" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://x.com/thsottiaux/status/2062310660806205901" rel="noreferrer" target="_blank">OpenAIは今夜のNBAファイナル第1戦でこのブランドムービーを流すそうです</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ <a class="footnote-reference brackets" href="#omae-dareyo" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python歴8年・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a></p></li>
+<li><p>機械学習エンジニア（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="omae-dareyo" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>Pythonコミュニティにおける自己紹介のことです</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">3月 <a class="footnote-reference brackets" href="#codex-findy-march" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> にもお話ししました</h3>
+<iframe height="480" src="https://ftnext.github.io/2026-slides/codex-findy/my-best-partner-codex-cli.html#/1" title="わたしの、最高の相棒、Codex CLI" width="800"></iframe><aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-findy-march" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>アーカイブ <a class="reference external" href="https://findy-code.io/events/VL_rdU3iJcEoP" rel="noreferrer" target="_blank">https://findy-code.io/events/VL_rdU3iJcEoP</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">おことわり</h3>
+<ul class="simple">
+<li><p>Codexの利用事例は、私の <strong>個人開発から</strong> が中心です</p></li>
+<li><p>ユーザベースのSpeeda開発チームは <em>常時ペアプログラミング</em> で開発しています <a class="footnote-reference brackets" href="#uzabase-pair-programming" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> 。featureブランチでプルリクエストはありません</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uzabase-pair-programming" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://agilejourney.uzabase.com/entry/2025/01/24/103000" rel="noreferrer" target="_blank">僕らのペアプログラミングにはまだ伸びしろがある ─ ペアプロガイドラインを策定したユーザベースはどんなペアプロをしているのか？</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3月からの差分：<strong>Codex App</strong> <a class="footnote-reference brackets" href="#why-app" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h2>
+<a class="reference external image-reference" href="https://developers.openai.com/codex/app" rel="noreferrer" target="_blank"><img alt="https://developers.openai.com/images/codex/app/app-screenshot-light.webp" src="../_images/app-screenshot-light.webp"/>
+</a>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="why-app" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>理解していなくても <a class="reference external" href="https://developers.openai.com/codex/app/worktrees" rel="noreferrer" target="_blank">git worktreeが簡単に使えた</a> り、並列作業が管理しやすかったりで乗り換え</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codexの提供形態 <a class="footnote-reference brackets" href="#codex-quickstart-doc" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> (私の利用量)</h3>
+<ul class="simple">
+<li><p><strong>App</strong> (多) 👈おすすめ</p></li>
+<li><p>CLI (少)</p></li>
+<li><p>Cloud (多)</p></li>
+<li><p>VS Codeなどの拡張 (少)</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-quickstart-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/quickstart#setup" rel="noreferrer" target="_blank">https://developers.openai.com/codex/quickstart#setup</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Appって何ができるの？ ー おすすめ動画 <a class="footnote-reference brackets" href="#findy-kyohei-san" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></h3>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/LoX9_dnXthc?si=pzwvD_FUClL1bzcg" title="YouTube video player" width="560"></iframe><aside class="footnote-list brackets">
+<aside class="footnote brackets" id="findy-kyohei-san" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id12" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://findy-code.io/engineer-lab/pdfme" rel="noreferrer" target="_blank">オレオレ神関数のOSS化で人生が変わった。pdfme開発者 kyoheiさんがOSS活動に取り組む理由</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">イチオシ機能：<strong>ペット</strong> と一緒 <a class="footnote-reference brackets" href="#codex-pet-blog" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a> 🏃‍♂️</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Pets. Now in Codex.<br/><br/>Use /pet to wake your pet. <a href="https://t.co/aAm4lLP4LW">pic.twitter.com/aAm4lLP4LW</a></p>— OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2050275713824211041?ref_src=twsrc%5Etfw">2026年5月1日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script><aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-pet-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id13" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/codex-app-pet-feature-hatch-pet-skill-realize-my-idol" rel="noreferrer" target="_blank">Codex App で"ペットが飼える"ようになったと聞きまして</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">本題へ：開発フローの中で活かすCodex (IMO <a class="footnote-reference brackets" href="#ambassador-disclaimer" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>)</h2>
+<ul class="simple">
+<li><p>コードレビュー</p></li>
+<li><p>実装</p></li>
+<li><p>コードリーディング</p></li>
+<li><p>開発ワークフロー</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ambassador-disclaimer" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id15" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p>Codex Ambassadorといっても私はめちゃめちゃ知っているわけではありません。紹介されなかったけどこれが便利というものがある方はぜひ発信を🙏（拡散します）</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">コードレビュー <a class="footnote-reference brackets" href="#why-ai-review" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a></h2>
+<p><a class="reference external" href="https://kimetsu.com/anime/story/detail/?ep=17&amp;series=risshi" rel="noreferrer" target="_blank">ひとつのことを極め抜け</a> ⚡️</p>
+<ol class="arabic simple">
+<li><p>Codex Cloud</p></li>
+<li><p>ローカルでの開発</p></li>
+</ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="why-ai-review" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id16" role="doc-backlink">10</a><span class="fn-bracket">]</span></span>
+<p>AIが生産するコードを全部見切れないので、人間が見る箇所を可能な限り減らしたくて取り組んでます</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAIはCodexでコードレビュー <a class="footnote-reference brackets" href="#example-codex-github" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a></h3>
+<blockquote>
+<div><p>Every pull request at OpenAI is now reviewed by Codex before human eyes see it,</p>
+</div></blockquote>
+<p><a class="reference external" href="https://x.com/lennysan/status/2022121036364529702" rel="noreferrer" target="_blank">https://x.com/lennysan/status/2022121036364529702</a> (2026/02)</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="example-codex-github" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id18" role="doc-backlink">11</a><span class="fn-bracket">]</span></span>
+<p>例：<a class="reference external" href="https://github.com/openai/codex/pulls" rel="noreferrer" target="_blank">https://github.com/openai/codex/pulls</a> chatgpt-codex-connector[bot]</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://developers.openai.com/codex/integrations/github" rel="noreferrer" target="_blank">Codex code review in GitHub</a></h2>
+<ul class="simple">
+<li><p>Codex Cloudは <strong>簡単</strong> にGitHubと連携設定できます</p></li>
+<li><p>私の設定：PRにpushされるたびにコードレビュー</p></li>
+<li><p>本当に頼りにしています（例：GitHub Actionsのセキュリティ面）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">設定例（画像クリックで設定画面へ）</h3>
+<a class="reference external image-reference" href="https://chatgpt.com/codex/cloud/settings/code-review" rel="noreferrer" target="_blank"><img alt="../_images/codex-web-review-easy-setting.png" height="502" src="../_images/codex-web-review-easy-setting.png" width="767"/>
+</a>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex Cloud のコードレビューのここが推し！</h3>
+<ul class="simple">
+<li><p>差分を読むだけにあらず</p></li>
+<li><p><a class="reference external" href="https://chatgpt.com/codex/cloud?tab=code_reviews" rel="noreferrer" target="_blank">Cloudの環境を使って</a> <strong>コマンド実行</strong>。仮説を持ったコードレビュー</p></li>
+<li><p>この動画の受け売り：<a class="reference external" href="https://youtu.be/HwbSWVg5Ln4?si=v4gCsn58o9nMh0fF&amp;t=168" rel="noreferrer" target="_blank">Automatic code reviews with OpenAI Codex</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自動コードレビュー ✖️ PRの面倒</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/autofix-pr</span></code> (Claude Code on the web)（<a class="reference external" href="https://code.claude.com/docs/ja/claude-code-on-the-web#%E3%83%97%E3%83%AB%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E8%87%AA%E5%8B%95%E4%BF%AE%E6%AD%A3" rel="noreferrer" target="_blank">プルリクエストの自動修正</a>） <a class="footnote-reference brackets" href="#codex-claude-loop-blog" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a></p></li>
+<li><p>Devin</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-claude-loop-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id21" role="doc-backlink">12</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/claude-code-on-the-web-auto-fix-codex-cloud-github-integration-review-loop" rel="noreferrer" target="_blank">Claude Code on the web の auto-fix × Codex cloud の PR レビュー で pull request を自動修正</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ローカルのCodex {CLI,App}</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/review</span></code> （<code class="docutils literal notranslate"><span class="pre">/コードレビュー</span></code>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">codex</span> <span class="pre">review</span></code></p></li>
+</ul>
+<p>現在の差分やブランチをレビューできる</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex以外でも（Cursor、VS Code）</h3>
+<ul class="simple">
+<li><p>CursorのComposer 2.5で実装</p></li>
+<li><p>コードレビュー目的で私は <strong>新規セッションでGPTを呼び出す</strong></p></li>
+<li><p>plan(Opus 4.8)、実装(Composer 2.5)、コードレビュー(GPT-5.5)と切り替えるのを試し中</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ローカル開発で <a class="reference external" href="https://github.com/openai/codex-plugin-cc" rel="noreferrer" target="_blank">Codex plugin for Claude Code</a></h3>
+<ul class="simple">
+<li><p>OpenAIによるClaude Codeプラグイン</p></li>
+<li><p><strong>Claude CodeからCodexを呼び出せる</strong> （スキルやフックを提供）</p></li>
+<li><p>例：Claude CodeがStopするとCodexがコードレビュー（<code class="docutils literal notranslate"><span class="pre">/codex:setup</span> <span class="pre">--enable-review-gate</span></code>）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codexのコードレビューを極め抜け</h2>
+<ul class="simple">
+<li><p>Codex CloudでGitHubのプルリクレビュー設定はおすすめ</p></li>
+<li><p>ローカルでの開発でも、Codex(GPT)のコードレビューを求めに行く <a class="footnote-reference brackets" href="#goal-review-gate-idea" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="goal-review-gate-idea" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id24" role="doc-backlink">13</a><span class="fn-bracket">]</span></span>
+<p><code class="docutils literal notranslate"><span class="pre">/goal</span></code> でもコードレビューゲートのような動きはできてそう</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">🔖開発フローの中で活かすCodex</h3>
+<ul class="simple">
+<li><p>コードレビュー</p></li>
+<li><p><strong>実装</strong></p></li>
+<li><p>コードリーディング</p></li>
+<li><p>開発ワークフロー</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://developers.openai.com/codex/concepts/sandboxing/auto-review" rel="noreferrer" target="_blank">自動レビュー</a></h2>
+<ul class="simple">
+<li><p>Codexが <strong>実装</strong> するのを大きくサポート</p></li>
+<li><p>コマンド実行の <em>許可を求めてこなくなる</em></p></li>
+<li><p>プルリクエストや差分の <strong>コードレビューではない</strong> です</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex App「代理で承認」（旧称 自動レビュー）</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Auto-review is a new mode that lets Codex work longer with fewer approvals and safer execution.<br/><br/>It helps Codex keep moving through tests, builds, and more, including during long tasks and automations, while a separate agent checks higher-risk steps in context before they run. <a href="https://t.co/TCcNC5yB0H">pic.twitter.com/TCcNC5yB0H</a></p>— OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2047436655863464011?ref_src=twsrc%5Etfw">2026年4月23日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex CLIは <code class="docutils literal notranslate"><span class="pre">/permissions</span></code></h3>
+<img alt="../_images/codex-cli-permissions-0-136-0.png" src="../_images/codex-cli-permissions-0-136-0.png"/>
+<p>codex-cli 0.136.0-alpha.2</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自走例</h3>
+<ul class="simple">
+<li><p>Opus 4.7(high)と <a class="reference external" href="https://claude.com/plugins/superpowers" rel="noreferrer" target="_blank">superpowers</a> で長大な計画（4000行）を作った</p></li>
+<li><p>GPT-5.5(高)とsuperpowersで実装（Codex Appの自動レビュー）</p></li>
+<li><p>実装が終わるまでの <strong>2時間</strong>、人間にコマンド実行許可を求めて止まることがなかった</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自動レビューは何をするのか</h3>
+<ul class="simple">
+<li><p>LLMがコマンドの <strong>実行許可を人間の代わりに</strong> 見てくれる <a class="footnote-reference brackets" href="#auto-review-reject-example" id="id31" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a></p></li>
+<li><p>サブエージェント + プロンプトによる実装（<code class="docutils literal notranslate"><span class="pre">guardian_approval</span></code>）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="auto-review-reject-example" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id31" role="doc-backlink">14</a><span class="fn-bracket">]</span></span>
+<p>トランクベース開発と伝えていないメインブランチpushは弾かれました</p>
+</aside>
+</aside>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">Codex Appの自動レビューにめちゃめちゃ助けられていて、でもこれって企業秘密っぽいよなーと思ってましたが、なんと仕組み公開されてました。<br/>プロンプトで判定させてるだけ、パクれる！！<a href="https://t.co/ASkqHfswHq">https://t.co/ASkqHfswHq</a><br/>App Serverもサポートしているみたいで、Codex Appに限らず使えそう。ありがたい限り</p>— nikkie(にっきー) / にっP (@ftnext) <a href="https://x.com/ftnext/status/2059055723657809960?ref_src=twsrc%5Etfw">2026年5月25日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">参考：同様の機能の流れ</h3>
+<ul class="simple">
+<li><p>Claude Code <a class="reference external" href="https://code.claude.com/docs/ja/auto-mode-config" rel="noreferrer" target="_blank">auto mode</a></p></li>
+<li><p>Cursor (3.6) <a class="reference external" href="https://cursor.com/ja/docs/agent/tools/terminal#auto-review" rel="noreferrer" target="_blank">Auto-review Run Mode</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コーディングエージェント自走が圧倒的に簡単に</h3>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/6f8da4e8af70435693f4fdd940e956e4?slide=3" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="夜を制する者が “AI Agent 大民主化時代” を制する"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2026年最高の発明、自動レビュー</h2>
+<ul class="simple">
+<li><p>Codex {App,CLI}（や他のコーディングエージェント）でぜひ設定しましょう</p></li>
+<li><p>仕組み：LLMにプロンプトで <strong>代理承認</strong> させています</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>CM</strong>：導入するなら</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Want to (officially) use Codex at work?<br/><br/>Send this post to your CTO to bring your team to Codex. Eligible enterprise customers who switch in the next 30 days get 2 free months of Codex usage for new users. <a href="https://t.co/38e8y7MAmg">pic.twitter.com/38e8y7MAmg</a></p>— OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2054586214112780518?ref_src=twsrc%5Etfw">2026年5月13日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">🔖開発フローの中で活かすCodex</h3>
+<ul class="simple">
+<li><p>コードレビュー</p></li>
+<li><p>実装</p></li>
+<li><p><strong>コードリーディング</strong></p></li>
+<li><p>開発ワークフロー</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">コードリーディング</h2>
+<ul class="simple">
+<li><p>ChatGPTのモバイルアプリ使ってる方？🙋（私はiPhoneで）</p></li>
+<li><p>ChatGPTのモバイルアプリから、あなたの <strong>PCのCodex Appに接続</strong> できます <a class="footnote-reference brackets" href="#codex-remote-connections-docs" id="id37" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a></p></li>
+<li><p>（Codex Cloudとは別の話 <a class="footnote-reference brackets" href="#codex-cloud-source-reading" id="id38" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a> ）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-remote-connections-docs" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id37" role="doc-backlink">15</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/remote-connections" rel="noreferrer" target="_blank">https://developers.openai.com/codex/remote-connections</a></p>
+</aside>
+<aside class="footnote brackets" id="codex-cloud-source-reading" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id38" role="doc-backlink">16</a><span class="fn-bracket">]</span></span>
+<p>Codex Cloudでのコードリーディングは御しきれておらず、体験が私にはイマイチでした</p>
+</aside>
+</aside>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">You've been asking for this one...<br/><br/>Now in preview: Codex in the ChatGPT mobile app.<br/><br/>Start new work, review outputs, steer execution, and approve next steps, all from the ChatGPT mobile app. Codex will keep running on your laptop, Mac mini, or devbox. <a href="https://t.co/9i2Jckjt9z">pic.twitter.com/9i2Jckjt9z</a></p>— OpenAI (@OpenAI) <a href="https://x.com/OpenAI/status/2055016850849993072?ref_src=twsrc%5Etfw">2026年5月14日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">元々Codexでソースコード読んでました</h3>
+<iframe height="480" src="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html" title="Codex CLIで加速するコードリーディング" width="800"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">モバイルでCodex</h3>
+<ul class="simple">
+<li><p>私はPCでCodex Appで常時作業</p></li>
+<li><p>スマホさえ持っていれば、PCにcloneしたコードについて質問して <strong>PCが手元になくても</strong> 回答を得られる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仕事中</h3>
+<dl class="field-list simple">
+<dt class="field-odd">通勤中<span class="colon">:</span></dt>
+<dd class="field-odd"><p>投げておいた質問の回答を読みながら</p>
+</dd>
+<dt class="field-even">仕事中<span class="colon">:</span></dt>
+<dd class="field-even"><p>休憩時間に使ってるライブラリへのニッチな疑問を、モバイルから自宅のCodexに投げる</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">モバイルで超快適コードリーディング</h2>
+<ul class="simple">
+<li><p><strong>Codex AppにChatGPTモバイルアプリから接続</strong> する設定をぜひ！</p></li>
+<li><p>ここでもポイントは「自動レビュー（代理で承認）」</p></li>
+<li><p>なおMacBookは画面ロックせず低電力モードで待機（<em>最適化の余地あり</em>）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">🔖開発フローの中で活かすCodex</h3>
+<ul class="simple">
+<li><p>コードレビュー</p></li>
+<li><p>実装</p></li>
+<li><p>コードリーディング</p></li>
+<li><p><strong>開発ワークフロー</strong></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">App Server</h2>
+<p>Codexを使った <em>開発ワークフローをカスタマイズ</em> できる</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>いろんな形態</strong> で提供できる秘密</h3>
+<ul class="simple">
+<li><p>App</p></li>
+<li><p>CLI</p></li>
+<li><p>Cloud</p></li>
+<li><p>VS Code拡張</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">記事 <a class="reference external" href="https://openai.com/ja-JP/index/unlocking-the-codex-harness/" rel="noreferrer" target="_blank">Codex ハーネスの解放：App Server を構築した方法</a></h3>
+<ul class="simple">
+<li><p>サーバとクライアント間の <strong>JSON-RPC</strong> プロトコル <a class="footnote-reference brackets" href="#app-server-raw-json-rpc-blog" id="id46" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a></p></li>
+<li><p>異なるクライアント（CLI、App、IDE拡張、...）が同じCodexハーネスを使用できる</p></li>
+<li><p>CLIで <code class="docutils literal notranslate"><span class="pre">codex</span> <span class="pre">app-server</span></code> したらサーバ起動</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="app-server-raw-json-rpc-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id46" role="doc-backlink">17</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/codex-app-server-waits-json-rpc-from-stdin" rel="noreferrer" target="_blank">Codex App Server に Python SDK に代わって JSON-RPC を人力で送って Hello world</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">App Server <strong>SDK</strong> <a class="footnote-reference brackets" href="#app-server-sdk-docs" id="id47" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>TypeScript</p></li>
+<li><p><strong>Python</strong> (NEW!!) <a class="reference external" href="https://x.com/reach_vb/status/2061569472792572163" rel="noreferrer" target="_blank">今週</a> 🔥</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="app-server-sdk-docs" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id47" role="doc-backlink">18</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/sdk" rel="noreferrer" target="_blank">https://developers.openai.com/codex/sdk</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">App Server SDK</h3>
+<ul class="simple">
+<li><p>npm <a class="reference external" href="https://www.npmjs.com/package/@openai/codex-sdk" rel="noreferrer" target="_blank">@openai/codex-sdk</a> （例：<a class="reference external" href="https://github.com/nrslib/takt/blob/v0.43.0/package.json#L67" rel="noreferrer" target="_blank">nrslib/takt</a> <a class="footnote-reference brackets" href="#findy-nrslib-takt" id="id49" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a> ）</p></li>
+<li><p>PyPI <a class="reference external" href="https://pypi.org/project/openai-codex/" rel="noreferrer" target="_blank">openai-codex</a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="findy-nrslib-takt" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id49" role="doc-backlink">19</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://findy-code.io/media/articles/codesidechat-nrslib" rel="noreferrer" target="_blank">AIに疲れたプログラマが、OSSを始めるまで</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実装例：Codexに実装&amp;コードレビューさせる</h3>
+<div class="literal-block-wrapper docutils container" id="id58">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://github.com/ftnext/2026-slides/blob/main/samplecode/codex-sdk-example/review_loop_idea.py" rel="noreferrer" target="_blank">review_loop_idea.py</a></span></div>
+<pre><code class="console" data-noescape="" data-trim="">% uv run review_loop_idea.py
+Sample project: /.../codex-sdk-implementation-review-ayzpy2am
+Implementation/review CLI. Type /diff to show the current diff.
+Type /exit or /quit to stop.
+
+task&gt; calculatorに冪乗を実装して
+
+Implementation:
+実装しました。
+
+Review cycle 1:
+Review summary: No actionable correctness, regression, missing-test, or unsafe-behavior issues found in the uncommitted changes. `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v` passes.
+Review findings: none</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ぜひ構築してみてください！</h2>
+<ul class="simple">
+<li><p>OpenAIによる <a class="reference external" href="https://github.com/openai/codex/tree/main/sdk/python/examples" rel="noreferrer" target="_blank">Python SDK Examples</a></p></li>
+<li><p>nikkieまとめ <a class="reference external" href="https://posfie.com/@ftnext/p/SpkW6rS" rel="noreferrer" target="_blank">Awesome Codex App Server</a> （更新中）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 わたしの、最高の相棒、Codex</h2>
+<dl class="field-list simple">
+<dt class="field-odd">自動レビュー<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>自走</strong> が簡単に（+定評あるコードレビュー）</p>
+</dd>
+<dt class="field-even">モバイル<span class="colon">:</span></dt>
+<dd class="field-even"><p>スマホ片手にどこからでも <strong>コードリーディング</strong></p>
+</dd>
+<dt class="field-odd">App Server<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>開発ワークフロー</strong> も組める！</p>
+</dd>
+</dl>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<p>Happy Development♪</p>
+<p>お知らせとAppendixが続きます</p>
+</section>
+<section>
+<style>
+  .reveal .slides section:has(> .nikkie-announcement) {
+    background: #f8f8f8;
+  }
+  .reveal .nikkie-announcement {
+    box-sizing: border-box;
+    width: 100%;
+    height: 680px;
+    padding: 0.3em 0.45em;
+    color: #3f3f46;
+    font-size: 0.58em;
+    text-align: left;
+  }
+  .reveal .nikkie-announcement h2 {
+    margin: 0 0 1.15em;
+    color: #3f3f46;
+    font-size: 1.14em;
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+  .reveal .nikkie-announcement h3 {
+    margin: 0 0 0.1em;
+    color: #3f3f46;
+    font-size: 1.06em;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .reveal .nikkie-announcement ul {
+    margin: 0 0 1.05em 1.35em;
+    padding: 0;
+  }
+  .reveal .nikkie-announcement li {
+    margin: 0.03em 0;
+    padding-left: 0.08em;
+    color: #3f3f46;
+    font-size: 1em;
+    line-height: 1.22;
+  }
+  .reveal .nikkie-announcement strong {
+    color: #3f3f46;
+    font-weight: 800;
+  }
+  .reveal .nikkie-announcement a,
+  .reveal .nikkie-announcement a:visited {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+  .reveal .nikkie-announcement .event-date {
+    display: inline-block;
+    min-width: 3.75em;
+    margin-right: 0.25em;
+  }
+  .reveal .nikkie-announcement .closing {
+    margin: 1.25em 0 0;
+    color: #3f3f46;
+    font-size: 1.08em;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+</style>
+<div class="nikkie-announcement">
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">nikkieさんからのお知らせ（再現）</h2>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">会えるAmbassador(?)勉強会情報（かいつまんで紹介します）</h3>
+<ul>
+<li><span class="event-date">6/16(火)</span><a href="https://lancersagent.connpass.com/event/391220/" rel="noopener" target="_blank">Claude Code、どこまで任せられる？失敗事例から任せ方を学ぶLT会（オンライン）</a> <strong>LTも募集中</strong></li>
+<li><span class="event-date">6/23(火)</span><a href="https://syncable.connpass.com/event/395070/" rel="noopener" target="_blank">小規模開発のリアルを語ろう〜試行錯誤を持ち寄る会〜（渋谷）</a></li>
+</ul>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">皆さんのお近くを訪れるかも</h3>
+<ul>
+<li><span class="event-date">6/5(金)</span><a href="https://lycorptech-fukuoka.connpass.com/event/392050/" rel="noopener" target="_blank">Python Meetup <strong>Fukuoka #7</strong></a></li>
+<li><span class="event-date">6/28(日)</span><a href="https://kinoko.connpass.com/event/381321/" rel="noopener" target="_blank">きのこカンファレンス2026（6/28本編）</a></li>
+<li><span class="event-date">7/18(土)</span><a href="https://startpython.connpass.com/event/391712/" rel="noopener" target="_blank">みんなのPython勉強会 in <strong>長野 #5</strong></a></li>
+<li><span class="event-date">8/21(金)22(土)</span><a href="https://pyconjp.connpass.com/event/391006/" rel="noopener" target="_blank">PyCon JP 2026 (<strong>広島</strong>)</a></li>
+</ul>
+<p class="closing">近い将来Codex関係のイベント開催する時は、ぜひお越しください！</p>
+</div></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Appendix：開発フローの中でさらに活かすCodex</h2>
+<ul class="simple">
+<li><p>調査</p></li>
+<li><p>自動化</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">助けてCodexえもん〜</h2>
+<ul class="simple">
+<li><p>落ちた GitHub Actions の調査</p></li>
+<li><p>ローカルPCから <code class="docutils literal notranslate"><span class="pre">gh</span></code> コマンドでworkflowのログを確認</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自走して適切に修正</h3>
+<dl class="field-list simple">
+<dt class="field-odd">権限設定ミス解決<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://github.com/ftnext/agents-cli-source-mirror/commit/aa7f9d2063e84b47eecde7a37a85d919b5d32cae" rel="noreferrer" target="_blank">https://github.com/ftnext/agents-cli-source-mirror/commit/aa7f9d2063e84b47eecde7a37a85d919b5d32cae</a></p>
+</dd>
+<dt class="field-even">メジャーバージョンアップに伴う依存の更新<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://github.com/ftnext/adk-python-db-schema-history/commit/ea6bbb4a56e0c83730dee7a2fc01ad71c11ae30f" rel="noreferrer" target="_blank">https://github.com/ftnext/adk-python-db-schema-history/commit/ea6bbb4a56e0c83730dee7a2fc01ad71c11ae30f</a></p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">自動化</h2>
+<ul class="simple">
+<li><p>シェルスクリプトに秀でていると感じる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">3月に話しました</h3>
+<iframe height="480" src="https://ftnext.github.io/2026-slides/codex-findy/my-best-partner-codex-cli.html#/7/2" title="わたしの、最高の相棒、Codex CLI" width="800"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">直近ではLLMを使おうとしたら綺麗にシェルスクリプトに収められた</h3>
+<ul class="simple">
+<li><p>Claude Code Actionを使っていたが、「その必要ないです」とCodexがシェルスクリプトにした例</p></li>
+<li><p><a class="reference external" href="https://github.com/ftnext/agents-cli-source-mirror/commit/6a50f60772c2b11782c113be69715a2e63392863" rel="noreferrer" target="_blank">https://github.com/ftnext/agents-cli-source-mirror/commit/6a50f60772c2b11782c113be69715a2e63392863</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h2>
+</section>
+</section>
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

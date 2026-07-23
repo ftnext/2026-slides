@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>ふだんのアウトプットから繋げるプロポーザル</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/cfp-findy/proposal-accumulating-everyday-output.html">
+    <meta property="og:title" content="ふだんのアウトプットから繋げるプロポーザル">
+    <meta property="og:description" content="伝わるプロポーザルの書き方 〜採択側・人気登壇者が明かすCfPの構造〜">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/cfp-findy.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">ふだんのアウトプットから繋げるプロポーザル</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ふだんのアウトプットから繋げるプロポーザル</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>伝わるプロポーザルの書き方 #cfp_findy</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/04/16 nikkie （スペース連打 or 矢印キーでめくります）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ？（<strong>Python使い</strong> の自己紹介）</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）</p></li>
+<li><p>機械学習エンジニア・LLM・自然言語処理（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+<li><p><a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Python Conferenceでの登壇多数 <a class="footnote-reference brackets" href="#pycon-2021-chair" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>PyCon JP 2025 <a class="reference external" href="https://2025.pycon.jp/ja/timetable/talk/Z8ZYFA" rel="noreferrer" target="_blank">標準ライブラリのlogging、レゴブロックのように組合せてロギングできることを理解しよう！</a></p></li>
+<li><p>PyCon JP 2024 <a class="reference external" href="https://2024.pycon.jp/ja/talk/89F3RQ" rel="noreferrer" target="_blank">PEP 723（Inline script metadata）が拓く世界。Pythonスクリプトに必要な仮想環境をツールにおまかせできるんです！</a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pycon-2021-chair" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>PyCon JPのスタッフも経験しています（2021年座長）</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">結論：アウトプットを <strong>積み重ね</strong> てプロポーザルに繋げている</h2>
+<ul class="simple">
+<li><p>2024/08 <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/python-logging-developing-library-take-advantage-nullhandler-and-propagate" rel="noreferrer" target="_blank">Pythonで標準ライブラリloggingを使って自作ライブラリの中でロギングしたい未来の私へ</a></p></li>
+<li><p>2024/04 <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/henry-schreiner-pipx-supports-pep723-dependencies-metadata" rel="noreferrer" target="_blank">Pythonスクリプトの未来。pipxが部分的にサポートしたInline script metadata（PEP 723）を触る</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ごめんなさい。<em>外れ値</em> が通ります🙏</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> を毎日1記事更新中（1200日超）</p></li>
+<li><p>しかし <strong>自分のペースのアウトプットを積む</strong> ことはあなたのプロポーザルを豊かにするはず！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">だいくしーさん「<a class="reference external" href="https://daiksy.hatenablog.jp/entry/2024/10/28/153606" rel="noreferrer" target="_blank">準備ができている人間にしか機会は来ない</a>」</h3>
+<ul>
+<li><p>自身のデブサミでの登壇をロックバンドに重ねて</p></li>
+<li><p>地元の小さなライブハウスからステップアップし、ついに武道館を満員に</p>
+<blockquote>
+<div><p><strong>いつものように</strong> プロとしてお客さんの前で演奏する。<a class="footnote-reference brackets" href="#emphasize-by-nikkie" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+</div></blockquote>
+</li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="emphasize-by-nikkie" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>強調は引用者によります</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">言い換えると、プロポーザル駆動開発を避ける</h2>
+<ul>
+<li><p>「構想しています。採択されたら準備します」に <strong>しない</strong></p></li>
+<li><p>プロポーザルと同じネタを小さくアウトプット（ブログ、LTなど）</p>
+<blockquote>
+<div><p>The program committee is very skeptical of “conference-driven development”. (Bad Ideas) <a class="footnote-reference brackets" href="#us-pycon-talk-guideline" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+</div></blockquote>
+</li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="us-pycon-talk-guideline" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://us.pycon.org/2026/speaking/talks/" rel="noreferrer" target="_blank">US PyCon 2026 トークガイドライン</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">重ねたアウトプットを元に提案する</h3>
+<ul class="simple">
+<li><p>アウトプット済みの内容を繋いでプロポーザルに構成することも</p></li>
+<li><p>「私こういう発表ができるんですけど、今回のカンファレンスにどうですか？」</p></li>
+<li><p>運営視点だと <strong>実績</strong> を考慮して採択することもある（著者、OSS作者） ※年により傾向は異なります</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">小さなアウトプットの連続の効能 <a class="footnote-reference brackets" href="#my-situation" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></h2>
+<ul class="simple">
+<li><p>記事を出すたび、LTするたび、小さく <strong>フィードバック</strong> を得られている</p></li>
+<li><p>過去のアウトプットを参照して、プロポーザルや発表の <strong>密度が高く</strong> なる</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="my-situation" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id12" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>気分屋なので採択されたときに別の技術に気持ちが移っていることもある。それでも再構成だけなので登壇は果たせる</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私の原動力：少しでも詳しくなった！</h3>
+<ul class="simple">
+<li><p><strong>自分の中の確かな知識を増やしたい</strong></p></li>
+<li><p>積んだアウトプットが <strong>自負</strong> になっている</p></li>
+<li><p>成果物の評価に執着がなくなった。採択不採択に一喜一憂していない <a class="footnote-reference brackets" href="#not-adopt-reason" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="not-adopt-reason" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id15" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>同じテーマで自分より詳しい方（著者、OSS作者）がプロポーザルを出していて、渾身のプロポーザルが落ちるは全然あります</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">2026上半期は海外PyConに挑戦中✈️</h3>
+<ul class="simple">
+<li><p>3月 PythonAsia 2026</p></li>
+<li><p>5月 US PyCon 2026 <a class="reference external" href="https://us.pycon.org/2026/schedule/presentation/47/" rel="noreferrer" target="_blank">Understanding Python's logging: Combine components like Lego blocks!</a></p></li>
+<li><p>日本での発表をLLMで英語化。英語発表は難しいですね</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：ふだんのアウトプットから繋げるプロポーザル</h2>
+<ul class="simple">
+<li><p>プロポーザルを出そう。同時に <strong>そのネタで小さくアウトプット</strong> もしてみませんか？</p></li>
+<li><p><strong>自分のペースで</strong> 重ねたアウトプットがプロポーザルを魅力的にする</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<ul class="simple">
+<li><p>「いつもどおり」の積み重ねが引き寄せる登壇もあると信じています</p></li>
+<li><p>皆さまの登壇を楽しみにしています🤞</p></li>
+</ul>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

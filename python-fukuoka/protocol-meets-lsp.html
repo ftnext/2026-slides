@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>typing.Protocol とインターフェース分離原則</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/python-fukuoka/protocol-meets-lsp.html">
+    <meta property="og:title" content="typing.Protocolとインターフェース分離原則">
+    <meta property="og:description" content="[特集:型] Python Meetup Fukuoka #7 LT">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/python-fukuoka-7.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> とインターフェース分離原則</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[特集:型] Python Meetup Fukuoka #7 LT</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/06/05 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">伝えたいこと</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> は <strong>インターフェース</strong> と捉えられる</p></li>
+<li><p>インターフェースは <strong>使い方を示す</strong> もの</p></li>
+<li><p>色々知らなくても使えるよう「インターフェースは小さく」（インターフェース分離原則。SOLID原則のI）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code></h2>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://docs.python.org/ja/3/library/typing.html#typing.Protocol" rel="noreferrer" target="_blank">ドキュメント</a> の例</span></div>
+<pre><code class="python" data-noescape="" data-trim="">from typing import Protocol
+
+
+class Proto(Protocol):
+    def meth(self) -&gt; int: ...</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">何のためのもの？ー静的ダックタイピング🐤</h2>
+<ul>
+<li><p>ダックタイピング 「アヒルのように見えて、アヒルのように鳴けば、それはアヒルである。」</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>型を見ない。振る舞い優先</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> で <strong>型チェッカに伝わるダックタイピング</strong></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ABC（抽象基底クラス）とは違う？</h3>
+<dl class="field-list simple">
+<dt class="field-odd">ABC<span class="colon">:</span></dt>
+<dd class="field-odd"><p>どのクラスを継承したか（名前）</p>
+</dd>
+<dt class="field-even">typing.Protocol<span class="colon">:</span></dt>
+<dd class="field-even"><p>どのメソッドを持っているか</p>
+</dd>
+</dl>
+<p>Structural Subtyping（<strong>構造</strong> で型を見る）</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">例：<code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code> protocol</h2>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">close()</span></code> できるもの <a class="footnote-reference brackets" href="#protocol-example-ref" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="python" data-noescape="" data-trim="">from typing import Protocol
+
+
+class SupportsClose(Protocol):
+    def close(self) -&gt; None: ...</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="protocol-example-ref" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>例はこちらから <a class="reference external" href="https://typing.python.org/en/latest/reference/protocols.html#simple-user-defined-protocols" rel="noreferrer" target="_blank">https://typing.python.org/en/latest/reference/protocols.html#simple-user-defined-protocols</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code> で型ヒント</h3>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">close_all()</span></code> は <code class="docutils literal notranslate"><span class="pre">close()</span></code> できるものを受け取る</span></div>
+<pre><code class="python" data-noescape="" data-trim="">from collections.abc import Iterable
+
+
+def close_all(items: Iterable[SupportsClose]) -&gt; None:
+    for item in items:
+        item.close()</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">静的ダックタイピング！</h3>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">close(self)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code> を持つので <strong>型チェッカは受け入れる</strong></span></div>
+<pre><code class="python" data-noescape="" data-trim="">class Resource:  # SupportsCloseを継承していない
+    def close(self) -&gt; None:
+        self.resource.release()
+
+
+close_all([Resource(), open("some/file")])  # 型チェッカはOK</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">💡 <code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code> は <strong>使い方</strong> を表している</h2>
+<p><code class="docutils literal notranslate"><span class="pre">close_all()</span></code> から見える世界：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> が呼べる（使い方）</p></li>
+<li><p>それ以外は関心がない</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ISP：インターフェース分離原則</h2>
+<ul class="simple">
+<li><p>SOLID原則（5つの設計原則）の1つ</p></li>
+<li><p>私の理解：<strong>インターフェースは使い方を過不足無く示す</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> による protocol はインターフェースと捉えられる！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">大きすぎるProtocol</h3>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">close_all()</span></code> が使わない <code class="docutils literal notranslate"><span class="pre">other_method()</span></code></span></div>
+<pre><code class="python" data-noescape="" data-trim="">class BigProtocolExample(Protocol):
+    def close(self) -&gt; None: ...
+    def other_method(self) -&gt; None: ...
+
+
+def close_all(items: Iterable[BigProtocolExample]) -&gt; None:
+    for item in items:
+        item.close()</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">提案：ISPに沿って、小さく分けましょう</h3>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text"><strong>最小の使い方</strong> （protocol）で使う側へ示す</span></div>
+<pre><code class="python" data-noescape="" data-trim="">class SupportsClose(Protocol):
+    def close(self) -&gt; None: ...
+
+
+class OtherProtocol(Protocol):
+    def other_method(self) -&gt; None: ...</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 <code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> とインターフェース分離原則</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> はインターフェースとして気づき、ISPを適用した</p></li>
+<li><p>Protocol を小さくして、使い方を表してみては</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python使い・<span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a> <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> 連続1250日突破</p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">参考</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/ja/3/library/typing.html#typing.Protocol" rel="noreferrer" target="_blank">typing.Protocol</a></p></li>
+<li><p><a class="reference external" href="https://typing.python.org/en/latest/reference/protocols.html" rel="noreferrer" target="_blank">Protocols and structural subtyping</a></p></li>
+<li><p>『Fluent Python 第2版』</p></li>
+<li><p>『ちょうぜつソフトウェア設計入門』</p></li>
+</ul>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
