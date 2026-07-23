@@ -1,3 +1,9 @@
+:ogp_title: Pythonを破壊するたった1行
+:ogp_event_name: saikyo-dev4
+:ogp_slide_name: python-buttsubushi
+:ogp_description: 埼京.dev #4【最恐の失敗談】
+:ogp_image_name: saikyo-dev4
+
 ============================================================
 Pythonを破壊する たった1行
 ============================================================
