@@ -156,7 +156,7 @@ Before（正常）
     data local=True global=False imported=False
     json local=True global=False imported=True
 
-シンボルテーブル上での ``json`` の変化
+シンボルテーブル上の ``json`` の変化
 --------------------------------------------------
 
 .. code-block:: diff
@@ -170,6 +170,8 @@ Before（正常）
 
     -json local=False global=True imported=False
     +json local=True global=False imported=True
+
+関数内の ``import`` で変化 + 位置（代入前に参照）
 
 まとめ🌯：Pythonを破壊するたった1行
 ============================================================
