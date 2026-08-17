@@ -1,0 +1,142 @@
+仮想環境 **人力** 管理
+============================================================
+
+.. code-block:: bash
+
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install sampleproject
+
+Pythonチュートリアルが人力パッケージ管理を指南
+------------------------------------------------------------
+
+.. code-block:: bash
+    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
+
+    (.venv) $ python -m pip uninstall sampleproject
+    (.venv) $ python -m pip freeze > requirements.txt
+
+チュートリアルの範囲はこれで十分
+
+人力でPythonプロジェクトはしんどくなる
+------------------------------------------------------------
+
+.. TODO ここはスライドを分けられそう（図解と合わせて）
+
+* 例えば、``pip uninstall`` は指定したパッケージしか消さない。そのパッケージの依存は不要だが、残る
+* ``pip install`` に指定したextraは ``pip freeze`` には現れない
+
+何かしらのPythonプロジェクト管理ツールを入れることに
+============================================================
+
+.. TODO 歴史を辿る感じにしたい（Poetry、uv）
+    uvはPython自体も管理する
+
+* 依存の解決を自動化する。ロックファイルに仮想環境を同期する
+* uv, Hatch, PDM, Flit（など）
+* PoetryやPipenvは2026年の標準から遅れている感があるので私は非推奨
+
+uvの場合
+------------------------------------------------------------
+
+* ``uv init``
+* ようこそ :file:`pyproject.toml`
+
+依存の管理
+------------------------------------------------------------
+
+* ``uv add`` (``uv remove``)
+* ``uv sync``
+* ``uv run``
+
+PyPIにあるCLIツールの使用
+============================================================
+
+* 一時的仮想環境
+* 仮想環境+マシングローバルにインストール
+
+従来の人力管理
+------------------------------------------------------------
+
+.. ``cd $(mktemp -d)`` してやってます
+
+``uvx`` または ``pipx run``
+------------------------------------------------------------
+
+* uvやpipxが一時的な仮想環境を作成
+* そこにCLIツールをインストールして実行
+
+``uv tool install`` または ``pipx install``
+------------------------------------------------------------
+
+* uvやpipxが仮想環境を作成
+* そこにCLIツールをインストールし、グローバルなパスを通す
+
+（CLIツールの配布エピソード）
+------------------------------------------------------------
+
+.. Rust製のツールであればmiseなどでもよい
+    Python処理系を必要としないので
+
+inline script metadata
+============================================================
+
+チュートリアルでサードパーティライブラリを使ったスクリプトに推す
+
+従来の人力管理
+------------------------------------------------------------
+
+.venvとscript.pyを置く
+
+PEP 723 - inline script metadata
+------------------------------------------------------------
+
+.. code-block:: python
+    :caption: 特殊なコメント
+
+    # /// script
+    # requires-python = ">=3.12"
+    # dependencies = [
+    #   "httpx2",
+    # ]
+    # ///
+
+inline script metadataをサポートしたツールは
+------------------------------------------------------------
+
+1. 指定されたPythonバージョンで仮想環境を作成
+2. 指定された依存を仮想環境にインストール
+3. その仮想環境でスクリプトを実行
+
+詳しくはPyCon JP 2024
+------------------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Xdmr14cCq2g?si=kV-p4clPRLuy_K_q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+uvとinline script metadata
+------------------------------------------------------------
+
+* `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__
+* `uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__
+* ``uv run`` にスクリプトを渡す
+
+Pythonスクリプトの持ち運びに超便利
+------------------------------------------------------------
+
+Pythonスクリプト開発中は？（デバッグしたい）
+------------------------------------------------------------
+
+* ``uv run --with httpx2 python -i script.py``
+* ``uv venv``・``uv pip install httpx2``・``.venv/bin/python -i script.py``
+
+.. 2点目はチュートリアルの仮想環境操作と変わらない
+
+小まとめ🥟「venv を作って pip install」の代わりにuv
+============================================================
+
+* 仮想環境を理解していなくても使えるinline script metadata（使いたいライブラリが明確な場合に有用）
+* Pythonプロジェクトへ進む際も、uvの別のコマンドを知ればよい
+
+.. uv run -> uv add --script -> uv init

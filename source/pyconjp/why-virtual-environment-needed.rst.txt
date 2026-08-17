@@ -1,0 +1,69 @@
+仮想環境はなぜ必要か
+============================================================
+
+仮想環境はなぜPython開発者にこれまでも（そしてこれからも）必要なのか
+
+仮想環境とは **ディレクトリ**
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    % python3.14 -m venv --help
+    usage: venv ENV_DIR [ENV_DIR ...]
+
+.. code-block:: shell
+    :caption: :file:`.venv/` というディレクトリができている
+
+    % python3.14 -m venv .venv --upgrade-deps
+    % ls -al
+    drwxr-xr-x@    7 nikkie  staff    224 Aug 18 00:30 .venv
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-venv-upgrade-deps-option
+
+なぜディレクトリを作るのか
+------------------------------------------------------------
+
+* **サードパーティライブラリ** のインストール先にするため
+* 仮に仮想環境を使わない場合、インストール先はマシンの中に1箇所
+
+.. TODO 図解を考える
+
+:file:`.venv/` には何がある？ [#python314-easter-egg]_
+------------------------------------------------------------
+
+.. tree -L 2 .venv を加工
+
+.. code-block:: txt
+    :caption: python.org からmacOSにインストール
+    :emphasize-lines: 2,7,11-12
+
+    .venv
+    ├── bin
+    │   ├── activate
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.14
+    │   ├── python -> python3.14
+    │   ├── python3 -> python3.14
+    │   ├── python3.14 -> /Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14
+    │   └── 𝜋thon -> python3.14
+    ├── lib
+    │   └── python3.14/
+    └── pyvenv.cfg
+
+.. [#python314-easter-egg] easter egg: 𝜋thon https://github.com/python/cpython/pull/125035
+
+:file:`.venv/bin/python`
+------------------------------------------------------------
+
+* マシンにインストールしたPython処理系への **シンボリックリンク**
+* :file:`activate` では環境変数 ``PATH`` を更新して、この処理系が見つかるようにしている
+* 処理系と標準ライブラリはこちらを使う
+
+:file:`.venv/lib/python3.14/site-packages/`
+------------------------------------------------------------
+
+* サードパーティライブラリのインストール先のディレクトリ
+* 仮想環境ごとに分かれているので、**バージョン違いが共存** する
+
+.. python -m site で標準ライブラリ + 仮想環境のサードバーティライブラリが確認できる
