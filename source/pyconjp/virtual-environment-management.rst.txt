@@ -1,4 +1,4 @@
-仮想環境 **人力** 管理
+仮想環境 **人力** 管理 [#why-python-m]_
 ============================================================
 
 .. code-block:: bash
@@ -7,7 +7,11 @@
     $ source .venv/bin/activate
     (.venv) $ python -m pip install sampleproject
 
-Pythonチュートリアルが人力パッケージ管理を指南
+.. [#why-python-m] なぜ ``python -m`` なのか。「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
+
+Python公式チュートリアルが人力パッケージ管理を指南
 ------------------------------------------------------------
 
 .. code-block:: bash
@@ -16,127 +20,80 @@ Pythonチュートリアルが人力パッケージ管理を指南
     (.venv) $ python -m pip uninstall sampleproject
     (.venv) $ python -m pip freeze > requirements.txt
 
-チュートリアルの範囲はこれで十分
+公式チュートリアルの範囲はこれで十分
 
 人力でPythonプロジェクトはしんどくなる
 ------------------------------------------------------------
 
-.. TODO ここはスライドを分けられそう（図解と合わせて）
+.. プロジェクト https://packaging.python.org/ja/latest/glossary/#term-Project
 
-* 例えば、``pip uninstall`` は指定したパッケージしか消さない。そのパッケージの依存は不要だが、残る
-* ``pip install`` に指定したextraは ``pip freeze`` には現れない
+2種類の依存：direct & transitive
+------------------------------------------------------------
+
+.. TODO 図 pip installで指定 vs directなパッケージが依存
+
+``pip freeze`` で仮想環境内のパッケージをファイルに書き出す
+
+``pip uninstall`` は指定したパッケージしか消さない
+------------------------------------------------------------
+
+* directな依存1つを指定（アンインストールされる）
+* transitiveな依存は残ったまま
+
+そもそも依存解決してから環境を同期すべきでは？
+------------------------------------------------------------
+
+* 手動管理の方法では複数のdirect依存からすべての依存を解決するプロセスがない
+* 仮想環境に入ったバージョンを書き出す
+* そっくりそのまま再現用（仮想環境はdisposableなので）
+
+.. ばんくしさん パッケージマネージャ
 
 何かしらのPythonプロジェクト管理ツールを入れることに
 ============================================================
 
-.. TODO 歴史を辿る感じにしたい（Poetry、uv）
-    uvはPython自体も管理する
+.. TODO 年表風にして歴史を辿る感じにしたい（Poetry、uv）
 
 * 依存の解決を自動化する。ロックファイルに仮想環境を同期する
-* uv, Hatch, PDM, Flit（など）
-* PoetryやPipenvは2026年の標準から遅れている感があるので私は非推奨
+* ツールに任せればよくなり、プロジェクトの仮想環境は人力管理不要に
 
-uvの場合
+.. pip-toolsも提案されてきた
+
+Poetry（2018〜）
 ------------------------------------------------------------
 
-* ``uv init``
-* ようこそ :file:`pyproject.toml`
+* ロックファイル（TODO）
+* ``poetry run <command>`` で仮想環境を有効にして実行
+* 当時は画期的だったが、近年の標準から遅れているように見えており、私からは非推奨 [#pycon-apac-2023-peacock]_
 
-依存の管理
+.. [#pycon-apac-2023-peacock] `Comparison of Packaging Tools in 2023 <https://2023-apac.pycon.jp/timetable?id=XEGZUD>`__ より。2025年の `v2.0.0 <https://github.com/python-poetry/poetry/releases/tag/2.0.0>`__ で待望の ``[project]`` サポート
+
+.. https://nikkie-ftnext.hatenablog.com/entry/pyconapac2023-comparison-of-packaging-tools-in-2023
+
+.. https://x.com/ftnext/status/2035279970986053883
+
+Python自体も管理
 ------------------------------------------------------------
 
-* ``uv add`` (``uv remove``)
-* ``uv sync``
-* ``uv run``
+* Pythonプロジェクトだけでなく、Python処理系自体もツールで管理 [#python-build-standalone]_
+* Hatchや、Rust製の **Rye** （2023 [#astral-rye-stewardship]_）
 
-PyPIにあるCLIツールの使用
-============================================================
+.. [#python-build-standalone] `python-build-standalone <https://github.com/astral-sh/python-build-standalone>`__ の功績が大きいです
 
-* 一時的仮想環境
-* 仮想環境+マシングローバルにインストール
+.. [#astral-rye-stewardship] 2024年 `RyeはAstralが引き継ぎ <https://astral.sh/blog/uv>`__ ました
 
-従来の人力管理
+uv（2024〜）
 ------------------------------------------------------------
 
-.. ``cd $(mktemp -d)`` してやってます
+* Astralによる [#openai-astral]_。Rust製。Python自体も管理
+* uvで管理しているプロジェクトであれば ``uv sync`` だけで再現（:file:`uv.lock`）
+* ``uv run <command>`` で仮想環境の中でcommandが実行される
 
-``uvx`` または ``pipx run``
+.. [#openai-astral] 2026年にOpenAIがAstralを買収しています
+
+uv使うなら :file:`pyproject.toml` もね
 ------------------------------------------------------------
 
-* uvやpipxが一時的な仮想環境を作成
-* そこにCLIツールをインストールして実行
-
-``uv tool install`` または ``pipx install``
-------------------------------------------------------------
-
-* uvやpipxが仮想環境を作成
-* そこにCLIツールをインストールし、グローバルなパスを通す
-
-（CLIツールの配布エピソード）
-------------------------------------------------------------
-
-.. Rust製のツールであればmiseなどでもよい
-    Python処理系を必要としないので
-
-inline script metadata
-============================================================
-
-チュートリアルでサードパーティライブラリを使ったスクリプトに推す
-
-従来の人力管理
-------------------------------------------------------------
-
-.venvとscript.pyを置く
-
-PEP 723 - inline script metadata
-------------------------------------------------------------
-
-.. code-block:: python
-    :caption: 特殊なコメント
-
-    # /// script
-    # requires-python = ">=3.12"
-    # dependencies = [
-    #   "httpx2",
-    # ]
-    # ///
-
-inline script metadataをサポートしたツールは
-------------------------------------------------------------
-
-1. 指定されたPythonバージョンで仮想環境を作成
-2. 指定された依存を仮想環境にインストール
-3. その仮想環境でスクリプトを実行
-
-詳しくはPyCon JP 2024
-------------------------------------------------------------
-
-.. raw:: html
-
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Xdmr14cCq2g?si=kV-p4clPRLuy_K_q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-uvとinline script metadata
-------------------------------------------------------------
-
-* `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__
-* `uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__
-* ``uv run`` にスクリプトを渡す
-
-Pythonスクリプトの持ち運びに超便利
-------------------------------------------------------------
-
-Pythonスクリプト開発中は？（デバッグしたい）
-------------------------------------------------------------
-
-* ``uv run --with httpx2 python -i script.py``
-* ``uv venv``・``uv pip install httpx2``・``.venv/bin/python -i script.py``
-
-.. 2点目はチュートリアルの仮想環境操作と変わらない
-
-小まとめ🥟「venv を作って pip install」の代わりにuv
-============================================================
-
-* 仮想環境を理解していなくても使えるinline script metadata（使いたいライブラリが明確な場合に有用）
-* Pythonプロジェクトへ進む際も、uvの別のコマンドを知ればよい
-
-.. uv run -> uv add --script -> uv init
+* 公式チュートリアルと互換なのは ``uv venv && uv pip install httpx2``
+* ``uv init`` は :file:`pyproject.toml` も作る
+* uvが書くことが多いが、新しい標準なので使いこなしましょう（``[tool.ham]`` テーブルで設定）

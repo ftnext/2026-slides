@@ -1,0 +1,159 @@
+プロジェクト以外も仮想環境は人力管理不要に
+============================================================
+
+* Takeaway：2点ぜひお持ち帰りください
+* これらがあるから一歩目を見直したくなっています
+
+1️⃣PyPIにあるCLIツールの使用
+============================================================
+
+* 一時的仮想環境
+* 仮想環境+マシングローバルにインストール
+
+従来の人力管理
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ cd $(mktemp -d)
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install openai==2.34.0
+    (.venv) $ openai api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+
+.. https://x.com/ftnext/status/2084262242980335677
+
+``uvx`` または ``pipx run``
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ uvx --from openai==2.34.0 openai api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+
+1. uvやpipxが **一時的な仮想環境** を作成
+2. そこにCLIツールをインストールして実行
+
+``uv tool install`` または ``pipx install``
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ uv tool install openai==2.34.0
+    $ openai api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+
+1. uvやpipxが仮想環境を作成
+2. そこにCLIツールをインストールし、**グローバルなパス** を通す
+
+uv様々：CLIツールをエンジニアでない100人に配布
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: macOSの手順のみ示します（実際はWindowsユーザにも展開）
+
+    $ curl -LsSf https://astral.sh/uv/install.sh | sh
+    $ uv tool install cdcasasagi
+    $ cdcasasagi --help
+
+実体がバイナリなら仮想環境不要
+------------------------------------------------------------
+
+* uv、ruff、ty、これらはRust実装でバイナリをPyPIから配布
+* 動作にPythonが不要なので、例えばmiseでインストールできる（TODO 動作確認）
+* Python処理系を必要とするCLIのみ仮想環境の都合で ``uv tool install``
+
+2️⃣inline script metadata
+============================================================
+
+チュートリアルでサードパーティライブラリを使ったスクリプトに推す
+
+従来の人力管理
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install httpx2
+    (.venv) $ python script.py
+
+PEP 723 - inline script metadata
+------------------------------------------------------------
+
+.. code-block:: python
+    :caption: 特殊なコメント
+
+    # /// script
+    # requires-python = ">=3.12"
+    # dependencies = [
+    #   "httpx2",
+    # ]
+    # ///
+
+inline script metadataをサポートしたツール（例：``uv run``）は
+----------------------------------------------------------------------
+
+1. 指定されたPythonバージョンで仮想環境を作成
+2. 指定された依存を仮想環境にインストール
+3. その仮想環境でスクリプトを実行
+
+.. TODO ``hatch run``, ``pipx run`` など
+
+詳しくはPyCon JP 2024
+------------------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Xdmr14cCq2g?si=kV-p4clPRLuy_K_q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+uvはinline script metadataを書く
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__
+
+    $ uv init --script awesome.py
+    $ cat awesome.py
+    # /// script
+    # requires-python = ">=3.14"
+    # dependencies = []
+    # ///
+
+.. revealjs-break::
+
+.. code-block:: shell
+    :caption: `uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__
+
+    $ uv add httpx2 --script awesome.py
+    $ cat awesome.py
+    # /// script
+    # requires-python = ">=3.14"
+    # dependencies = [
+    #     "httpx2>=2.10.0",
+    # ]
+    # ///
+
+Pythonスクリプトの持ち運びに超便利
+------------------------------------------------------------
+
+Pythonスクリプト開発中は？（デバッグしたい）
+------------------------------------------------------------
+
+* printデバッグ？
+* ``uv run --with httpx2 python -i script.py``
+* ``uv venv``・``uv pip install httpx2``・``.venv/bin/python -i script.py``
+
+.. 2点目はチュートリアルの仮想環境操作と変わらない
+
+小まとめ🥟2026年、仮想環境人力管理は卒業できる！
+============================================================
+
+* ``uvx`` や ``uv tool install``
+* inline script metadata で仮想環境を理解していなくてもスクリプトを動かせる
+
+uv選択の狙い
+------------------------------------------------------------
+
+* **簡単**
+* 1つのツールで **知っている範囲を広げていけばよい** （新しいツールの導入不要）
+
+    * スクリプトの実行だけ -> Pythonプロジェクト（``uv init``）
