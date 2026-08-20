@@ -1,4 +1,4 @@
-2026年で考えたいトピック
+Part4 2026年で考えたいトピック
 ============================================================
 
 1. コーディングエージェント
@@ -7,32 +7,68 @@
 1.コーディングエージェントとの相性
 ============================================================
 
-* コーディングエージェントは速い
-* コーディングエージェントが使うツールも速くしたい
+* コーディングエージェントは **速い**
+* 速さは魔性：コーディングエージェントが使うツールも速くしたい
 
-uvは速い
+.. revealjs-break::
+    :notitle:
+
+.. raw:: html
+
+    <iframe class="speakerdeck-iframe" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/1b717ecfee8a4833a8ac0999900753d5?slide=49" title="AI Coding Agent Enablement in TypeScript" allowfullscreen="true" allow="web-share" data-ratio="1.7777777777777777"></iframe>
+
+uvは速い [#how-uv-got-so-fast]_
 ------------------------------------------------------------
 
-* Rust製でバイナリ配布（Python処理系を介さず動く）
-* 高速化のための数々の工夫（``uv cache dir``）
+* Python処理系を介さず、バイナリで動作（Rust製）だけでなく
+* PyCon US 2026にて開発者による「`Peeking under the hood of uv run <https://us.pycon.org/2026/schedule/presentation/77/>`__」
 
-.. https://nesbitt.io/2025/12/26/how-uv-got-so-fast.html
-    他にPyCon US 2026トーク
+    * 高速化のためのキャッシュの超積極活用（``uv cache dir`` ご覧あれ）
 
-uvがベストなのか？
+.. [#how-uv-got-so-fast] 他に `How uv got so fast <https://nesbitt.io/2025/12/26/how-uv-got-so-fast.html>`__
+
+uvがコーディングエージェントにベスト？
 ------------------------------------------------------------
 
-* ``uv run`` がキャッシュを積極利用するのがコーディングエージェントにとっては余計
-* キャッシュへの書き込み権限許可の必要あり（例：Codexならwritable_roots）
-* ``uv run pytest`` より ``.venv/bin/pytest`` で済む
+* コーディングエージェントは一般に書き込めるディレクトリの制限がある
+* ``uv run`` が（書き込めるディレクトリとは別の）キャッシュを積極利用するために、 *余計な設定* が必要
+* GPT-5.6 Solは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
 
-.. uv runさせていない https://github.com/google/adk-python/blob/v2.7.0/.agents/skills/adk-setup/SKILL.md
+uvのキャッシュを考慮してコーディングエージェントを設定
+------------------------------------------------------------
+
+.. code-block:: toml
+    :caption: Codexの例（:file:`.codex/config.toml`）
+
+    [sandbox_workspace_write]
+    writable_roots = [
+        "/Users/nikkie/.cache/uv",
+    ]
+
+* コーディングエージェントには ``uv run pytest`` を渡さず、 **.venv/bin/pytest** [#adk-python-agents-md]_
+
+.. [#adk-python-agents-md] https://github.com/google/adk-python/blob/v1.39.0/AGENTS.md#setup-instructions
+
+.. https://github.com/google/adk-python/blob/v2.7.0/.agents/skills/adk-setup/SKILL.md
 
 2.セキュリティ：変わり始めたPythonの世界
 ============================================================
 
 * 近年npmでサプライチェーン攻撃が展開されている（IMO：攻撃者を強く非難します）
 * PyPIでも2026年3月、LiteLLMでサプライチェーン攻撃が発生
+
+LiteLLM [#litellm-nikkie-article]_
+------------------------------------------------------------
+
+.. code-block:: python
+
+    from litellm import completion
+
+    for model in ["openai/gpt-5.6-luna", "gemini/gemini-3.7-flash"]:
+        response = completion(model=model, messages=messages)
+        print(response.choices[0].message.content)
+
+.. [#litellm-nikkie-article] 拙ブログ：`LiteLLMを使って、同じプロンプトを複数のLLMのWeb APIに送る（GPTとGeminiを例に） <https://nikkie-ftnext.hatenablog.com/entry/call-gpt-and-gemini-web-apis-with-litellm-awesome>`__
 
 LiteLLMへの攻撃で状況は大きく変わった
 ------------------------------------------------------------
@@ -41,13 +77,17 @@ LiteLLMへの攻撃で状況は大きく変わった
 * 最新版インストール後、importしただけで環境の秘密情報が抜かれる（uvxして踏みました）
 * **最新版のインストールがリスク**
 
-最新版には悪意あるコードが入っているかも
+.. 邪悪なlitellm_init.pth https://nikkie-ftnext.hatenablog.com/entry/cope-with-compromised-litellm-1.82.8-with-gpt-5.4
+
+「最新版には悪意あるコードが入っているかも」
 ------------------------------------------------------------
 
 * ロックファイルがあるPythonプロジェクトなら最新版を取りに行かないのでリスクは低い
-* 歴史的経緯や利用シーンによってはロックファイルはない
+* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ にはロックファイルはない
 
-ロックファイルがない状況で最新版インストールのリスクを避けるには
+.. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
+
+ロックファイルがない状況で最新版インストールのリスクを減らすには
 ----------------------------------------------------------------------
 
 * cooldownの設定
@@ -60,22 +100,44 @@ LiteLLMへの攻撃で状況は大きく変わった
 cooldown
 ------------------------------------------------------------
 
-* 最新版を一定期間避ける設定
-* uv
-* pip
+最新版を一定期間避ける設定。コミュニティが攻撃を検出し、隔離・削除
+
+.. code-block:: toml
+   :caption: :file:`~/.config/uv/uv.toml`
+
+   exclude-newer = "7 days"
+
+.. code-block:: toml
+   :caption: :file:`~/.config/pip/pip.conf` （ただしpip>=26.1）
+
+    [global]
+    uploaded-prior-to=P3D
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-package-installer-how-to-cooldown-after-compromised-litellm
 
 セキュアなインデックス
 ------------------------------------------------------------
 
-* 例：Takumi Guard（無料）
+* 例：`Takumi Guard <https://shisho.dev/docs/ja/r/202603-takumi-guard-pypi/>`__ （無料）
 * 新規開発が止まっているようなプロジェクトで採用
 * ロックファイルはなく、pipが古くてcooldownも効かないが、`PIP_INDEX_URL <https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-i>`__ 指定だけで済んで作業効果は高い
 
 サプライチェーン攻撃のリスクを認識しましょう
 ------------------------------------------------------------
 
-* 私は、``uvx`` から ``uv tool install`` に切り替えました
+* 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
 * 今すぐ **cooldown** を設定しましょう！
-* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているの、危ないと思ってます
+* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないと思います（cooldownを案内しては）
 
 .. TODO https://astral.sh/blog/uv-audit
+
+Part4 まとめ🥟2026年で考えたいトピック
+============================================================
+
+* uvは速いが、キャッシュの積極利用がコーディングエージェントに余計
+
+    * IMO：``.venv/bin/python`` を指示したい
+
+* サプライチェーン攻撃があったことで、最新版のインストールがリスクに
+
+    * cooldownなど複数の防御策を組み合わせましょう
