@@ -30,9 +30,11 @@ uvは速い [#how-uv-got-so-fast]_
 uvがコーディングエージェントにベスト？
 ------------------------------------------------------------
 
-* コーディングエージェントは一般に書き込めるディレクトリの制限がある
+* コーディングエージェントは一般に書き込めるディレクトリの制限がある [#gpt-5.6-sol-uv-cache]_
 * ``uv run`` が（書き込めるディレクトリとは別の）キャッシュを積極利用するために、 *余計な設定* が必要
-* GPT-5.6 Solは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
+
+
+.. [#gpt-5.6-sol-uv-cache] GPT-5.6 Solは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
 
 uvのキャッシュを考慮してコーディングエージェントを設定
 ------------------------------------------------------------
@@ -55,7 +57,7 @@ uvのキャッシュを考慮してコーディングエージェントを設定
 ============================================================
 
 * 近年npmでサプライチェーン攻撃が展開されている（IMO：攻撃者を強く非難します）
-* PyPIでも2026年3月、LiteLLMでサプライチェーン攻撃が発生
+* PyPIでも **2026年3月**、LiteLLMで **サプライチェーン攻撃が発生**
 
 LiteLLM [#litellm-nikkie-article]_
 ------------------------------------------------------------
@@ -83,7 +85,7 @@ LiteLLMへの攻撃で状況は大きく変わった
 ------------------------------------------------------------
 
 * ロックファイルがあるPythonプロジェクトなら最新版を取りに行かないのでリスクは低い
-* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ にはロックファイルはない
+* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ といった使い方でロックファイルを作っていない
 
 .. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
 
@@ -111,7 +113,7 @@ cooldown
    :caption: :file:`~/.config/pip/pip.conf` （ただしpip>=26.1）
 
     [global]
-    uploaded-prior-to=P3D
+    uploaded-prior-to=P7D
 
 .. https://nikkie-ftnext.hatenablog.com/entry/python-package-installer-how-to-cooldown-after-compromised-litellm
 
@@ -119,25 +121,19 @@ cooldown
 ------------------------------------------------------------
 
 * 例：`Takumi Guard <https://shisho.dev/docs/ja/r/202603-takumi-guard-pypi/>`__ （無料）
-* 新規開発が止まっているようなプロジェクトで採用
+* 新規開発が止まっているようなPythonプロジェクトで採用
 * ロックファイルはなく、pipが古くてcooldownも効かないが、`PIP_INDEX_URL <https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-i>`__ 指定だけで済んで作業効果は高い
 
 サプライチェーン攻撃のリスクを認識しましょう
 ------------------------------------------------------------
 
 * 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
-* 今すぐ **cooldown** を設定しましょう！
-* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないと思います（cooldownを案内しては）
+* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないと思います（**cooldown** を案内しては）
 
 .. TODO https://astral.sh/blog/uv-audit
 
 Part4 まとめ🥟2026年で考えたいトピック
 ============================================================
 
-* uvは速いが、キャッシュの積極利用がコーディングエージェントに余計
-
-    * IMO：``.venv/bin/python`` を指示したい
-
-* サプライチェーン攻撃があったことで、最新版のインストールがリスクに
-
-    * cooldownなど複数の防御策を組み合わせましょう
+* IMO：コーディングエージェントには ``uv run`` よりも ``.venv/bin/python`` を指示したい
+* 最新版のインストールがリスクになっており、cooldownはじめ複数の防御策を組み合わせましょう

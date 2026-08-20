@@ -1,99 +1,128 @@
-仮想環境 **人力** 管理 [#why-python-m]_
+Part2 仮想環境の管理方法
 ============================================================
 
-.. code-block:: bash
+かつて人力、今はツールへ
 
-    $ python -m venv .venv --upgrade-deps
-    $ source .venv/bin/activate
-    (.venv) $ python -m pip install sampleproject
-
-.. [#why-python-m] なぜ ``python -m`` なのか。「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
-
-.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
-
-Python公式チュートリアルが人力パッケージ管理を指南
-------------------------------------------------------------
+人力パッケージ管理を指南 [#why-python-m]_
+============================================================
 
 .. code-block:: bash
     :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
 
-    (.venv) $ python -m pip uninstall sampleproject
+    $ python -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install httpx2
     (.venv) $ python -m pip freeze > requirements.txt
+    (.venv) $ python -m pip uninstall httpx2
 
-公式チュートリアルの範囲はこれで十分
+.. [#why-python-m] ``python -m``：「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
 
-人力でPythonプロジェクトはしんどくなる
+.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
+
+スクリプトからPythonプロジェクトへ
 ------------------------------------------------------------
 
-.. プロジェクト https://packaging.python.org/ja/latest/glossary/#term-Project
+* 公式チュートリアルの範囲やスクリプトをいくつか書くだけなら人力仮想環境管理で十分
+* `Pythonプロジェクト <https://packaging.python.org/ja/latest/glossary/#term-Project>`__ では実装に加え、テストやドキュメントも
+* やりたいこと：テスト時の依存（例：pytest）は本番稼働には不要
 
-2種類の依存：direct & transitive
+人力管理はしんどくなる
 ------------------------------------------------------------
 
-.. TODO 図 pip installで指定 vs directなパッケージが依存
+* ``pip freeze`` で仮想環境内のパッケージをファイルに書き出す [#virtual-environment-disposable]_
 
-``pip freeze`` で仮想環境内のパッケージをファイルに書き出す
+    * 本番用の :file:`requirements.txt` と開発用の :file:`dev-requirements.txt`
 
-``pip uninstall`` は指定したパッケージしか消さない
-------------------------------------------------------------
+* そもそも **順番が逆** では？ あるべきは、依存の組合せを解決する -> 仮想環境を同期する
 
-* directな依存1つを指定（アンインストールされる）
-* transitiveな依存は残ったまま
-
-そもそも依存解決してから環境を同期すべきでは？
-------------------------------------------------------------
-
-* 手動管理の方法では複数のdirect依存からすべての依存を解決するプロセスがない
-* 仮想環境に入ったバージョンを書き出す
-* そっくりそのまま再現用（仮想環境はdisposableなので）
+.. [#virtual-environment-disposable] ``pip freeze`` の出力はそっくりそのまま再現するためのものだと捉えています（公式チュートリアルに仮想環境はdisposableとあります）
 
 .. ばんくしさん パッケージマネージャ
+    https://nikkie-ftnext.hatenablog.com/entry/vaaaaanquish-python-package-manager-diy-introduction-is-awesome
 
-何かしらのPythonプロジェクト管理ツールを入れることに
+Pythonプロジェクトの仮想環境管理ツールを入れることに
 ============================================================
 
-.. TODO 年表風にして歴史を辿る感じにしたい（Poetry、uv）
+* ここ10年くらい、プロジェクトの仮想環境の扱いを簡単にするツールの提案
+* 共通の性質の1つ：ロックファイル
 
-* 依存の解決を自動化する。ロックファイルに仮想環境を同期する
-* ツールに任せればよくなり、プロジェクトの仮想環境は人力管理不要に
+    * 依存解決結果をファイルに残し、それに仮想環境を同期する
 
 .. pip-toolsも提案されてきた
 
-Poetry（2018〜）
+.. revealjs-break::
+    :notitle:
+
+.. image:: ../_static/pyconjp/package-manager-chrono.drawio.png
+
+『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`__』5章に基づき作成
+
+Poetry（2018〜） [#pycon-apac-2023-peacock]_
 ------------------------------------------------------------
 
-* ロックファイル（TODO）
-* ``poetry run <command>`` で仮想環境を有効にして実行
-* 当時は画期的だったが、近年の標準から遅れているように見えており、私からは非推奨 [#pycon-apac-2023-peacock]_
+.. https://python-poetry.org/docs/#installation
 
-.. [#pycon-apac-2023-peacock] `Comparison of Packaging Tools in 2023 <https://2023-apac.pycon.jp/timetable?id=XEGZUD>`__ より。2025年の `v2.0.0 <https://github.com/python-poetry/poetry/releases/tag/2.0.0>`__ で待望の ``[project]`` サポート
+.. code-block:: shell
+
+    $ pipx install poetry
+
+.. [#pycon-apac-2023-peacock] 当時は画期的だったが、「`Comparison of Packaging Tools in 2023 <https://2023-apac.pycon.jp/timetable?id=XEGZUD>`__」にて近年の標準からの遅れの指摘。2025年の `v2.0.0 <https://github.com/python-poetry/poetry/releases/tag/2.0.0>`__ で待望の ``[project]`` サポート
+
+.. code-block:: shell
+    :caption: `基本的な使い方 <https://python-poetry.org/docs/basic-usage/>`__
+
+    $ poetry new my-project
+    $ cd my-project
+    $ poetry add 'httpx2>=2.12.0'  # poetry.lock 作成
+    $ poetry run <command>  # 仮想環境を有効にして実行
+
+.. code-block:: shell
+
+    $ poetry install  # poetry.lockを元に環境再現（+ editable install）
 
 .. https://nikkie-ftnext.hatenablog.com/entry/pyconapac2023-comparison-of-packaging-tools-in-2023
 
 .. https://x.com/ftnext/status/2035279970986053883
 
-Python自体も管理
+機能拡張：Python自体も管理
 ------------------------------------------------------------
 
-* Pythonプロジェクトだけでなく、Python処理系自体もツールで管理 [#python-build-standalone]_
-* Hatchや、Rust製の **Rye** （2023 [#astral-rye-stewardship]_）
+* Pythonプロジェクトの仮想環境だけでなく、 **Python処理系自体もツールで管理** [#python-build-standalone]_
+* Hatch（``hatch python``）や、Rust製のRye（2023 [#astral-rye-stewardship]_）
 
 .. [#python-build-standalone] `python-build-standalone <https://github.com/astral-sh/python-build-standalone>`__ の功績が大きいです
 
 .. [#astral-rye-stewardship] 2024年 `RyeはAstralが引き継ぎ <https://astral.sh/blog/uv>`__ ました
 
-uv（2024〜）
+uv（2024〜） [#openai-astral]_
 ------------------------------------------------------------
 
-* Astralによる [#openai-astral]_。Rust製。Python自体も管理
-* uvで管理しているプロジェクトであれば ``uv sync`` だけで再現（:file:`uv.lock`）
-* ``uv run <command>`` で仮想環境の中でcommandが実行される
+.. code-block:: shell
 
-.. [#openai-astral] 2026年にOpenAIがAstralを買収しています
+    $ curl -LsSf https://astral.sh/uv/install.sh | sh  # 他miseで入れる。などなど
 
-uv使うなら :file:`pyproject.toml` もね
+.. code-block:: shell
+
+    $ uv python install  # Python自体も管理
+    $ uv init
+    $ uv add 'httpx2>=2.12.0'  # uv.lock 作成
+    $ uv run <command>  # 仮想環境を有効にして実行
+
+.. code-block:: shell
+
+    $ uv sync  # uv.lockを元に環境再現。*爆速*
+
+.. [#openai-astral] 開発元のAstralを2026年にOpenAIが買収しています
+
+.. TODO https://github.com/astral-sh/uv/releases/tag/0.12.0
+
+uv使う上で
 ------------------------------------------------------------
 
-* 公式チュートリアルと互換なのは ``uv venv && uv pip install httpx2``
-* ``uv init`` は :file:`pyproject.toml` も作る
-* uvが書くことが多いが、新しい標準なので使いこなしましょう（``[tool.ham]`` テーブルで設定）
+* 生成される :file:`pyproject.toml` も使い倒しましょう。 ``[tool.ham]`` に設定書けます！
+* ``uv run`` はロックファイル更新とそれに仮想環境の同期が **自動** [#uv-automatic-lock-and-sync]_
+* `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__：Poetryなどからuvへ移行
+
+.. [#uv-automatic-lock-and-sync] https://docs.astral.sh/uv/concepts/projects/sync/#automatic-lock-and-sync
+
+.. TODO 小まとめ🥟？
