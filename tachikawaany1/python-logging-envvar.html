@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>こんなPythonロギングはどうだい！？</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/tachikawaany1/python-logging-envvar.html">
+    <meta property="og:title" content="こんなPythonロギングはどうだい！？">
+    <meta property="og:description" content="Tachikawa.any #1 happy-python-logging runの紹介">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/tachikawaany1.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">こんなPythonロギングはどうだい！？</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tachikawa.any #1</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/05/12 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">㊗️Tachikawa.any 爆誕！🎂</h2>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/e911e6e737af49f99f134adf493fa899?slide=18" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="ご機嫌に学べ - 寝ぼけ眼の親たちへ贈る_友の輪_駆動開発 - "></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">nikkieと立川</h2>
+<ul class="simple">
+<li><p>今日は吉祥寺より先まで中央線グリーン車でおトク！</p></li>
+<li><p><strong>シネマシティ</strong>、だいすき！</p></li>
+<li><p>超かぐや姫！の舞台！！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">これすき</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">彩葉は感動すると<br/>放心状態になるタイプのオタクなので<br/>乙女っぽいポーズをしています🦊<a href="https://twitter.com/hashtag/GW%E3%81%AF%E8%B6%85%E3%81%8B%E3%81%90%E3%82%84%E5%A7%AB?src=hash&amp;ref_src=twsrc%5Etfw">#GWは超かぐや姫</a> <a href="https://t.co/VAXLiHCYYE">pic.twitter.com/VAXLiHCYYE</a></p>— 『超かぐや姫！』公式 (@Cho_KaguyaHime) <a href="https://twitter.com/Cho_KaguyaHime/status/2049428729701487012?ref_src=twsrc%5Etfw">2026年4月29日</a></blockquote> <script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">こんなPythonロギングはどうだい！？</h2>
+<pre data-id="id2"><code class="shell" data-noescape="" data-trim="">% happy-python-logging run --log-config httpxyz=debug example.py</code></pre>
+<p><a class="reference external" href="https://pypi.org/project/happy-python-logging/" rel="noreferrer" target="_blank">happy-python-logging</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">最新のPEPを取得するスクリプト</h3>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">example.py</span></code></span></div>
+<pre><code class="python" data-noescape="" data-trim="">from datetime import datetime
+
+import httpxyz
+from rich.pretty import pprint
+
+resp = httpxyz.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])
+</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">最新のPEPを取得するスクリプト</h3>
+<ul class="simple">
+<li><p>HTTPクライアント HTTPXYZ <a class="footnote-reference brackets" href="#fall-in-love-with-httpxyz" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p>カラフルな出力 Rich</p></li>
+</ul>
+<img alt="../_images/latest-peps-rich-output.png" src="../_images/latest-peps-rich-output.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="fall-in-love-with-httpxyz" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>推しの非同期サポートHTTPクライアントです。拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/do-you-know-httpxyz-friendly-fork-httpx" rel="noreferrer" target="_blank">君は HTTPXYZ を知っているか</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ライブラリHTTPXYZの作者によるロギング</h2>
+<p><a class="reference external" href="https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py" rel="noreferrer" target="_blank">https://codeberg.org/httpxyz/httpxyz/src/tag/0.31.1/httpxyz/_client.py</a></p>
+<pre data-id="httpxyz"><code class="python" data-noescape="" data-trim="">logger = logging.getLogger("httpxyz")  # L117</code></pre>
+<pre data-id="httpxyz"><code class="python" data-noescape="" data-trim="">logger.info(  # L1032
+    'HTTP Request: %s %s "%s %d %s"',
+    request.method,
+    request.url,
+    response.http_version,
+    response.status_code,
+    response.reason_phrase,
+)</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">仕込まれたロギングを見たい私（<em>束縛系</em>）は</h3>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">example.py</span></code> にロギングの実装を追加</span></div>
+<pre><code class="python" data-noescape="" data-trim="">httpxyz_logger = logging.getLogger("httpxyz")
+httpxyz_logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+formatter = logging.Formatter(
+    "%(asctime)s | %(levelname)s (%(name)s) | %(filename)s:%(funcName)s:%(lineno)d - %(message)s"
+)
+console_handler.setFormatter(formatter)
+httpxyz_logger.addHandler(console_handler)
+</code></pre>
+</div>
+<pre data-id="id4"><code class="txt" data-noescape="" data-trim="">2026-05-11 20:32:15,259 | INFO (httpxyz) | _client.py:_send_single_request:1032 - HTTP Request: GET https://peps.python.org/api/peps.json "HTTP/1.1 200 OK"</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ロガー・ハンドラ・フォーマッタを設定 🏃‍♂️</h3>
+<ul class="simple">
+<li><p>PyCon JP 2025 で話しています！ <a class="footnote-reference brackets" href="#pyconjp-2026-cfp" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+<li><p><a class="reference external" href="https://2025.pycon.jp/ja/timetable/talk/Z8ZYFA" rel="noreferrer" target="_blank">標準ライブラリのlogging、レゴブロックのように組合せてロギングできることを理解しよう！</a></p></li>
+<li><p>動画 <a class="reference external" href="https://www.youtube.com/watch?v=tSuSr2jFE0Q" rel="noreferrer" target="_blank">https://www.youtube.com/watch?v=tSuSr2jFE0Q</a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pyconjp-2026-cfp" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id6" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://pyconjp.blogspot.com/2026/04/pycon-jp-2026-call-for-proposals.html" rel="noreferrer" target="_blank">PyCon JP 2026 Call for Proposals を開始しました</a> （5/31(日)まで）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ボイラープレートコードが多い -&gt; <strong>設定ファイル</strong> で外出し</h3>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">tomllib.load して <a class="reference external" href="https://docs.python.org/ja/3/library/logging.config.html#logging.config.dictConfig" rel="noreferrer" target="_blank">logging.config.dictConfig</a> に渡します</span></div>
+<pre><code class="toml" data-noescape="" data-trim="">version = 1
+disable_existing_loggers = false
+
+[loggers.httpxyz]
+level = "DEBUG"
+handlers = ["console"]
+
+[handlers.console]
+class = "logging.StreamHandler"
+formatter = "detailed"
+
+[formatters.detailed]
+format = "%(asctime)s | %(levelname)s (%(name)s) | %(filename)s:%(funcName)s:%(lineno)d - %(message)s"
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ところで <code class="docutils literal notranslate"><span class="pre">RUST_LOG</span></code> っていいですね</h2>
+<pre data-id="rust-log"><code class="shell" data-noescape="" data-trim="">$ RUST_LOG=codex_core=trace codex exec "print hello" --skip-git-repo-check</code></pre>
+<p>バイナリ実行中のログレベルを外から制御できる！ <a class="footnote-reference brackets" href="#codex-cli-logging-breaking-news" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-cli-logging-breaking-news" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/codex-cli-rust-log-env-var-responses-api-request-json" rel="noreferrer" target="_blank">【速報】nikkie氏、ついに Codex CLI から Responses API へのリクエストを覗くことに成功！</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">RUST_LOG</span></code> 関係者</h3>
+<ul>
+<li><p><a class="reference external" href="https://docs.rs/env_logger/latest/env_logger/" rel="noreferrer" target="_blank">env_logger</a></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">RUST_LOG</span></code> environment variable controls logging with the syntax:</p>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://docs.rs/tracing-subscriber/latest/tracing_subscriber/" rel="noreferrer" target="_blank">tracing_subscriber</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">PYTHON_LOG</span></code> が私は欲しいぞ！</h2>
+<pre data-id="python-log"><code class="shell" data-noescape="" data-trim="">$ PYTHON_LOG=httpxyz=debug happy-python-logging run example.py</code></pre>
+<pre data-id="python-log"><code class="shell" data-noescape="" data-trim="">% happy-python-logging run --log-config httpxyz=debug example.py</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">happy-python-logging</span> <span class="pre">run</span></code></h3>
+<ul class="simple">
+<li><p>Python使いをロギングで幸せにするために始動</p></li>
+<li><p>あるライブラリをちょっとロギングしたいだけなのに、 <strong>なんで何行も書かないといけないのか</strong> （仕組みを理解した上で）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">「HTTPXYZは今だけdebugレベルで」</h3>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text"><strong class="command">PYTHON_LOG=httpxyz=debug happy-python-logging run example.py</strong></span></div>
+<pre><code class="python" data-noescape="" data-trim="">from datetime import datetime
+
+import httpxyz
+from rich.pretty import pprint
+
+resp = httpxyz.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+peps_desc_created = sorted(
+    data.items(),
+    key=lambda item: datetime.strptime(item[1]["created"], "%d-%b-%Y"),
+    reverse=True,
+)
+pprint([(k, v["title"], v["created"]) for k, v in peps_desc_created][:10])
+</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">アイデア <a class="reference external" href="https://docs.python.org/ja/3/library/runpy.html#runpy.run_path" rel="noreferrer" target="_blank">runpy.run_path</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">path/to/script</span></code> 相当</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PYTHON_LOG</span></code> に沿ったロギング設定をしてからスクリプト実行</p></li>
+<li><p>Opus 4.7とGPT-5.5の実装・レビュー <a class="reference external" href="https://github.com/ftnext/happy-python-logging/pull/3" rel="noreferrer" target="_blank">20往復</a> でこれは消えた...（別の実装に）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ：こんなPythonロギングはどうだい！？</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RUST_LOG</span></code> ならぬ <code class="docutils literal notranslate"><span class="pre">PYTHON_LOG</span></code></p></li>
+<li><p>ロギングのコードを書かずにロギングできる <strong class="command">happy-python-logging run</strong> お試しあれ！</p></li>
+</ul>
+<pre data-id="id11"><code class="shell" data-noescape="" data-trim="">$ PYTHON_LOG=httpxyz=debug happy-python-logging run example.py</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python使い・<span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a> <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> 連続1250日突破</p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">本LTタイトルはこちらから</h3>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/KGkdhAjWfSo?si=XyQPxWQhwFoGfDqj&amp;start=46" title="YouTube video player" width="560"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">happy-python-logging命名インスパイア</h3>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/uMY_qIoWgnk?si=Dzsc6Bma1_p4M3he" title="YouTube video player" width="560"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h3>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

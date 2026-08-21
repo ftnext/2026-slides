@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Pythonのリンタを作ろう</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/pyconshizu/write-linter-rules.html">
+    <meta property="og:title" content="Pythonのリンタを作ろう">
+    <meta property="og:description" content="PyCon mini Shizuoka 2026">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/pyconshizu.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Pythonのリンタを作ろう</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PyCon mini Shizuoka 2026</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/02/21 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">訂正：リンタの <strong>ルール</strong> を作ろう</h2>
+<ul class="simple">
+<li><p>プロポーザルのタイトルが本文を反映していませんでした。ごめんなさい <a class="footnote-reference brackets" href="#build-python-linter-first-step" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p>主張：Pythonのリンタの <strong>ルールを書ける</strong> ようになって、より使いこなしていきましょう（<span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext/2026-slides/tree/main/samplecode/write-python-linter-rules" rel="noreferrer" target="_blank">サンプルコード</a>）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="build-python-linter-first-step" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>せめてものお詫びとして拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/my-first-python-linter-based-on-flake8-observation-first-step" rel="noreferrer" target="_blank">flake8 を観察して作る、小さな Python リンタ（一歩目）</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">皆さまお使いのリンタは？</h3>
+<ul class="simple">
+<li><p>Ruff</p></li>
+<li><p>flake8</p></li>
+<li><p>pylint</p></li>
+</ul>
+<p>対象：仕組みは分からないが、1つでも <strong>動かしたことがある</strong></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）・Python歴8年・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/" rel="noreferrer" target="_blank">ブログ</a> 連続1100日突破</p></li>
+<li><p>機械学習エンジニア。 <a class="reference external" href="https://jp.ub-speeda.com/news/speeda-promotion-gallery/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>拡張</strong> できるものが好き</h3>
+<ul class="simple">
+<li><p>公開している flake8 プラグイン <span class="fab fa-github"></span> <a class="reference external" href="https://github.com/ftnext" rel="noreferrer" target="_blank">@ftnext</a></p>
+<ul>
+<li><p><a class="reference external" href="https://pypi.org/project/flake8-kotoha/" rel="noreferrer" target="_blank">flake8-kotoha</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/happy-python-logging/" rel="noreferrer" target="_blank">happy-python-logging</a></p></li>
+</ul>
+</li>
+<li><p>Ruff 使ってます（速さ &amp; 簡単さ）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">導入：あなたはリンタのルールを書きたくなる</h2>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スタイルガイド <a class="reference external" href="https://peps.python.org/pep-0008/" rel="noreferrer" target="_blank">PEP 8</a></h3>
+<ul>
+<li><p>見た目について（例：演算子と半角スペース） <a class="footnote-reference brackets" href="#formatter" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+<li><p>このようなPythonを <strong>書いてはいけません</strong> （代わりにこう書きましょう）</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>このトークでリンタが指しているのはこちら</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="formatter" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>フォーマッタと呼ばれるツールの出番ですね</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例「このように書いてはいけません」 <a class="footnote-reference brackets" href="#b012" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id63">
+<div class="code-block-caption"><span class="caption-text">ぶっぶーですわ🙅‍♀️</span></div>
+<pre><code class="python" data-noescape="" data-trim="">def foo():
+    try:
+        1 / 0
+    finally:
+        return 42</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="b012" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/ruff/rules/jump-statement-in-finally/" rel="noreferrer" target="_blank">jump-statement-in-finally (B012)</a> （拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/whatsnew-python-314-pep-765-syntaxwarning-finally-return" rel="noreferrer" target="_blank">「What's new in Python 3.14」より finally 節での return（や continue・break）は SyntaxWarning で警告されるようになりました（PEP 765）</a>）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">PEP 8 以外の例：ログメッセージにf-stringはいけません <a class="footnote-reference brackets" href="#g004" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></h3>
+<div class="literal-block-wrapper docutils container" id="id64">
+<div class="code-block-caption"><span class="caption-text">ぶっぶーですわ🙅‍♀️</span></div>
+<pre><code class="python" data-noescape="" data-trim="">logger.info(f"{user} - Something happened")</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id65">
+<div class="code-block-caption"><span class="caption-text">ロギングでは <strong>%演算子による書式化</strong></span></div>
+<pre><code class="python" data-noescape="" data-trim="">logger.info("%s - Something happened", user)</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="g004" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id11" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.astral.sh/ruff/rules/logging-f-string/" rel="noreferrer" target="_blank">logging-f-string (G004)</a> （拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/hey-claude-dont-use-f-string-in-logging-messages" rel="noreferrer" target="_blank">Pythonのログメッセージにf-stringはいけません。そこのClaude、私はあなたに言っているんですよ</a>）</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スタイルガイドはリンタにチェックさせよう</h3>
+<ul class="simple">
+<li><p>人間は全てのルールを覚えていられない</p></li>
+<li><p>書いてはいけないPythonの <strong>指摘をリンタに任せる</strong></p></li>
+<li><p>効能：コードレビューの焦点がスタイルから本質的なロジックへ</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コーディングエージェントにリンタを持たせる</h3>
+<ul>
+<li><p>IMO：LLMは（性能向上は甚だしいが）Pythonを十分には理解していない</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>例：先のログメッセージのf-string</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>フック機能でリンタを組み込み</strong> スタイルガイドを強制する <a class="footnote-reference brackets" href="#yapc-fukuoka-lt" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="yapc-fukuoka-lt" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>YAPCでのLT🏅 <a class="reference external" href="https://ftnext.github.io/2025-slides/yapc-fukuoka/lt-agent-who-understand-python.html#/2" rel="noreferrer" target="_blank">Pythonを"理解"しているコーディングエージェントが欲しい！！</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">「指摘したいルールが誰にも公開されていない」問題</h3>
+<ul class="simple">
+<li><p>リントルールは 800 以上あるが、自分が欲しいルールが存在しないことがある</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id66">
+<div class="code-block-caption"><span class="caption-text">この型ヒントには伸びしろがある</span></div>
+<pre><code class="python" data-noescape="" data-trim="">def plus_one_ng(numbers: list[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">引数の型ヒントをlistにしてはいけません</h3>
+<div class="literal-block-wrapper docutils container" id="id67">
+<div class="code-block-caption"><span class="caption-text">list以外を渡しても動きます</span></div>
+<pre><code class="python" data-noescape="" data-trim="">plus_one_ng((1, 2, 3))  # collections.abc.Sequence
+plus_one_ng(range(3))   # collections.abc.Iterable</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://docs.python.org/ja/3/library/typing.html#typing.List" rel="noreferrer" target="_blank">typing.List</a> のドキュメントより</h3>
+<blockquote>
+<div><p>Note that to annotate arguments, it is preferred to use an abstract collection type such as <code class="docutils literal notranslate"><span class="pre">Sequence</span></code> or <code class="docutils literal notranslate"><span class="pre">Iterable</span></code> rather than to use <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">typing.List</span></code>.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code> や <code class="docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code> などの <strong>抽象</strong> 型が好ましい</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://pypi.org/project/flake8-kotoha/" rel="noreferrer" target="_blank">flake8-kotoha</a> を自作しました</h3>
+<pre data-id="id17"><code class="console" data-noescape="" data-trim="">$ uvx --with flake8-kotoha flake8 lint-targets/use_iterable.py
+lint-targets/use_iterable.py:6:17: KTH101 Type hint with abstract type `collections.abc.Iterable` or `collections.abc.Sequence`, instead of concrete type `list`</code></pre>
+<div class="literal-block-wrapper docutils container" id="id68">
+<div class="code-block-caption"><span class="caption-text">こうしましょう</span></div>
+<pre><code class="python" data-noescape="" data-trim="">def plus_one_ok(numbers: Iterable[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ルールを書きたくなってきましたよね？</h3>
+<p>「引数の型ヒントをlistにしてはいけません」を例に</p>
+<dl class="field-list simple">
+<dt class="field-odd">1. Pythonで書く<span class="colon">:</span></dt>
+<dd class="field-odd"><p>例として <strong>flake8プラグイン</strong></p>
+</dd>
+<dt class="field-even">2. Ruff では？<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>意見</strong> を伝えるので考えるきっかけに</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">リンタのルールをPythonで書く</h2>
+<p>そのためにまず2つ押さえましょう</p>
+<ul class="simple">
+<li><p>抽象構文木（<em>AST</em>: Abstract Syntax Tree）</p></li>
+<li><p>GoF のデザインパターンの <em>Visitor</em></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">「このように書いてはいけません」の実装</h3>
+<ul class="simple">
+<li><p>「書いてはいけないパターン」をASTで <strong>表現</strong></p></li>
+<li><p>それを Visitor パターンで <strong>見つける</strong></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">おすすめ：LintオタクによるLint解説（<a class="reference external" href="https://www.youtube.com/watch?v=gKCB6rQxFBU" rel="noreferrer" target="_blank">Lint Night #1</a>） 🏃‍♂️</h3>
+<iframe allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/ffeacc49800f47a29172d5d11eecc210" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="LintオタクによるLint解説 / Introduction to Lints"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">準備1️⃣ AST</h2>
+<ul class="simple">
+<li><p>ソースコードを <strong>木構造</strong> のデータとして表現したもの</p></li>
+<li><p>ソースコードをトークンに分ける <a class="footnote-reference brackets" href="#python-lexical-analysis" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+<li><p>トークンを構文を表す構造（木）に変換する</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="python-lexical-analysis" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id21" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p>字句解析 <a class="reference external" href="https://docs.python.org/ja/3/reference/lexical_analysis.html" rel="noreferrer" target="_blank">https://docs.python.org/ja/3/reference/lexical_analysis.html</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">標準ライブラリの <code class="docutils literal notranslate"><span class="pre">ast</span></code> モジュール <a class="footnote-reference brackets" href="#ast-m" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></h3>
+<pre data-id="id23"><code class="default" data-noescape="" data-trim="">$ echo 'print("静岡")' | python -m ast
+Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ast-m" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id22" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#command-line-usage" rel="noreferrer" target="_blank">https://docs.python.org/ja/3/library/ast.html#command-line-usage</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ソースコードをASTに変換 <a class="footnote-reference brackets" href="#ast-parse" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a> 🏃‍♂️</h3>
+<pre data-id="id25"><code class="pycon" data-noescape="" data-trim="">&gt;&gt;&gt; import ast
+&gt;&gt;&gt; tree = ast.parse('print("静岡")')</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ast-parse" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id24" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.parse" rel="noreferrer" target="_blank">https://docs.python.org/ja/3/library/ast.html#ast.parse</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ASTを表示 <a class="footnote-reference brackets" href="#ast-dump" id="id26" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a> 🏃‍♂️</h3>
+<pre data-id="id27"><code class="pycon" data-noescape="" data-trim="">&gt;&gt;&gt; print(ast.dump(tree, indent=3))
+Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ast-dump" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id26" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.dump" rel="noreferrer" target="_blank">https://docs.python.org/ja/3/library/ast.html#ast.dump</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">print("静岡")</span></code> のASTを読む</h3>
+<pre data-id="print-ast"><code class="default" data-line-numbers="1" data-noescape="" data-trim="">Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.Module" rel="noreferrer" target="_blank">ast.Module</a></h3>
+<ul>
+<li><p>Pythonは文があるプログラミング言語 <a class="footnote-reference brackets" href="#python-statements" id="id29" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code> には <a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast-statements" rel="noreferrer" target="_blank">文</a> が来る</p>
+<blockquote>
+<div><p>関数呼び出しのような式がそれ自身で文となり、（<a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.Expr" rel="noreferrer" target="_blank">ast.Expr</a>）</p>
+</div></blockquote>
+</li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="python-statements" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id29" role="doc-backlink">10</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.python.org/ja/3/reference/simple_stmts.html" rel="noreferrer" target="_blank">単純文</a>・<a class="reference external" href="https://docs.python.org/ja/3/reference/compound_stmts.html" rel="noreferrer" target="_blank">複合文</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">どんな式（文）か</h3>
+<pre data-id="id30"><code class="default" data-line-numbers="4,5,6,7" data-noescape="" data-trim="">Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.Call" rel="noreferrer" target="_blank">ast.Call</a>：関数呼び出し</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">func</span></code> に組み込み関数の <code class="docutils literal notranslate"><span class="pre">print</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code> に位置引数</p></li>
+</ul>
+<pre data-id="id31"><code class="default" data-noescape="" data-trim="">         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])
+</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">準備2️⃣ Visitor パターン</h2>
+<ul class="simple">
+<li><p>やりたいこと：木の中の特定のノードを見つけたい（例：<code class="docutils literal notranslate"><span class="pre">print</span></code> 関数）</p></li>
+<li><p>操作を <strong>訪問者</strong> （Visitor）に書き、データ構造は訪問者を受け入れる <a class="footnote-reference brackets" href="#gof-visitor-pattern" id="id32" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="gof-visitor-pattern" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id32" role="doc-backlink">11</a><span class="fn-bracket">]</span></span>
+<p>データ構造に操作を書くのと比べて、操作を追加しやすくなります。拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/the-transcendent-book-chapter8-design-patterns-visitor" rel="noreferrer" target="_blank">読書&amp;写経ログ | #ちょうぜつ本 第8章 Visitorパターン</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.NodeVisitor" rel="noreferrer" target="_blank">ast.NodeVisitor</a></h3>
+<blockquote>
+<div><p>抽象構文木を渡り歩いてビジター関数を見つけたノードごとに呼び出すノード・ビジターの基底クラスです。</p>
+</div></blockquote>
+<p><strong>継承</strong> したクラスを実装する</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例：<code class="docutils literal notranslate"><span class="pre">print</span></code> を見つける</h3>
+<pre data-id="print"><code class="python" data-noescape="" data-trim="">class PrintFinder(ast.NodeVisitor):
+    def visit_Call(self, node):
+        if isinstance(node.func, ast.Name) and node.func.id == "print":
+            args = [arg.value for arg in node.args]
+            print(f"Found print at line {node.lineno}, args {args}")
+        self.generic_visit(node)
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実行結果</h3>
+<pre data-id="id34"><code class="python" data-noescape="" data-trim="">source = """\
+print("静岡")
+len("静岡")
+print("最高")
+"""
+tree = ast.parse(source)
+PrintFinder().visit(tree)
+</code></pre>
+<pre data-id="id34"><code class="txt" data-noescape="" data-trim="">Found print at line 1, args ['静岡']
+Found print at line 3, args ['最高']</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">PrintFinder.visit()</span></code></h3>
+<ul class="simple">
+<li><p>親クラス <code class="docutils literal notranslate"><span class="pre">NodeVisitor</span></code> で定義されている</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visit</span></code> は <strong>ノードのクラス名から visit_クラス名 メソッド</strong> を呼び出す</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.NodeVisitor.visit" rel="noreferrer" target="_blank">https://docs.python.org/ja/3/library/ast.html#ast.NodeVisitor.visit</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">NodeVisitor.visit()</span></code> 🏃‍♂️</h3>
+<pre data-id="nodevisitor-visit"><code class="python" data-noescape="" data-trim="">class NodeVisitor(object):
+    def visit(self, node):
+        method = 'visit_' + node.__class__.__name__
+        visitor = getattr(self, method, self.generic_visit)
+        return visitor(node)</code></pre>
+<p><a class="reference external" href="https://github.com/python/cpython/blob/v3.14.3/Lib/ast.py#L482-L516" rel="noreferrer" target="_blank">https://github.com/python/cpython/blob/v3.14.3/Lib/ast.py#L482-L516</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">visitのイメージ</h3>
+<a class="reference internal image-reference" href="../_images/visit-print-call.drawio.png"><img alt="../_images/visit-print-call.drawio.png" height="556" src="../_images/visit-print-call.drawio.png" width="321"/>
+</a>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">関数呼び出しノードに対する <strong>visit_Callを追加</strong></h3>
+<pre data-id="visit-call"><code class="python" data-line-numbers="3" data-noescape="" data-trim="">class PrintFinder(ast.NodeVisitor):
+    def visit_Call(self, node):
+        if isinstance(node.func, ast.Name) and node.func.id == "print":
+            args = [arg.value for arg in node.args]
+            print(f"Found print at line {node.lineno}, args {args}")
+        self.generic_visit(node)
+</code></pre>
+<pre data-id="visit-call"><code class="default" data-line-numbers="4,5,6,7" data-noescape="" data-trim="">Module(
+   body=[
+      Expr(
+         value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+               Constant(value='静岡')]))])
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">再帰的にvisit</h3>
+<pre data-id="id35"><code class="python" data-line-numbers="6" data-noescape="" data-trim="">class PrintFinder(ast.NodeVisitor):
+    def visit_Call(self, node):
+        if isinstance(node.func, ast.Name) and node.func.id == "print":
+            args = [arg.value for arg in node.args]
+            print(f"Found print at line {node.lineno}, args {args}")
+        self.generic_visit(node)
+</code></pre>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_visit</span></code>：子ノードの <code class="docutils literal notranslate"><span class="pre">visit</span></code> メソッド呼び出し</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ルールを書く準備、OK？</h2>
+<dl class="field-list simple">
+<dt class="field-odd">抽象構文木<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">ast</span></code> モジュールで確認できる</p>
+</dd>
+<dt class="field-even">Visitorパターン<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ast.NodeVisitor</span></code> を継承。<code class="docutils literal notranslate"><span class="pre">visit_ノードのクラス名</span></code> を実装</p>
+</dd>
+</dl>
+<p>ASTのノードを巡回して、<strong>特定の条件のノード</strong> を見つけられます！</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">「引数の型ヒントをlistにしてはいけません」を書く</h2>
+<pre data-id="id36"><code class="python" data-noescape="" data-trim="">class ArgumentListTypeHintChecker(ast.NodeVisitor):
+    def visit_arg(self, node):
+        annotation = node.annotation
+        if isinstance(annotation, ast.Subscript) and annotation.value.id == "list":
+            as_is = f"{node.arg}: {annotation.value.id}[{annotation.slice.id}]"
+            print(f"Fix type hint `{as_is}` at {node.lineno}:{node.col_offset}")
+        self.generic_visit(node)
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">関数定義のAST（抜粋）</h3>
+<pre data-id="id37"><code class="default" data-noescape="" data-trim="">FunctionDef(
+   name='plus_one_ng',
+   args=arguments(
+      args=[
+         arg(
+            arg='numbers',
+            annotation=Subscript(
+               value=Name(id='list', ctx=Load()),
+               slice=Name(id='int', ctx=Load()),
+               ctx=Load()))]),
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.FunctionDef" rel="noreferrer" target="_blank">ast.FunctionDef</a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ast.arguments</span></code> が関数の引数全体</p></li>
+<li><p><strong>1つ1つの引数</strong> が <a class="reference external" href="https://docs.python.org/ja/3/library/ast.html#ast.arg" rel="noreferrer" target="_blank">ast.arg</a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">annotation</span></code> に型ヒント</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">ast.arg</span></code> の <code class="docutils literal notranslate"><span class="pre">annotation</span></code></h3>
+<pre data-id="ast-arg-annotation"><code class="default" data-line-numbers="7" data-noescape="" data-trim="">FunctionDef(
+   name='plus_one_ng',
+   args=arguments(
+      args=[
+         arg(
+            arg='numbers',
+            annotation=Subscript(
+               value=Name(id='list', ctx=Load()),
+               slice=Name(id='int', ctx=Load()),
+               ctx=Load()))]),
+</code></pre>
+<ul class="simple">
+<li><p><strong>ast.Subscript</strong>: ジェネリック型（ <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">func(d:</span> <span class="pre">list[int])</span></code> ）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実行結果🙌</h3>
+<pre data-id="id39"><code class="python" data-noescape="" data-trim="">def plus_one_ng(numbers: list[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]
+
+def plus_one_ok(numbers: Iterable[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]</code></pre>
+<pre data-id="id39"><code class="txt" data-noescape="" data-trim="">Fix type hint `numbers: list[int]` at 1:16</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">annotation</span></code> のパターン 🏃‍♂️</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: 型ヒントなし（ <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">func(a)</span></code> ）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ast.Name</span></code>: 単純な型（ <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">func(b:</span> <span class="pre">int)</span></code> ）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ast.Attribute</span></code>: 修飾名（ <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">func(tree:</span> <span class="pre">ast.AST)</span></code> ）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">小まとめ🥟 リンタのルールをPythonで書く</h3>
+<ul class="simple">
+<li><p>ASTとVisitorパターン</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ast.NodeVisitor</span></code> を継承して <strong>visit_ノードのクラス名</strong> を実装</p></li>
+<li><p>「引数の型ヒントをlistにしてはいけません」ルールをPythonで実装できた</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">flake8にルールを追加する</h2>
+<ul class="simple">
+<li><p>Python製リンタ <a class="reference external" href="https://github.com/PyCQA/flake8" rel="noreferrer" target="_blank">https://github.com/PyCQA/flake8</a></p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>先の実装をflake8のインターフェースに合わせるだけ</p></li>
+<li><p>Pythonパッケージとしてメタデータを書く</p></li>
+</ol>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">(1)flake8プラグインのインターフェース</h3>
+<ul class="simple">
+<li><p>AST型プラグイン：flake8がパース済みの <code class="docutils literal notranslate"><span class="pre">ast.AST</span></code> を渡してくれる</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">tree:</span> <span class="pre">ast.AST)</span></code>: ASTを受け取る</p></li>
+</ul>
+<pre data-id="id41"><code class="default" data-noescape="" data-trim="">class Flake8KotohaPlugin:
+    def __init__(self, tree: ast.AST) -&gt; None:
+        self._tree = tree
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">(1)flake8プラグインのインターフェース</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">run()</span></code> メソッド: 4-tuple <code class="docutils literal notranslate"><span class="pre">(行番号,</span> <span class="pre">列番号,</span> <span class="pre">メッセージ,</span> <span class="pre">型)</span></code> を <code class="docutils literal notranslate"><span class="pre">yield</span></code></p></li>
+<li><p>チェッカーは <code class="docutils literal notranslate"><span class="pre">print</span></code> する代わりに <code class="docutils literal notranslate"><span class="pre">self.errors</span></code> リストへの蓄積に変更</p></li>
+</ul>
+<pre data-id="id41"><code class="default" data-noescape="" data-trim="">class Flake8KotohaPlugin:
+    def run(self) -&gt; Generator[tuple[int, int, str, Type[Any]], None, None]:
+        checker = ArgumentListTypeHintChecker()
+        checker.visit(self._tree)
+
+        for lineno, col_offset, message in checker.errors:
+            yield (lineno, col_offset, message, type(self))
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">(2)パッケージング（メタデータの書き方）</h3>
+<pre data-id="id42"><code class="default" data-noescape="" data-trim="">[project]
+dependencies = ["flake8"]
+
+[project.entry-points."flake8.extension"]
+KTH = "kotoha_plugin:Flake8KotohaPlugin"
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">pylint でもプラグインとして書ける 🏃‍♂️</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pylint-dev/pylint" rel="noreferrer" target="_blank">https://github.com/pylint-dev/pylint</a></p></li>
+<li><p>標準ライブラリastでなく <strong>astroid</strong> を使って AST を表現 <a class="footnote-reference brackets" href="#pylint-kotoha" id="id43" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<pre data-id="pylint"><code class="console" data-noescape="" data-trim="">$ pylint --load_plugins kotoha_plugin use_iterable.py</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pylint-kotoha" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id43" role="doc-backlink">12</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/flake8-kotoha-experiment-pylint-checker-implementation" rel="noreferrer" target="_blank">pylint を使った琴葉ちゃん「引数の型ヒントを list にしてはいけません」</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">おすすめ：<a class="reference external" href="https://2022.pycon.jp/timetable/?id=CNFPPT" rel="noreferrer" target="_blank">コーディング規約自動化 Pylintのカスタムルールを作ろう</a> 🏃‍♂️</h3>
+<iframe allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/dd2b52803bf14bd7a5d1b0cb67315cfb" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="PyCon JP 2022/コーディング規約自動化 Pylintのカスタムルールを作ろう」"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Rust製リンタにルールをどう追加するか</h2>
+<p>Pythonでルールを追加できるようになったものの...</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Ruff（図はREADMEより）</h3>
+<ul>
+<li><p><a class="reference external" href="https://github.com/astral-sh/ruff" rel="noreferrer" target="_blank">https://github.com/astral-sh/ruff</a></p>
+<blockquote>
+<div><p>An extremely fast Python linter and code formatter, written in Rust.</p>
+</div></blockquote>
+</li>
+</ul>
+<img alt="https://user-images.githubusercontent.com/1309177/232603514-c95e9b0f-6b31-43de-9a80-9e844173fd6a.svg" src="https://user-images.githubusercontent.com/1309177/232603514-c95e9b0f-6b31-43de-9a80-9e844173fd6a.svg"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Astral「Ruff だけあればいいでしょ」</h3>
+<ul>
+<li><p>数々のリンタ・フォーマッタをRuffに <strong>統合</strong></p>
+<blockquote>
+<div><p>Ruff can be used to replace Flake8 (plus dozens of plugins), Black, isort, pydocstyle, pyupgrade, autoflake, and more,</p>
+</div></blockquote>
+</li>
+<li><p>ルールを再実装し、800超えをカバー <a class="footnote-reference brackets" href="#ruff-rules-doc" id="id46" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ruff-rules-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id46" role="doc-backlink">13</a><span class="fn-bracket">]</span></span>
+<p>「<em>Ruff supports over 800 lint rules,</em>」 <a class="reference external" href="https://docs.astral.sh/ruff/rules/" rel="noreferrer" target="_blank">https://docs.astral.sh/ruff/rules/</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">コマンド例 <a class="footnote-reference brackets" href="#ruff-command-article" id="id47" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a></h3>
+<pre data-id="id48"><code class="console" data-noescape="" data-trim="">uvx ruff format
+uvx ruff check --fix --extend-select I
+# または uv format  # &gt;= 0.8.13</code></pre>
+<p>昨日の <a class="reference external" href="https://github.com/astral-sh/ruff/releases/tag/0.15.2" rel="noreferrer" target="_blank">Ruff 0.15.2</a> からデフォルトルールが <strong>爆増</strong> してます</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ruff-command-article" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id47" role="doc-backlink">14</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/ruff-as-python-formatter-two-commands" rel="noreferrer" target="_blank">Ruffは format と check --fix の2つのコマンドでフォーマットする</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Ruffにはプラグイン機構が無い🈚️</h3>
+<ul class="simple">
+<li><p>ルールの追加は、本家へのプルリクエストが案内される（<a class="reference external" href="https://github.com/astral-sh/ruff/blob/main/CONTRIBUTING.md" rel="noreferrer" target="_blank">CONTRIBUTING.md</a>）</p></li>
+<li><p><a class="reference external" href="https://github.com/astral-sh/ruff/issues/283" rel="noreferrer" target="_blank">Meta issue: plugin system #283</a> (2023/09 2年半以上オープン。<em>放置</em>？)</p></li>
+<li><p>自分に必要なルールを <strong>手元でRuffに追加できない</strong> 状態</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Why Astral?</h3>
+<ul class="simple">
+<li><p>高速ツールに最大級の感謝を示しつつも、率直に言って困ってます</p></li>
+<li><p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/is-ruff-superset-of-flake8-my-answer-is-no-202501" rel="noreferrer" target="_blank">RuffはFlake8の全ての要素を含んでいる、のでしょうか？</a> ― 否（互換でない）</p></li>
+<li><p><strong>速さを優先すると、機能の豊かさを失う</strong> （RuffやAstralはもっとうまく立ち回れるはず）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Ruff + カスタムルール をどう実現するか？</h3>
+<ul class="simple">
+<li><p>flake8（やpylint）との併用はない。せっかくの速さを失う</p></li>
+<li><p><strong>高速さを損なわずにカスタムルールを書く方法</strong> を求めてます（アイデア募集。廊下希望）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">IMO：代替手段</h3>
+<ol class="upperalpha simple">
+<li><p>ast-grep: Rust製ツール、カスタムルールを <strong>YAML</strong> で書く</p></li>
+<li><p><strong>Rust</strong> で直接書いてみる: RustPython/Parser</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">🅰️ ast-grep</h2>
+<ul>
+<li><p><a class="reference external" href="https://github.com/ast-grep/ast-grep" rel="noreferrer" target="_blank">https://github.com/ast-grep/ast-grep</a></p>
+<blockquote>
+<div><p>ast-grep is an abstract syntax tree based tool to search code by pattern code.</p>
+</div></blockquote>
+</li>
+<li><p><strong>ASTでgrep</strong> できる！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">使い方（一例）</h3>
+<pre data-id="id50"><code class="console" data-noescape="" data-trim="">$ uvx --from ast-grep-cli ast-grep scan --rule ast-grep-kotoha.yaml examples.py</code></pre>
+<p><a class="reference external" href="https://pypi.org/project/ast-grep-cli/" rel="noreferrer" target="_blank">https://pypi.org/project/ast-grep-cli/</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">YAMLでルールを書く</h3>
+<pre data-id="yaml"><code class="yaml" data-noescape="" data-trim="">id: do-not-use-list-as-typed-parameter
+language: Python
+rule:
+  pattern:
+    context: 'a: list[$TYPE]'
+    selector: type
+  inside:
+    kind: typed_parameter
+fix: Iterable[$TYPE]
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ast-grepにおけるAST</h3>
+<pre data-id="ast-grepast"><code class="python" data-noescape="" data-trim="">def plus_one_ng(numbers: list[str]) -&gt; list[int]: pass</code></pre>
+<pre data-id="ast-grepast"><code class="default" data-noescape="" data-trim="">  (function_definition [0, 0] - [0, 54]
+    name: (identifier [0, 4] - [0, 15])
+    parameters: (parameters [0, 15] - [0, 35]
+      (typed_parameter [0, 16] - [0, 34]
+        (identifier [0, 16] - [0, 23])
+        type: (type [0, 25] - [0, 34]
+          (generic_type [0, 25] - [0, 34]
+            (identifier [0, 25] - [0, 29])
+            (type_parameter [0, 29] - [0, 34]
+              (type [0, 30] - [0, 33]
+                (identifier [0, 30] - [0, 33])))))))
+</code></pre>
+<p><a class="reference external" href="https://ast-grep.github.io/playground.html" rel="noreferrer" target="_blank">https://ast-grep.github.io/playground.html</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">list[]</span></code> という型ヒントにマッチ</h3>
+<pre data-id="id51"><code class="yaml" data-noescape="" data-trim="">rule:
+  pattern:
+    context: 'a: list[$TYPE]'
+    selector: type
+</code></pre>
+<img alt="../_images/ast-grep-playground-list-type-hint.png" src="../_images/ast-grep-playground-list-type-hint.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">親ノードの指定を追加</h3>
+<p>typed_parameter の直下の type</p>
+<pre data-id="id52"><code class="yaml" data-line-numbers="5,6" data-noescape="" data-trim="">rule:
+  pattern:
+    context: 'a: list[$TYPE]'
+    selector: type
+  inside:
+    kind: typed_parameter
+</code></pre>
+<img alt="../_images/ast-grep-playground-list-typed-parameter.png" src="../_images/ast-grep-playground-list-typed-parameter.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ast-grepは実は <strong>tree-sitter</strong> による 🏃‍♂️</h3>
+<blockquote>
+<div><p>ast-grep's core is an algorithm to search and replace code based on abstract syntax tree produced by tree-sitter.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>tree-sitter は多言語対応</p></li>
+<li><p><a class="reference external" href="https://tree-sitter.github.io/tree-sitter/" rel="noreferrer" target="_blank">https://tree-sitter.github.io/tree-sitter/</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">tree-sitter クエリの例 <a class="footnote-reference brackets" href="#tree-sitter-blog" id="id53" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a> 🏃‍♂️</h3>
+<pre data-id="tree-sitter"><code class="scheme" data-noescape="" data-trim="">(typed_parameter
+  (identifier) @param_name
+  type: (type
+    (generic_type
+      (identifier) @type_name
+      (type_parameter
+        (type
+          (identifier) @inner_type))))
+  (#eq? @type_name "list"))
+</code></pre>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="tree-sitter-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id53" role="doc-backlink">15</a><span class="fn-bracket">]</span></span>
+<p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/tree-sitter-python-query-like-flake8-kotoha" rel="noreferrer" target="_blank">tree-sitterで、関数の引数をlistで型ヒントしているPythonコードをクエリする🔍</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">🅱️ 発展：Rustで書く</h2>
+<ul class="simple">
+<li><p>この部分だけRustの知識を前提にします</p></li>
+<li><p>雰囲気だけ掴んでいただければ！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">RustPython/Parser</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/RustPython/Parser" rel="noreferrer" target="_blank">https://github.com/RustPython/Parser</a></p></li>
+<li><p>RustPythonが使うPythonパーサ（Rust製）</p></li>
+<li><p>Ruffもかつて使っていた <a class="footnote-reference brackets" href="#ruff-040-blog" id="id55" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ruff-040-blog" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id55" role="doc-backlink">16</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://astral.sh/blog/ruff-v0.4.0" rel="noreferrer" target="_blank">https://astral.sh/blog/ruff-v0.4.0</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Rust環境セットアップ</h3>
+<ul>
+<li><p><a class="reference external" href="https://rustup.rs/" rel="noreferrer" target="_blank">rustup</a> でRust環境を導入</p></li>
+<li><p><strong class="command">cargo</strong> でRustのプロジェクトを管理</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>AstralはPythonにおけるcargoとしてuvを提案している</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">PythonコードをRustでパース</h3>
+<pre data-id="pythonrust"><code class="rust" data-noescape="" data-trim="">use rustpython_parser::{Parse, ast};
+
+fn main() {
+    let python_source = r#"
+def plus_one_ng(numbers: list[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]
+"#;
+    let ast = ast::Suite::parse(python_source, "&lt;embedded&gt;");
+    assert!(ast.is_ok());
+    println!("{:#?}", ast.unwrap());
+}</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">RustPython/ParserのAST</h3>
+<pre data-id="rustpython-parserast"><code class="default" data-noescape="" data-trim="">        StmtFunctionDef {
+            range: 1..86,
+            name: Identifier(
+                "plus_one_ng",
+            ),
+            args: Arguments {
+                range: (),
+                posonlyargs: [],
+                args: [
+                    ArgWithDefault {
+                        range: (),
+                        def: Arg {
+                            range: 17..35,
+                            arg: Identifier(
+                                "numbers",
+                            ),
+                            annotation: Some(
+                                Subscript(
+                                    ExprSubscript {
+                                        range: 26..35,
+                                        value: Name(
+                                            ExprName {
+                                                range: 26..30,
+                                                id: Identifier(
+                                                    "list",
+                                                ),
+                                                ctx: Load,
+                                            },
+                                        ),
+                                        slice: Name(
+                                            ExprName {
+                                                range: 31..34,
+                                                id: Identifier(
+                                                    "int",
+                                                ),
+                                                ctx: Load,
+                                            },
+                                        ),
+                                        ctx: Load,
+                                    },
+                                ),
+                            ),
+                            type_comment: None,
+                        },
+                        default: None,
+                    },
+                ],
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">rustpython-astのvisitor feature</h3>
+<pre data-id="rustpython-astvisitor-feature"><code class="rust" data-noescape="" data-trim="">use rustpython_ast::{Arguments, Visitor};
+
+struct KotohaVisitor&lt;'a&gt; {
+    source: &amp;'a str,
+}
+
+impl Visitor for KotohaVisitor&lt;'_&gt; {
+    fn visit_arguments(&amp;mut self, node: Arguments) {
+        // ここに処理を書く
+    }
+}</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Python実装と同様の指摘</h3>
+<pre data-id="id57"><code class="python" data-noescape="" data-trim="">def plus_one_ng(numbers: list[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]
+
+def plus_one_ok(numbers: Iterable[int]) -&gt; list[int]:
+    return [n + 1 for n in numbers]</code></pre>
+<pre data-id="id57"><code class="console" data-noescape="" data-trim="">$ cargo run -q
+Fix type hint `numbers: list[int]` at 2:17</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">小まとめ🥟 Rust製リンタにルールをどう追加するか</h3>
+<ul class="simple">
+<li><p>プラグインがないRuffをカスタムルールと一緒に動かしたい</p></li>
+<li><p><strong>ast-grep</strong>：Rust製ツールで、YAMLでルールを書く</p></li>
+<li><p>RustPython/Parserを使って <strong>Rustも書いてみた</strong> （生成AIサポート）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 Pythonのリンタのルールを作ろう</h2>
+<ul class="simple">
+<li><p>Pythonコードのスタイルの指摘はリンタに任せよう</p></li>
+<li><p>自分が欲しいルールが見つからないときは <strong>自分で書こう</strong></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Pythonでリンタのルールを書く</h3>
+<ul class="simple">
+<li><p>標準ライブラリastで抽象構文木を見ながら <strong>指摘したいPythonノードの処理をvisitorに追加</strong></p></li>
+<li><p>既存のリンタのプラグインにしてルール追加</p></li>
+<li><p>💡ルールが書けたら、CLIからのファイルの読み込みなどを足していけばリンタが作れるじゃん！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Ruff + カスタムルール</h3>
+<ul class="simple">
+<li><p>ast-grep（<strong>YAML</strong> でルールを書く）</p></li>
+<li><p>この機会にRustを書いちゃおう🌟</p></li>
+<li><p>Astralはさすがにそろそろプラグインを追加してください🙏（私も挑みます）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<p>Happy Python Development♪</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

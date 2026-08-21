@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Codex開発基礎</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/stapy-syncable/develop-with-codex-101.html">
+    <meta property="og:title" content="Codex Ambassador直伝！Codex開発基礎">
+    <meta property="og:description" content="小規模開発のリアルを語ろう">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/stapy-syncable.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Codex開発基礎</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>小規模開発のリアルを語ろう</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/06/23 nikkie（Codex Ambassador直伝！）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex App を使った開発を体験しましょう</h2>
+<ul class="simple">
+<li><p>まずはインストールを</p></li>
+<li><p>nikkieはデモの都合で <code class="docutils literal notranslate"><span class="pre">/高速</span></code></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex Appインストール</h3>
+<ul class="simple">
+<li><p>Appタブ <a class="reference external" href="https://developers.openai.com/codex/quickstart#setup" rel="noreferrer" target="_blank">https://developers.openai.com/codex/quickstart#setup</a></p></li>
+<li><p>macOSまたはWindows（Linuxの方ごめんなさい🙏）</p></li>
+<li><p>ChatGPTのアカウントでサインイン</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー） <a class="footnote-reference brackets" href="#nikkie-uuid" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a></p></li>
+<li><p>機械学習エンジニア（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/Newgrads28_002" rel="noreferrer" target="_blank">サマーインターン募集中</a>）・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-uuid" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>UUID <a class="reference external" href="https://x.com/ftnext/status/2041119610368602138" rel="noreferrer" target="_blank">28fb3f96-a221-462c-93bd-567b431715b9</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex App触っていきましょう</h2>
+<p><strong>ユースケースを体験</strong> しましょう</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex <a class="footnote-reference brackets" href="#codex-jp-page" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></h2>
+<ul class="simple">
+<li><p>powered by <strong>ChatGPT</strong> (OpenAI)</p></li>
+<li><p>ChatGPT <strong>無料版でも</strong> 使えます（アカウントでサインイン）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-jp-page" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://openai.com/ja-JP/codex/" rel="noreferrer" target="_blank">https://openai.com/ja-JP/codex/</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">多様な形態 <a class="footnote-reference brackets" href="#codex-quickstart" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p><strong>App</strong></p></li>
+<li><p>CLI</p></li>
+<li><p>IDE拡張</p></li>
+<li><p>Web</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-quickstart" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/quickstart#setup" rel="noreferrer" target="_blank">https://developers.openai.com/codex/quickstart#setup</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">料金体系</h3>
+<ul class="simple">
+<li><p><strong>5時間</strong> 利用枠と <strong>1週間</strong> 利用枠がある <a class="footnote-reference brackets" href="#go-usage-limits" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+<li><p>両方の枠内でなら追加課金不要</p></li>
+<li><p>5時間ぶん回して$40超えるAPIキー消費（Plus($20)の元十分取れる。5月時点）</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="go-usage-limits" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>（追記）Goは月の利用枠のみでした</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex Appインストール（みなさんは済み）</h3>
+<p><a class="reference external" href="https://developers.openai.com/codex/app#getting-started" rel="noreferrer" target="_blank">https://developers.openai.com/codex/app#getting-started</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">言語設定</h3>
+<ul class="simple">
+<li><p>Settings（左下） &gt; Settings &gt; General &gt; General &gt; Language &gt; 日本語</p></li>
+<li><p>設定（左下） &gt; 設定 &gt; 個人設定の一般 &gt; 一般 &gt; 言語 &gt; 日本語</p></li>
+<li><p>副作用として <em>コマンドまで日本語化</em> されます</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">0️⃣チャットしてみる</h2>
+<img alt="../_images/codex-app-chat.png" src="../_images/codex-app-chat.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">「こんにちは」</h3>
+<img alt="../_images/codex-app-chat-thread.png" src="../_images/codex-app-chat-thread.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">モデルと推論（例「5.5 中」）</h3>
+<ul class="simple">
+<li><p>モデル：GPT-5.5の選択</p></li>
+<li><p>過去のモデルも選べますが、 <strong>5.5から始めましょう</strong></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">モデルと推論（例「5.5 中」）</h3>
+<ul class="simple">
+<li><p>推論：低(low)・中(medium)・高(high)・非常に高い(xhigh)</p></li>
+<li><p>mediumがバランス取れていてデフォルト</p></li>
+<li><p>私の場合は <strong>high</strong> がしっくりきました</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">「速度」に注意⚠️</h3>
+<ul class="simple">
+<li><p>「高速」はここぞというときに（デフォルトでONかも）</p></li>
+<li><p><strong>「標準」で十分</strong> です</p></li>
+<li><p>個人設定の一般 &gt; 一般 &gt; 速度</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スレッドという概念</h3>
+<ul class="simple">
+<li><p><strong>1つのチャットが1スレッド</strong></p></li>
+<li><p>話題が変わったら新しいチャット（スレッド）にしましょう</p></li>
+<li><p>複数スレッドを並行して扱いやすくてApp推し（<em>git worktree</em> との相性もよし）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スレッドの操作</h3>
+<ul class="simple">
+<li><p>アーカイブ（不要になったら非表示に）</p></li>
+<li><p>ピン</p></li>
+<li><p><kbd class="kbd docutils literal notranslate">⌘</kbd>+<kbd class="kbd docutils literal notranslate">K</kbd> <kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">K</kbd> のメニューで移動</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">1️⃣コードベースを理解する</h2>
+<p>ユースケース <a class="reference external" href="https://developers.openai.com/codex/use-cases/codebase-onboarding" rel="noreferrer" target="_blank">Understand large codebases</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>プロジェクト</strong> 設定</h3>
+<ul class="simple">
+<li><p>チャットではなくその上の「プロジェクト」</p></li>
+<li><p>「既存のフォルダーを使用」から読ませたいディレクトリを選択</p></li>
+<li><p>例：<a class="reference external" href="https://github.com/django/django" rel="noreferrer" target="_blank">Django</a> をcloneしてきた</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自然言語でコードベースに質問</h3>
+<blockquote>
+<div><p>Tell me about this project</p>
+</div></blockquote>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codexのイメージはシェル芸人 <a class="footnote-reference brackets" href="#lunchwithai-2025-codex2" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>プロジェクトのルートディレクトリしか知らない</p></li>
+<li><p><strong>コマンドを実行して調査</strong>。回答を返す</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="lunchwithai-2025-codex2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id22" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>過去のLTより <a class="reference external" href="https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/4" rel="noreferrer" target="_blank">https://ftnext.github.io/2025-slides/lunchwithai-codex2/invincible-code-reading.html#/4</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">もちろん <strong>開発</strong> もできます</h3>
+<ul class="simple">
+<li><p>コードを書かせる（+ <code class="docutils literal notranslate"><span class="pre">/プランモード</span></code>）</p></li>
+<li><p><a class="reference external" href="https://developers.openai.com/codex/app/review" rel="noreferrer" target="_blank">/コードレビュー</a></p></li>
+<li><p>バグの調査</p></li>
+<li><p>開発の自動化</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://developers.openai.com/codex/concepts/sandboxing/auto-review" rel="noreferrer" target="_blank">代理で承認</a> （イチオシ！）</h3>
+<ul class="simple">
+<li><p>Codexがコマンドを実行したいとき、人間に許可を求める</p></li>
+<li><p>「代理で承認」は、人間の代わりに（別の）Codexが許可・拒否を判断する（おすすめ）</p></li>
+<li><p>設定 &gt; 権限 &gt; 自動レビュー（有効にする）</p></li>
+</ul>
+</section>
+<section>
+<a class="reference external image-reference" href="https://developers.openai.com/codex/concepts/sandboxing#how-you-control-it" rel="noreferrer" target="_blank"><img alt="../_images/openai-docs-auto-review-image.png" src="../_images/openai-docs-auto-review-image.png"/>
+</a>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex App、<strong>めっちゃ高機能</strong>！</h3>
+<p><a class="reference external" href="https://developers.openai.com/codex/app/features" rel="noreferrer" target="_blank">https://developers.openai.com/codex/app/features</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">おすすめ動画</h3>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="315" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/LoX9_dnXthc?si=pzwvD_FUClL1bzcg" title="YouTube video player" width="560"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">2️⃣Codexに専門知識を与える</h2>
+<p><em>Agent Skills</em></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAIのドキュメントに質問できる</h3>
+<ul>
+<li><p>「チャット」セクションにて $openai -&gt;「OpenAI Docs」選択（システムに組み込みのスキル）</p>
+<blockquote>
+<div><p>$openai-docs Responses APIについて教えて</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://agentskills.io/home" rel="noreferrer" target="_blank">Agent Skills</a></h3>
+<ul>
+<li><p>Anthropic提案</p>
+<blockquote>
+<div><p>extending AI agent capabilities with specialized knowledge and workflows.</p>
+</div></blockquote>
+</li>
+<li><p>どんな専門知識があるかだけ知っている（nameとdescription）。   <strong>詳細を参照するのは必要になった時</strong></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">$openai-docs</h3>
+<blockquote>
+<div><p>Use when the user asks how to build with OpenAI products or APIs,（略）(<em>description</em>)</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>「OpenAIのResponses APIについて教えて」でも（多数の場合）発火</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">$openai-docs の仕組み</h3>
+<ul class="simple">
+<li><p>OpenAIは <a class="reference external" href="https://developers.openai.com/learn/docs-mcp" rel="noreferrer" target="_blank">開発者ドキュメントのMCPサーバ</a> を提供（MCPクライアントから誰でも使えます）</p></li>
+<li><p><a class="reference external" href="https://github.com/openai/codex/tree/rust-v0.142.0/codex-rs/skills/src/assets/samples/openai-docs" rel="noreferrer" target="_blank">$openai-docs</a> skill記載の使い方に沿って、CodexがMCPサーバを使っているだけ</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">$openai-docs にはCodexの質問も可能</h3>
+<p><a class="reference external" href="https://developers.openai.com/codex/codex-manual.md" rel="noreferrer" target="_blank">https://developers.openai.com/codex/codex-manual.md</a> に基づいて回答する仕組みあり</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">IMO：この世は <em>スキルゲー</em> （<strong>専門知識の装備</strong>）</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md" rel="noreferrer" target="_blank">$find-skills</a></p></li>
+<li><p><a class="reference external" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md" rel="noreferrer" target="_blank">$grilling</a> （尋問してきます）</p></li>
+<li><p><a class="reference external" href="https://github.com/openai/plugins/tree/main/plugins/superpowers" rel="noreferrer" target="_blank">$superpowers</a> （後述の <em>プラグイン</em>。入念に設計してからテスト駆動開発で実装）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">スキルをインストールするツール</h3>
+<ul class="simple">
+<li><p>Codex Appには <a class="reference external" href="https://github.com/openai/codex/tree/rust-v0.142.0/codex-rs/skills/src/assets/samples/skill-installer" rel="noreferrer" target="_blank">$skill-installer</a> （組み込み）</p></li>
+<li><p>Vercelによる npx <a class="reference external" href="https://www.npmjs.com/package/skills" rel="noreferrer" target="_blank">skills</a></p></li>
+<li><p><a class="reference external" href="https://cli.github.com/manual/gh_skill" rel="noreferrer" target="_blank">gh skills</a> や <a class="reference external" href="https://github.com/microsoft/apm" rel="noreferrer" target="_blank">apm</a> もある（どれか1ツールで十分です）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">3️⃣プラグインを設定してCodexに開発させる</h2>
+<p>例：OpenAIのAPIを使ったアプリケーション開発</p>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Use the OpenAI Developers plugin in Codex to build faster with OpenAI tools by setting up API keys, finding the right docs, and debugging along the way. <a href="https://t.co/ztBd3h3oeb">pic.twitter.com/ztBd3h3oeb</a></p>— OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2066634415955136728?ref_src=twsrc%5Etfw">2026年6月15日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">プラグイン <a class="footnote-reference brackets" href="#codex-plugin-doc" id="id34" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> とは、<strong>まとめ</strong> てワークフローを提供</h3>
+<ul class="simple">
+<li><p>MCPサーバ</p></li>
+<li><p>Agent Skill</p></li>
+<li><p><em>アプリ</em> (?)</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="codex-plugin-doc" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id34" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developers.openai.com/codex/plugins" rel="noreferrer" target="_blank">https://developers.openai.com/codex/plugins</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAI Developersプラグイン</h3>
+<img alt="../_images/codex-app-plugin-openai.png" src="../_images/codex-app-plugin-openai.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codexに指示して <a class="reference external" href="https://platform.openai.com/api-keys" rel="noreferrer" target="_blank">APIキー</a> を作る</h3>
+<blockquote>
+<div><p>OpenAIのAPIキーを新しく作って</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Playgroundプロジェクト（Gitリポジトリではない）</p></li>
+<li><p>OpenAIにクレジットカード登録が必要と思われます</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Responses APIを使ったチャットアプリ</h3>
+<blockquote>
+<div><p>Responses APIを使ったチャットボットをPythonで実装して。Realtime APIを使った音声チャットモードも合わせて。</p>
+</div></blockquote>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAI Developersプラグインを使って</h3>
+<ul class="simple">
+<li><p>APIキー作成（アプリ。要所は人間が許可する）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$openai-docs</span></code> で必要なドキュメント参照</p></li>
+</ul>
+<p>Codexが <strong>自分で調べて実装を進めていける</strong></p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Codex Appで業務自動化も</h2>
+<ul class="simple">
+<li><p>コーディング以外もお任せ！</p></li>
+<li><p><a class="reference external" href="https://openai.com/ja-JP/index/codex-for-almost-everything/" rel="noreferrer" target="_blank">（ほぼ）あらゆる作業に対応する Codex</a> (Codex for (almost) everything)</p></li>
+</ul>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Show Codex a workflow once. Reuse it as a skill.<br/><br/>Record &amp; Replay lets you show Codex a recurring task, like filing an expense report or submitting a time-off request.<br/><br/>Codex turns that demo into an inspectable, editable skill.<br/><br/>You control when recording starts and stops. <a href="https://t.co/UqSGaO7XUs">pic.twitter.com/UqSGaO7XUs</a></p>— OpenAI Developers (@OpenAIDevs) <a href="https://x.com/OpenAIDevs/status/2067681320281723113?ref_src=twsrc%5Etfw">2026年6月18日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ペットはいいぞ</h3>
+<ul class="simple">
+<li><p>設定 &gt; 個人設定のPets &gt; <strong>選べます</strong></p></li>
+<li><p><a class="reference external" href="https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet" rel="noreferrer" target="_blank">$hatch-pet</a> で自作できます</p></li>
+<li><p>拙ブログ <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/codex-app-pet-feature-hatch-pet-skill-realize-my-idol" rel="noreferrer" target="_blank">Codex App で"ペットが飼える"ようになったと聞きまして</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：Codex開発基礎</h2>
+<ul class="simple">
+<li><p>Codex Appをインストール</p></li>
+<li><p>既存のコードベースをプロジェクトに開き自然言語で質問</p></li>
+<li><p>Agent Skillsで専門知識を与える</p></li>
+<li><p>自分で開発するのに必要な一式を設定（プラグイン）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codex App以外にも適用できる考え方</h3>
+<ul class="simple">
+<li><p>話題が変わったらスレッド（セッション）は分ける</p></li>
+<li><p>装備させたい専門知識を設定しましょう（Agent Skills + MCP）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+<p>Happy Development♪</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

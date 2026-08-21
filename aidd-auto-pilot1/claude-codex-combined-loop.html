@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Claude Codeで実装、 Codexでレビュー、合わせて自走の企て</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/aidd-auto-pilot1/claude-codex-combined-loop.html">
+    <meta property="og:title" content="Claude Codeで実装、 Codexでレビュー、合わせて自走の企て">
+    <meta property="og:description" content="【AI駆動開発】AI自走環境構築・運用スペシャル #1">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/aidd-auto-pilot1.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Claude Codeで実装、 Codexでレビュー、合わせて自走の企て</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Claude Codeで実装、 Codexでレビュー、合わせて自走の企て</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>【AI駆動開発】AI自走環境構築・運用スペシャル #1</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/04/09 nikkie （スペース連打 or 矢印キーでめくります）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ？（<strong>Python使い</strong> の自己紹介）</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）</p></li>
+<li><p>機械学習エンジニア・LLM・自然言語処理（<a class="reference external" href="https://hrmos.co/pages/uzabase/jobs/1829077236709650481" rel="noreferrer" target="_blank">We're hiring!</a>）</p></li>
+<li><p><a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A提供</a>）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>自走</strong> に強い興味 <a class="footnote-reference brackets" href="#auto-pilot-article" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></h3>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/6f8da4e8af70435693f4fdd940e956e4?slide=3" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="夜を制する者が “AI Agent 大民主化時代” を制する"></iframe><aside class="footnote-list brackets">
+<aside class="footnote brackets" id="auto-pilot-article" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/memorandum-auto-pilot-coding-agent-at-night-202602" rel="noreferrer" target="_blank">散文：夜に駆ける</a> や <a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/devin-pull-request-github-copilot-review-devin-fix-auto-loop-first-step" rel="noreferrer" target="_blank">Devin からの pull request に GitHub Copilot で自動的にレビューし、Devin に自動的に修正してもらう</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">直近の個人開発フロー</h2>
+<p>私は <strong>合わせて</strong> 使っています</p>
+<ul class="simple">
+<li><p>Claude Code</p></li>
+<li><p>Codex CLI</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Claude Codeで実装（<code class="docutils literal notranslate"><span class="pre">/feature-dev</span></code>）使ってる方🙋</h3>
+<pre data-id="claude-code-feature-dev"><code class="txt" data-noescape="" data-trim="">/feature-dev Add user authentication with OAuth</code></pre>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/anthropics/claude-plugins-official" rel="noreferrer" target="_blank">claude-plugins-official</a> marketplaceの <a class="reference external" href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev" rel="noreferrer" target="_blank">feature-dev</a> プラグイン</p></li>
+</ul>
+<pre data-id="claude-code-feature-dev"><code class="shell" data-noescape="" data-trim="">% claude plugins marketplace add https://github.com/anthropics/claude-plugins-official
+% claude plugins install feature-dev@claude-plugins-official</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">鹿野さんもおすすめ</h3>
+<blockquote>
+<div><div class="line-block">
+<div class="line">手戻りを減らしたい</div>
+<div class="line">Claude Codeのfeature-devプラグインを使う</div>
+</div>
+</div></blockquote>
+<p>3/11 <a class="reference external" href="https://zenn.dev/ubie_dev/articles/claude-code-tips-findy-2026#%E6%89%8B%E6%88%BB%E3%82%8A%E3%82%92%E6%B8%9B%E3%82%89%E3%81%97%E3%81%9F%E3%81%84" rel="noreferrer" target="_blank">Claude Codeを加速させる私の推しスキル・ツール・設定（Findyイベント登壇資料）</a></p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://claude.com/plugins/feature-dev" rel="noreferrer" target="_blank">Feature Dev</a></h3>
+<blockquote>
+<div><p>A structured 7-phase workflow</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>code-explorer (Phase 2)</p></li>
+<li><p>code-architect (Phase 4)</p></li>
+<li><p>code-reviewer (Phase 6)</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実装し切ったらCodexでレビュー（使ってる方🙋）</h3>
+<ul class="simple">
+<li><p><strong class="command">codex review --base main</strong></p></li>
+<li><p>インタラクティブでないレビュー。時間がかかるが非常に鋭い</p></li>
+<li><p>（Slash command <code class="docutils literal notranslate"><span class="pre">/review</span></code> もある）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OpenAIはCodexで一通りレビュー</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">今やっている Agents SDK の開発では gpt-5-codex による考慮漏れのレビューで何度も救ってもらっているし、チームの中では codex のレビューは全部自動で走っていて、それを一通りやった上で人の目が入るようになってきています。</p>— Kazuhiro Sera (瀬良) (@seratch_ja) <a href="https://twitter.com/seratch_ja/status/1971925353741561877?ref_src=twsrc%5Etfw">2025年9月27日</a></blockquote> <script async="" charset="utf-8" src="https://platform.twitter.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">直近の開発フロー まとめ</h3>
+<img alt="../_images/claude-codex-human-loop.drawio.png" src="../_images/claude-codex-human-loop.drawio.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/openai/codex-plugin-cc" rel="noreferrer" target="_blank">openai/codex-plugin-cc</a> は有効性の証左？ 🏃‍♂️</h3>
+<blockquote>
+<div><p>Claude Code のワークフローを維持したまま、Codex が強い場面だけ Codex を使えるようにする（<a class="reference external" href="https://x.com/reach_vb/status/2039251986357338257" rel="noreferrer" target="_blank">Claude Code 向け Codex Plugin の紹介</a>）</p>
+</div></blockquote>
+<pre data-id="id8"><code class="txt" data-noescape="" data-trim="">/codex:review</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">適用事例：Pythonファイルに以下を書き込む</h3>
+<div class="literal-block-wrapper docutils container" id="id31">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://packaging.python.org/ja/latest/specifications/inline-script-metadata/" rel="noreferrer" target="_blank">inline script metadata</a> <a class="footnote-reference brackets" href="#pyconjp-2024-pep723" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></span></div>
+<pre><code class="python" data-noescape="" data-trim=""># /// script
+# dependencies = [
+#   "httpx",
+# ]
+# ///</code></pre>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pyconjp-2024-pep723" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://2024.pycon.jp/ja/talk/89F3RQ" rel="noreferrer" target="_blank">PyCon JP 2024</a> で素晴らしさを伝えました</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><em>20行</em> の参照実装</h3>
+<div class="literal-block-wrapper docutils container" id="id32">
+<div class="code-block-caption"><span class="caption-text">荒削り(crude)な例 (<a class="reference external" href="https://peps.python.org/pep-0723/#reference-implementation" rel="noreferrer" target="_blank">PEP 723</a>)</span></div>
+<pre><code class="python" data-line-numbers="" data-noescape="" data-trim="">import re
+
+import tomlkit
+
+REGEX = r'(?m)^# /// (?P&lt;type&gt;[a-zA-Z0-9-]+)$\s(?P&lt;content&gt;(^#(| .*)$\s)+)^# ///$'
+
+def add(script: str, dependency: str) -&gt; str:
+    match = re.search(REGEX, script)
+    content = ''.join(
+        line[2:] if line.startswith('# ') else line[1:]
+        for line in match.group('content').splitlines(keepends=True)
+    )
+
+    config = tomlkit.parse(content)
+    config['dependencies'].append(dependency)
+    new_content = ''.join(
+        f'# {line}' if line.strip() else f'#{line}'
+        for line in tomlkit.dumps(config).splitlines(keepends=True)
+    )
+
+    start, end = match.span('content')
+    return script[:start] + new_content + script[end:]</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>500行</strong></h3>
+<ul class="simple">
+<li><p>重厚な実装に！ <a class="reference external" href="https://github.com/ftnext/pep723/pull/6" rel="noreferrer" target="_blank">https://github.com/ftnext/pep723/pull/6</a></p></li>
+<li><p>Codex (GPT-5.4)がPythonの仕様を熟知していて <strong>考慮漏れを指摘しまくる</strong> （10回近く）</p></li>
+<li><p>20行の参照実装をもとにClaude Code (Sonnet 4.6)で実装していたが、Opus 4.6出動</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">効果ありそう！ここで担当を整理</h3>
+<dl class="field-list simple">
+<dt class="field-odd">Claude Code<span class="colon">:</span></dt>
+<dd class="field-odd"><p>実装</p>
+</dd>
+<dt class="field-even">Codex CLI<span class="colon">:</span></dt>
+<dd class="field-even"><p>レビュー</p>
+</dd>
+<dt class="field-odd">nikkie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>受け渡し役</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">受け渡すだけの私って、 <strong>必要なくね</strong> ？</h2>
+<img alt="../_images/claude-codex-human-loop.drawio.png" src="../_images/claude-codex-human-loop.drawio.png"/>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>自動ループ</strong> の構築を試みる</h3>
+<img alt="../_images/claude-codex-loop.drawio.png" src="../_images/claude-codex-loop.drawio.png"/>
+<p>レビューで指摘がなくなったり、前回と矛盾したりしたら止まる</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">私は takt に目をつけた 🎼（使ってる方🙋）</h3>
+<ul class="simple">
+<li><p>TAKT Agent Koordination Topology</p></li>
+<li><p><a class="reference external" href="https://github.com/nrslib/takt" rel="noreferrer" target="_blank">https://github.com/nrslib/takt</a></p></li>
+<li><p>対応：Claude Code、Codex、OpenCode、Cursor、GitHub Copilot CLI (<a class="reference external" href="https://github.com/nrslib/takt/blob/v0.35.0/docs/README.ja.md" rel="noreferrer" target="_blank">v0.35.0</a>)</p></li>
+</ul>
+<pre data-id="takt"><code class="shell" data-noescape="" data-trim="">$ npm install -g takt@"&gt;=0.34.0"</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">作者nrsさんによる発信多数</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zenn.dev/nrs/articles/c6842288a526d7" rel="noreferrer" target="_blank">AIの見張り番をやめよう - AIチームを指揮するOSS「TAKT」を公開しました</a></p></li>
+<li><p>3/12 <a class="reference external" href="https://www.youtube.com/live/csJhIQFuYJw?si=8pj0UHkrAWNqfy4b&amp;t=7688" rel="noreferrer" target="_blank">Claude Code Meetup Japan #3 LT</a></p></li>
+<li><p>4/10 <a class="reference external" href="https://aid.connpass.com/event/386203/" rel="noreferrer" target="_blank">Claude Code Meetup Japan #4</a> LT &amp; 4/15 <a class="reference external" href="https://nrs-seminar.connpass.com/event/389688/" rel="noreferrer" target="_blank">配信</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">MCPでやる方法も聞きます <a class="footnote-reference brackets" href="#claude-add-codex-mcp" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> 🏃‍♂️</h3>
+<pre data-id="mcp"><code class="shell" data-noescape="" data-trim="">claude mcp add --transport stdio codex -- codex mcp-server</code></pre>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developers.openai.com/codex/cli/reference#codex-mcp-server" rel="noreferrer" target="_blank">CodexはMCPサーバになる</a> ！ <a class="footnote-reference brackets" href="#claude-mcp-serve" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="claude-add-codex-mcp" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id16" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>先のopenai/codex-plugin-ccを呼ばせてもいいかもです</p>
+</aside>
+<aside class="footnote brackets" id="claude-mcp-serve" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id17" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>Claude CodeもMCPサーバになります（<code class="docutils literal notranslate"><span class="pre">claude</span> <span class="pre">mcp</span> <span class="pre">serve</span></code>）</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">私が理解したtakt</h2>
+<ul class="simple">
+<li><p>コーディングエージェントに任せたいタスクの <strong>仕様書</strong></p></li>
+<li><p>コーディングエージェントを <strong>ワークフロー</strong> に従わせて、仕様書を実装してもらえる</p></li>
+</ul>
+<p>（完全に理解への道半ば）</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">taktのワークフロー <a class="footnote-reference brackets" href="#takt-0-34-0-rename-workflow" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p><strong>YAMLファイル</strong> を書く</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">takt</span> <span class="pre">--workflow</span> <span class="pre">&lt;workflow.yaml&gt;</span></code></p></li>
+<li><p>コーディングエージェントの動き方を <strong>プログラミング</strong></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="takt-0-34-0-rename-workflow" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id19" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>音楽の比喩(piece)を使っていたのですが、 <a class="reference external" href="https://x.com/nrslib/status/2039895144196129147" rel="noreferrer" target="_blank">v0.34.0</a> でworkflowにrenameしました</p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">例： <a class="reference external" href="https://github.com/nrslib/takt/blob/main/docs/pieces.md#workflow-with-review" rel="noreferrer" target="_blank">Workflow with Review</a> より</h3>
+<pre data-id="id21"><code class="yaml" data-noescape="" data-trim="">name: with-review
+max_movements: 10
+initial_movement: implement
+interactive_mode: passthrough
+
+steps:
+  - name: implement
+    edit: true
+    required_permission_mode: edit
+    provider_options:
+      claude:
+        allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, WebSearch, WebFetch]
+    rules:
+      - condition: Implementation complete
+        next: review
+      - condition: Cannot proceed
+        next: ABORT
+    instruction: |
+      Implement the requested changes.
+
+  - name: review
+    edit: false
+    provider_options:
+      codex:
+        allowed_tools: [Read, Glob, Grep, WebSearch, WebFetch]
+    rules:
+      - condition: Approved
+        next: COMPLETE
+      - condition: Needs fix
+        next: implement
+    instruction: |
+      Review the implementation for code quality and best practices.
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実装とレビューのループ（抜粋）</h3>
+<pre data-id="id22"><code class="yaml" data-noescape="" data-trim="">initial_movement: implement
+steps:
+  - name: implement
+    rules:
+      - condition: Implementation complete
+        next: review
+      - condition: Cannot proceed
+        next: ABORT
+
+  - name: review
+    rules:
+      - condition: Approved
+        next: COMPLETE
+      - condition: Needs fix
+        next: implement
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">実装が完了したらレビューへ</h3>
+<pre data-id="id23"><code class="yaml" data-line-numbers="5,6" data-noescape="" data-trim="">initial_movement: implement
+steps:
+  - name: implement
+    rules:
+      - condition: Implementation complete
+        next: review
+      - condition: Cannot proceed
+        next: ABORT
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">修正が必要ならレビューから実装に戻る</h3>
+<pre data-id="id24"><code class="yaml" data-line-numbers="6,7" data-noescape="" data-trim="">steps:
+  - name: review
+    rules:
+      - condition: Approved
+        next: COMPLETE
+      - condition: Needs fix
+        next: implement
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">レビューで <code class="docutils literal notranslate"><span class="pre">codex</span> <span class="pre">review</span></code> を呼ぶように指示</h3>
+<pre data-id="codex-review"><code class="yaml" data-noescape="" data-trim="">    instruction: |
+      Review the implementation for correctness, scope, and maintainability.
+      Run Codex CLI review first, then base your judgment on its output.
+      Do not modify files.
+
+      Run:
+      codex review --base main 2&gt;&amp;1
+
+      Summarize the findings and decide:
+      - If there are actionable issues, request fixes.
+      - If there are no actionable issues, approve.
+
+      If acceptable, output the status for the first rule.
+      If fixes are needed, output the status for the second rule and explain what to fix.
+</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">taktの仕様書</h3>
+<ul class="simple">
+<li><p>仕様書は渡してもいいし、 <strong>一緒に作ってもいい</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">takt</span></code> と起動すると <a class="reference external" href="https://github.com/nrslib/takt/blob/main/docs/cli-reference.ja.md#%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96%E3%83%A2%E3%83%BC%E3%83%89" rel="noreferrer" target="_blank">インタラクティブモード</a> に入って仕様書を作れる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">インタラクティブモード（抜粋）</h3>
+<pre data-id="id26"><code class="txt" data-noescape="" data-trim="">対話モードを選択してください:
+
+❯ アシスタント (default)
+    確認質問をしてから指示書を作成
+
+  パススルー  # &lt;- 仕様書が手元にある時
+    入力をそのままタスクとして渡す</code></pre>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">TAKT でやり取りせず AI との会話の末に Issue を作らせて、それを takt add #99 で引き渡すという裏テクもあります<br/><br/>調査とかしながらシームレスに移行する場合にどうぞ！ <a href="https://t.co/xEXkx5OtLn">https://t.co/xEXkx5OtLn</a></p>— nrs (@nrslib) <a href="https://twitter.com/nrslib/status/2041098219267182956?ref_src=twsrc%5Etfw">2026年4月6日</a></blockquote></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：Claude Codeで実装、 Codexでレビュー、合わせて自走の企て</h2>
+<ul class="simple">
+<li><p>直近の開発フローの紹介</p></li>
+<li><p>taktを使って <strong>自動ループ</strong> の構築を試みた（さらに育てていくぞ💪）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">直近の開発フロー</h3>
+<dl class="field-list simple">
+<dt class="field-odd">Claude Code<span class="colon">:</span></dt>
+<dd class="field-odd"><p>実装（<code class="docutils literal notranslate"><span class="pre">/feature-dev</span></code>）</p>
+</dd>
+<dt class="field-even">Codex CLI<span class="colon">:</span></dt>
+<dd class="field-even"><p>レビュー（<code class="docutils literal notranslate"><span class="pre">codex</span> <span class="pre">review</span> <span class="pre">--base</span> <span class="pre">main</span></code>）</p>
+</dd>
+<dt class="field-odd">nikkie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>受け渡し役</p>
+</dd>
+</dl>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">taktを使った自動ループ（一歩目）</h3>
+<dl class="field-list simple">
+<dt class="field-odd">implement<span class="colon">:</span></dt>
+<dd class="field-odd"><p>実装（Opus 4.6）</p>
+</dd>
+<dt class="field-even">review<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">codex</span> <span class="pre">review</span></code> を呼び出してレビュー（Opus 4.6）</p>
+</dd>
+</dl>
+<p>止まるまで繰り返し実行される</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Happy Development ❤️🤖</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">OSSサポートに感謝申し上げます</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Uberi/speech_recognition" rel="noreferrer" target="_blank">SpeechRecognition</a> (9k star) メンテナ</p></li>
+<li><p><a class="reference external" href="https://claude.com/contact-sales/claude-for-oss" rel="noreferrer" target="_blank">Claude for Open Source</a></p></li>
+<li><p><a class="reference external" href="https://openai.com/ja-JP/form/codex-for-oss/" rel="noreferrer" target="_blank">Codex for Open Source</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h2>
+</section>
+</section>
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

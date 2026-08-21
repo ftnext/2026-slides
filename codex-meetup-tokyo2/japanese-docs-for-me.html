@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Codexの ドキュメント 日本語化計画</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides//.html">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Codexの ドキュメント 日本語化計画</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Codex Meetup Tokyo #2</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/08/07 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://codex-docs-ja.nikkie-ftnext.workers.dev/" rel="noreferrer" target="_blank">https://codex-docs-ja.nikkie-ftnext.workers.dev/</a></h2>
+<a class="reference internal image-reference" href="../_images/qrcode_codex-docs-ja.nikkie-ftnext.workers.dev.png"><img alt="../_images/qrcode_codex-docs-ja.nikkie-ftnext.workers.dev.png" height="405" src="../_images/qrcode_codex-docs-ja.nikkie-ftnext.workers.dev.png" width="405"/>
+</a>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Codexのドキュメント日本語化計画</h3>
+<ul class="simple">
+<li><p>Codexのドキュメントを <strong>日本語化</strong> しました</p></li>
+<li><p><strong>私が読む</strong> ためのものです</p></li>
+<li><p>OpenAIさんが公式翻訳したら吹き飛びます</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a>・Devin Ambassador</p></li>
+<li><p>機械学習エンジニア・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260701/" rel="noreferrer" target="_blank">MCP</a> 提供）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Skill $openai-docs</h2>
+<ul class="simple">
+<li><p>使ったことある方？</p></li>
+<li><p>OpenAIのAPIやCodexについて質問するとCodexが使う（ことが多い）</p></li>
+</ul>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="ja">Codex Appだと$\openai-docs skillが最初から使える状態ではないかと思います<a href="https://t.co/iyckF7wvjs">https://t.co/iyckF7wvjs</a><br/>これはClaude Codeのguide subagentと近い存在で、Codexのドキュメントのmarkdownを取得してCodexについて回答してくれます。OpenAI Developer Docs MCPも使うのでResponses APIなども知ってます <a href="https://t.co/dnD9j3SbSa">https://t.co/dnD9j3SbSa</a></p>— nikkie(にっきー) / にっP (@ftnext) <a href="https://x.com/ftnext/status/2073774899328585787?ref_src=twsrc%5Etfw">2026年7月5日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">何が書いてある？</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/openai/skills/blob/main/skills/.curated/openai-docs/SKILL.md" rel="noreferrer" target="_blank">https://github.com/openai/skills/blob/main/skills/.curated/openai-docs/SKILL.md</a></p></li>
+<li><p><a class="reference external" href="https://developers.openai.com/resources/docs-mcp/" rel="noreferrer" target="_blank">OpenAI developer docs MCP server</a></p></li>
+<li><p>Codexについては <a class="reference external" href="https://github.com/openai/skills/blob/main/skills/.curated/openai-docs/scripts/fetch-codex-manual.mjs" rel="noreferrer" target="_blank">scripts/fetch-codex-manual.mjs</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">何を取得している？</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developers.openai.com/codex/codex-manual.md" rel="noreferrer" target="_blank">https://developers.openai.com/codex/codex-manual.md</a></p></li>
+<li><p>Codexの <strong>ドキュメント（英語）を1つにまとめた</strong> ファイル（発表時点1.9MB）</p></li>
+<li><p>GPTは全部入りのこれを見て回答できる</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;"><code class="file docutils literal notranslate"><span class="pre">codex-manual.md</span></code></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://llmstxt.org/" rel="noreferrer" target="_blank">The /llms.txt file</a>：LLM向けのWebサイト表現</p></li>
+<li><p>IMO：claude-code-guideと近いものを実現してますよね</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">思い出した先行例</h3>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/e0bf5acebba944ecaf6c10f3fe04d1f7?slide=13" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="Claude Codeをどのように キャッチアップしているか"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://github.com/oikon48/cc-doc-tracker" rel="noreferrer" target="_blank">oikon48/cc-doc-tracker</a></h3>
+<ul class="simple">
+<li><p>Oikonさんによる、Claudeのドキュメントの <strong>トラッカー</strong></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">codex-manual.md</span></code> （やリンク先）についてパクった</p></li>
+<li><p>Build WeekにGPT-5.6 Sol(中)にやってもらいました</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">日本語翻訳</h2>
+<ul class="simple">
+<li><p>なぜなら <strong>私が読みたい</strong> から！通読したい</p></li>
+<li><p>GPTには不要。英語の <code class="file docutils literal notranslate"><span class="pre">codex-manual.md</span></code> や他のドキュメントを読んで日本語で回答できる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Lunaで日英翻訳</h3>
+<ul class="simple">
+<li><p>APIキーを使ってLunaで日本語翻訳するPythonスクリプト</p></li>
+<li><p>Solに翻訳の様子を監督させる（現在150ドキュメント）</p></li>
+<li><p>眺めてみましょう <a class="reference external" href="https://codex-docs-ja.nikkie-ftnext.workers.dev/" rel="noreferrer" target="_blank">https://codex-docs-ja.nikkie-ftnext.workers.dev/</a></p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯：Codexのドキュメント日本語化計画</h2>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">codex-manual.md</span></code> をトラックする仕組みを作りました</p></li>
+<li><p>手元にドキュメントの英語マークダウンを得たのでLunaで日本語翻訳しました</p></li>
+<li><p>読む同士がいたらお気づきの点は <a class="reference external" href="https://github.com/ftnext/codex-docs-ja-discussions" rel="noreferrer" target="_blank">discussions</a> へどうぞ</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Build Weekは力尽きたので、今回発表の場をありがとうございます！</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
