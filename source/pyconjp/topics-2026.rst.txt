@@ -20,7 +20,7 @@ Part4 2026年で考えたいトピック
 uvは速い [#how-uv-got-so-fast]_
 ------------------------------------------------------------
 
-* Python処理系を介さず、バイナリで動作（Rust製）だけでなく
+* Python処理系を介さない（Rust実装・バイナリ動作）だけでなく
 * PyCon US 2026にて開発者による「`Peeking under the hood of uv run <https://us.pycon.org/2026/schedule/presentation/77/>`__」
 
     * 高速化のためのキャッシュの超積極活用（``uv cache dir`` ご覧あれ）
@@ -30,9 +30,8 @@ uvは速い [#how-uv-got-so-fast]_
 uvがコーディングエージェントにベスト？
 ------------------------------------------------------------
 
-* コーディングエージェントは一般に書き込めるディレクトリの制限がある [#gpt-5.6-sol-uv-cache]_
-* ``uv run`` が（書き込めるディレクトリとは別の）キャッシュを積極利用するために、 *余計な設定* が必要
-
+* 安全に使うため書き込めるディレクトリは制限されている [#gpt-5.6-sol-uv-cache]_
+* コーディングエージェントが ``uv run`` するとき、 **書き込めるディレクトリとは別** のキャッシュに書き込むことに
 
 .. [#gpt-5.6-sol-uv-cache] GPT-5.6 Solは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
 
@@ -40,14 +39,15 @@ uvのキャッシュを考慮してコーディングエージェントを設定
 ------------------------------------------------------------
 
 .. code-block:: toml
-    :caption: Codexの例（:file:`.codex/config.toml`）
+    :caption: リポジトリの :file:`.codex/config.toml`
 
     [sandbox_workspace_write]
     writable_roots = [
-        "/Users/nikkie/.cache/uv",
+        "/Users/nikkie/.cache/uv",  # uvのキャッシュ自体への書き込み許可
+    #     "/Users/nikkie/.cache/codex/awesome-repo/uv",  # そのリポジトリ用のuvのキャッシュで運用
     ]
 
-* コーディングエージェントには ``uv run pytest`` を渡さず、 **.venv/bin/pytest** [#adk-python-agents-md]_
+* 別案：コーディングエージェントには ``uv run pytest`` を渡さず、 **.venv/bin/pytest** [#adk-python-agents-md]_
 
 .. [#adk-python-agents-md] https://github.com/google/adk-python/blob/v1.39.0/AGENTS.md#setup-instructions
 
@@ -84,20 +84,20 @@ LiteLLMへの攻撃で状況は大きく変わった
 「最新版には悪意あるコードが入っているかも」
 ------------------------------------------------------------
 
-* ロックファイルがあるPythonプロジェクトなら最新版を取りに行かないのでリスクは低い
-* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ といった使い方でロックファイルを作っていない
+* ロックファイルがあるPythonプロジェクトなら最新版は取りに行かない（踏むリスク低）
+* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ といった使い方で *ロックファイルを作っていない*
 
 .. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
 
-ロックファイルがない状況で最新版インストールのリスクを減らすには
+ロックファイルがない状況で最新版インストールのリスクを減らす
 ----------------------------------------------------------------------
 
 * cooldownの設定
 * セキュアなインデックスへの切り替え
 
-完璧な1つの対策はない。どの対策にも穴があるが重ね合わせて貫通しなくする🧀
+完璧な1つの対策はない。どの対策にも穴があるが重ね合わせて貫通しなくする🧀 [#swiss-cheese-model]_
 
-.. スイスチーズモデル
+.. [#swiss-cheese-model] `スイスチーズモデル <https://ja.wikipedia.org/wiki/%E3%82%B9%E3%82%A4%E3%82%B9%E3%83%81%E3%83%BC%E3%82%BA%E3%83%A2%E3%83%87%E3%83%AB>`__
 
 cooldown
 ------------------------------------------------------------
@@ -105,7 +105,7 @@ cooldown
 最新版を一定期間避ける設定。コミュニティが攻撃を検出し、隔離・削除
 
 .. code-block:: toml
-   :caption: :file:`~/.config/uv/uv.toml`
+   :caption: :file:`~/.config/uv/uv.toml` [#uv-exclude-newer]_
 
    exclude-newer = "7 days"
 
@@ -116,6 +116,8 @@ cooldown
     uploaded-prior-to=P7D
 
 .. https://nikkie-ftnext.hatenablog.com/entry/python-package-installer-how-to-cooldown-after-compromised-litellm
+
+.. [#uv-exclude-newer] 出た直後のバグフィックスを当てるために `--exclude-newer-package=foobar=false <https://docs.astral.sh/uv/reference/cli/#uv-run--exclude-newer-package>`__
 
 セキュアなインデックス
 ------------------------------------------------------------
@@ -128,7 +130,7 @@ cooldown
 ------------------------------------------------------------
 
 * 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
-* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないと思います（**cooldown** を案内しては）
+* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないですよね（**cooldown** を案内しては）
 
 .. TODO https://astral.sh/blog/uv-audit
 
@@ -136,4 +138,4 @@ Part4 まとめ🥟2026年で考えたいトピック
 ============================================================
 
 * IMO：コーディングエージェントには ``uv run`` よりも ``.venv/bin/python`` を指示したい
-* 最新版のインストールがリスクになっており、cooldownはじめ複数の防御策を組み合わせましょう
+* 最新版のインストールがリスクに。cooldownはじめ複数の防御策を組み合わせましょう

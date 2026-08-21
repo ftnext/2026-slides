@@ -12,25 +12,28 @@ Part1 仮想環境はなぜ必要か
     usage: python3.14 -m venv ENV_DIR [ENV_DIR ...]
 
 .. code-block:: shell
-    :caption: :file:`.venv/` というディレクトリができている
+    :caption: :file:`.venv/` というディレクトリができている [#venv-upgrade-deps]_
 
     % python3.14 -m venv .venv --upgrade-deps
     % ls -al
     drwxr-xr-x@  7 nikkie  staff       224  8月 20 23:54 .venv
 
-.. https://nikkie-ftnext.hatenablog.com/entry/python-venv-upgrade-deps-option
+.. [#venv-upgrade-deps] 拙ブログ `Pythonのvenvの--upgrade-depsオプションは、どこから来てどこへ行くのか <https://nikkie-ftnext.hatenablog.com/entry/python-venv-upgrade-deps-option>`__
 
 なぜディレクトリを作るのか
 ------------------------------------------------------------
 
 * **サードパーティライブラリ** のインストール先にするため
-* 仮に仮想環境を使わない場合、インストール先はマシンの中に処理系ごとに1箇所
 * あるパッケージのバージョン違いがマシンに共存可能になる（図解続く）
 
-.. revealjs-break::
-    :notitle:
+仮想環境を使わないとしたら、インストール先は1箇所
+------------------------------------------------------------
 
 .. image:: ../_static/pyconjp/system-site-packages-version-conflict.drawio.png
+    :alt: 仮に仮想環境を使わない場合、インストール先はマシンの中に処理系ごとに1箇所
+
+仮想環境で共存可能に
+------------------------------------------------------------
 
 .. revealjs-break::
     :notitle:

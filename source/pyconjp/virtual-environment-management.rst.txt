@@ -1,19 +1,23 @@
 Part2 仮想環境の管理方法
 ============================================================
 
+Pythonプロジェクトの話
+
 かつて人力、今はツールへ
 
-人力パッケージ管理を指南 [#why-python-m]_
+人力仮想環境管理を指南 [#we-are-package-manager]_
 ============================================================
 
 .. code-block:: bash
-    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
+    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__ [#why-python-m]_
 
     $ python -m venv .venv --upgrade-deps
     $ source .venv/bin/activate
     (.venv) $ python -m pip install httpx2
     (.venv) $ python -m pip freeze > requirements.txt
     (.venv) $ python -m pip uninstall httpx2
+
+.. [#we-are-package-manager] 拙ブログ `俺がPythonのパッケージマネージャなんだ <https://nikkie-ftnext.hatenablog.com/entry/pythonistas-are-part-of-python-package-manager-system>`__
 
 .. [#why-python-m] ``python -m``：「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
 
@@ -22,20 +26,31 @@ Part2 仮想環境の管理方法
 スクリプトからPythonプロジェクトへ
 ------------------------------------------------------------
 
-* 公式チュートリアルの範囲やスクリプトをいくつか書くだけなら人力仮想環境管理で十分
+* 公式チュートリアルの範囲やスクリプトをいくつか書くだけなら人力管理で十分
 * `Pythonプロジェクト <https://packaging.python.org/ja/latest/glossary/#term-Project>`__ では実装に加え、テストやドキュメントも
-* やりたいこと：テスト時の依存（例：pytest）は本番稼働には不要
+
+テスト時の依存は本番稼働には不要
+------------------------------------------------------------
+
+.. code-block:: txt
+    :caption: :file:`dev-requirements.txt`
+
+    -r requirements.txt
+    pytest
+    # 他開発に必要なパッケージ
+
+できなくはないが...
 
 人力管理はしんどくなる
 ------------------------------------------------------------
 
-* ``pip freeze`` で仮想環境内のパッケージをファイルに書き出す [#virtual-environment-disposable]_
-
-    * 本番用の :file:`requirements.txt` と開発用の :file:`dev-requirements.txt`
-
-* そもそも **順番が逆** では？ あるべきは、依存の組合せを解決する -> 仮想環境を同期する
+* ``pip freeze`` は仮想環境内のパッケージをファイルに書き出している [#virtual-environment-disposable]_
+* そもそも **順番が逆** では？ [#pip-tools-compile]_
+* ``pip uninstall`` は `単体アンインストール <https://nikkie-ftnext.hatenablog.com/entry/python-dependency-management-pip-only-uninstall-implementation>`__ なので、使っていないパッケージが残ることも
 
 .. [#virtual-environment-disposable] ``pip freeze`` の出力はそっくりそのまま再現するためのものだと捉えています（公式チュートリアルに仮想環境はdisposableとあります）
+
+.. [#pip-tools-compile] `pip-tools <https://pip-tools.readthedocs.io/en/stable/>`__ の ``pip-compile``
 
 .. ばんくしさん パッケージマネージャ
     https://nikkie-ftnext.hatenablog.com/entry/vaaaaanquish-python-package-manager-diy-introduction-is-awesome
@@ -46,9 +61,7 @@ Pythonプロジェクトの仮想環境管理ツールを入れることに
 * ここ10年くらい、プロジェクトの仮想環境の扱いを簡単にするツールの提案
 * 共通の性質の1つ：ロックファイル
 
-    * 依存解決結果をファイルに残し、それに仮想環境を同期する
-
-.. pip-toolsも提案されてきた
+    * まず依存解決して結果をファイルに残し、それに仮想環境を同期する
 
 .. revealjs-break::
     :notitle:
@@ -92,7 +105,7 @@ Poetry（2018〜） [#pycon-apac-2023-peacock]_
 
 .. [#python-build-standalone] `python-build-standalone <https://github.com/astral-sh/python-build-standalone>`__ の功績が大きいです
 
-.. [#astral-rye-stewardship] 2024年 `RyeはAstralが引き継ぎ <https://astral.sh/blog/uv>`__ ました
+.. [#astral-rye-stewardship] 2024年 `RyeはAstralが引き継ぎ <https://astral.sh/blog/uv>`__ ました （作者のmitsuhiko-sanは今はコーディングエージェントpi（TypeScript）へ）
 
 uv（2024〜） [#openai-astral]_
 ------------------------------------------------------------
@@ -104,7 +117,8 @@ uv（2024〜） [#openai-astral]_
 .. code-block:: shell
 
     $ uv python install  # Python自体も管理
-    $ uv init
+    $ uv init my-project
+    $ cd my-project
     $ uv add 'httpx2>=2.12.0'  # uv.lock 作成
     $ uv run <command>  # 仮想環境を有効にして実行
 
@@ -114,15 +128,19 @@ uv（2024〜） [#openai-astral]_
 
 .. [#openai-astral] 開発元のAstralを2026年にOpenAIが買収しています
 
-.. TODO https://github.com/astral-sh/uv/releases/tag/0.12.0
-
-uv使う上で
+uv使う上で [#uv-init-change-0-12-0]_ 🏃‍♂️
 ------------------------------------------------------------
 
-* 生成される :file:`pyproject.toml` も使い倒しましょう。 ``[tool.ham]`` に設定書けます！
+* 生成される :file:`pyproject.toml` も使い倒しましょう。 `[tool.ham] <https://packaging.python.org/ja/latest/guides/writing-pyproject-toml/>`__ に設定書けます！
 * ``uv run`` はロックファイル更新とそれに仮想環境の同期が **自動** [#uv-automatic-lock-and-sync]_
 * `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__：Poetryなどからuvへ移行
 
 .. [#uv-automatic-lock-and-sync] https://docs.astral.sh/uv/concepts/projects/sync/#automatic-lock-and-sync
 
-.. TODO 小まとめ🥟？
+.. [#uv-init-change-0-12-0] `0.12.0 <https://github.com/astral-sh/uv/releases/tag/0.12.0>`__ で ``uv init`` のデフォルト挙動が変更されています
+
+Part2🥟 仮想環境の管理方法
+============================================================
+
+* Pythonプロジェクトの仮想環境管理ツールの提案。仮想環境を忘れられる
+* Python処理系自体も管理する機能拡張

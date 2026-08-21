@@ -10,7 +10,7 @@ Part3 プロジェクト以外も仮想環境は人力管理不要に
 * 一時的な仮想環境
 * 仮想環境+マシングローバルにインストール
 
-従来の人力管理
+従来の人力管理 [#sakana-namazu]_
 ------------------------------------------------------------
 
 .. code-block:: shell
@@ -20,6 +20,8 @@ Part3 プロジェクト以外も仮想環境は人力管理不要に
     $ source .venv/bin/activate
     (.venv) $ python -m pip install openai==2.34.0
     (.venv) $ openai api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+
+.. [#sakana-namazu] 今回の例では環境変数 ``OPENAI_BASE_URL`` と ``OPENAI_API_KEY`` で `Sakana AIのNamazu <https://sakana.ai/namazu/>`__ に向けてます
 
 .. https://x.com/ftnext/status/2084262242980335677
 
@@ -44,17 +46,6 @@ Part3 プロジェクト以外も仮想環境は人力管理不要に
 1. uvやpipxが仮想環境を作成
 2. そこにCLIツールをインストールし、**グローバルなパス** を通す
 
-uv様々：自作CLIツールをエンジニアでない100人に配布
-------------------------------------------------------------
-
-.. code-block:: shell
-    :caption: macOSの手順（Windows手順は省略）
-
-    $ uv tool install cdcasasagi
-    $ cdcasasagi --help
-
-Pythonのインストールや仮想環境の管理をuvが覆い隠して簡単にしてくれた
-
 実体がバイナリなら仮想環境不要
 ------------------------------------------------------------
 
@@ -62,14 +53,14 @@ Pythonのインストールや仮想環境の管理をuvが覆い隠して簡単
 * **動作にPython処理系は不要** なので、例えば `mise <https://mise.jdx.dev/>`__ でインストールできる
 * Pythonを必要とするCLIのみ仮想環境の都合で ``uv tool install`` [#python-cli-shebang-secret]_
 
-.. [#python-cli-shebang-secret] 拙ブログ `パッケージを pip install して生えるコマンドの実体は、シバンでPythonを指定したテキストファイルでした <https://nikkie-ftnext.hatenablog.com/entry/python-project-scripts-command-secret-shebang>`__`
+.. [#python-cli-shebang-secret] 拙ブログ `パッケージを pip install して生えるコマンドの実体は、シバンでPythonを指定したテキストファイルでした <https://nikkie-ftnext.hatenablog.com/entry/python-project-scripts-command-secret-shebang>`__
 
 2️⃣inline script metadata
 ============================================================
 
 サードパーティライブラリを使ったスクリプトを書くチュートリアルに推す
 
-書籍で採用してほし〜
+**書籍で採用してほし〜**
 
 従来の人力管理
 ------------------------------------------------------------
@@ -99,8 +90,8 @@ Pythonのインストールや仮想環境の管理をuvが覆い隠して簡単
 inline script metadataをサポートしたツール（例：``uv run``）は [#other-pep723-tools]_
 ------------------------------------------------------------------------------------------
 
-1. 指定されたPythonバージョンで仮想環境を作成
-2. 指定された依存を仮想環境にインストール
+1. ``requires-python`` を満たすバージョンで仮想環境を作成
+2. ``dependencies`` を仮想環境にインストール
 3. **その仮想環境でスクリプトを実行**
 
 .. [#other-pep723-tools] ``hatch run``, ``pipx run``, ``pdm run`` （など）
@@ -150,16 +141,30 @@ inline script metadataはいいぞ
 * 完成したPythonスクリプトの **持ち運び** に超便利（コーディングエージェントのフックスクリプト、stdioのMCPサーバ実装）
 * 実装中は ``PYTHONINSPECT=1 uv run awesome.py`` で **対話モードを立ち上げ** てデバッグも可能
 
-小まとめ🥟2026年、仮想環境人力管理は卒業できる！
+Part3🥟 プロジェクト以外も仮想環境は人力管理不要に
 ============================================================
 
+* 2026年、仮想環境 **人力管理は卒業** できる！
 * ``uvx`` や ``uv tool install``
-* inline script metadata で仮想環境を理解していなくてもスクリプトを動かせる
+* inline script metadata
 
 uv選択の狙い
 ------------------------------------------------------------
 
-* **簡単**
-* 1つのツールで **知っている範囲を広げていけばよい** （新しいツールの導入不要）
+* **簡単** [#fastapi-tutorial-uv]_
+* 1つのツールで **知っている範囲を広げていけばよい** （新たなツールの導入不要）
 
     * スクリプトの実行だけ -> Pythonプロジェクト（``uv init``）
+
+.. [#fastapi-tutorial-uv] FastAPIはuv採用（`v0.140.0 <https://github.com/fastapi/fastapi/releases/tag/0.140.0>`__・`PR #16032 <https://github.com/fastapi/fastapi/pull/16032>`__）
+
+uv様々：自作CLIツールをエンジニアでない100人に配布
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: macOSの手順（Windows手順は省略）
+
+    $ uv tool install cdcasasagi
+    $ cdcasasagi --help
+
+Pythonのインストールや仮想環境の管理を **uvが覆い隠して簡単に** してくれた
