@@ -1,3 +1,8 @@
+:ogp_title: Pythonチュートリアル、venv を作って pip install と2026年も教え続けますか？
+:ogp_event_name: pyconjp
+:ogp_slide_name: teach-venv-pip-install-alternatives
+:ogp_description: PyCon JP 2026 #pyconjpB
+
 ================================================================================
 Pythonチュートリアル、venv を作って pip install と2026年も教え続けますか？
 ================================================================================
