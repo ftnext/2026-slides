@@ -35,9 +35,6 @@ Part1 仮想環境はなぜ必要か
 仮想環境で共存可能に
 ------------------------------------------------------------
 
-.. revealjs-break::
-    :notitle:
-
 .. image:: ../_static/pyconjp/virtual-environment-package-isolation.drawio.png
 
 :file:`.venv/` には何がある？ [#python314-easter-egg]_

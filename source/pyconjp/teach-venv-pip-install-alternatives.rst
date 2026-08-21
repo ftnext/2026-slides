@@ -35,12 +35,14 @@ Python公式チュートリアルより
 お前、誰よ
 ============================================================
 
-* nikkie（にっきー） [#nikkie-uuid]_ ・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__・`Devin Ambassador <https://x.com/ftnext/status/2069459222040105357>`__
+* nikkie（にっきー） [#nikkie-uuid]_ ・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__・`Devin Ambassador <https://x.com/ftnext/status/2069459222040105357>`__ [#coba-hiroshima-iizo]_
 * 機械学習エンジニア・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A <https://jp.ub-speeda.com/news/20260319/>`__・`MCP <https://jp.ub-speeda.com/news/20260701/>`__ 提供）
 
 .. image:: ../_static/uzabase-white-logo.png
 
 .. [#nikkie-uuid] UUID `28fb3f96-a221-462c-93bd-567b431715b9 <https://x.com/ftnext/status/2041119610368602138>`__
+
+.. [#coba-hiroshima-iizo] 8/20(木)の `もくもく会 <https://aid.connpass.com/event/401330/>`__ に使わせていただいた、コワーキングスペース `co-ba <https://co-ba.net/hiroshima/>`__ さんよかったです
 
 「venvはもはや必須科目ではない」
 ------------------------------------------------------------
@@ -101,9 +103,33 @@ Pythonで仕事をしている方は
 * Python処理系がどう動くのか知っている範囲を広げられる。結果、エンジニアとして解ける課題が広がる
 * このトークをきっかけにしてもいいかもしれませんね
 
-.. TODO 文献リスト？
+参考文献リスト 🏃‍♂️
+------------------------------------------------------------
+
+* 『`ハイパーモダンPython`_』
+* `PEP 405 – Python Virtual Environments <https://peps.python.org/pep-0405/>`__
+* ばんくしさん「`ゼロから作る自作 Python Package Manager 入門 <https://techbookfest.org/product/rpXewXTtekXgNPFBCWLrX4>`__」
+
+.. https://nikkie-ftnext.hatenablog.com/entry/vaaaaanquish-python-package-manager-diy-introduction-is-awesome
 
 ご清聴ありがとうございました
 ------------------------------------------------------------
 
 あなただったら、venv を作って pip install と教えますか？
+
+このあと15:00〜 stapyコミュニティブースへどうぞ🌸
+================================================================================
+
+.. raw:: html
+
+    <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="ja" dir="ltr">コミュニティブースにみんなのPython勉強会あります〜 <a href="https://x.com/hashtag/stapy?src=hash&amp;ref_src=twsrc%5Etfw">#stapy</a> <a href="https://x.com/hashtag/pyconjp2026?src=hash&amp;ref_src=twsrc%5Etfw">#pyconjp2026</a><br>お好み焼き・宮島stapyステッカーも配布してます <a href="https://t.co/EdmTG5F35q">pic.twitter.com/EdmTG5F35q</a></p>&mdash; nikkie(にっきー) / にっP (@ftnext) <a href="https://x.com/ftnext/status/2090649754258821555?ref_src=twsrc%5Etfw">2026年8月21日</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+
+来週東京でDevinCon！
+------------------------------------------------------------
+
+.. raw:: html
+
+    <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="ja" dir="ltr">📣 DevinCon Tokyo、8/26（水）開催決定！<br>Cognition初の日本コミュニティイベント。Devinユーザーに限らず、AI駆動開発に取り組むすべてのエンジニアをお待ちしています。Migration / SRE / AI駆動開発組織設計、各社の実践知が集まります。…</p>&mdash; Cognition Japan (@cognition_jp) <a href="https://x.com/cognition_jp/status/2082631076900721116?ref_src=twsrc%5Etfw">2026年7月30日</a></blockquote>
+
+EOF
+===

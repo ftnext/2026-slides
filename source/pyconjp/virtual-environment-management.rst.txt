@@ -52,9 +52,6 @@ Pythonプロジェクトの話
 
 .. [#pip-tools-compile] `pip-tools <https://pip-tools.readthedocs.io/en/stable/>`__ の ``pip-compile``
 
-.. ばんくしさん パッケージマネージャ
-    https://nikkie-ftnext.hatenablog.com/entry/vaaaaanquish-python-package-manager-diy-introduction-is-awesome
-
 Pythonプロジェクトの仮想環境管理ツールを入れることに
 ============================================================
 
@@ -68,7 +65,7 @@ Pythonプロジェクトの仮想環境管理ツールを入れることに
 
 .. image:: ../_static/pyconjp/package-manager-chrono.drawio.png
 
-『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`__』5章に基づき作成
+『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`_』5章に基づき作成
 
 Poetry（2018〜） [#pycon-apac-2023-peacock]_
 ------------------------------------------------------------
