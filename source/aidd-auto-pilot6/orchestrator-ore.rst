@@ -1,3 +1,9 @@
+:ogp_title: オーケストレータ 俺
+:ogp_event_name: aidd-auto-pilot6
+:ogp_slide_name: orchestrator-ore
+:ogp_description: 【AI駆動開発】AI自走環境整備・運用スペシャル #6
+:ogp_image_name: aidd-auto-pilot6
+
 ============================================================
 オーケストレータ 俺
 ============================================================
