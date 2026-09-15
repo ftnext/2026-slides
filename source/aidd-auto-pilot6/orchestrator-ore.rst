@@ -169,3 +169,8 @@ GPT-6 Astra [#sunagaku-san-orchestrator-tips]_
 ------------------------------------------------------------
 
 Happy Development ❤️🤖（ステッカードゾー）
+
+話したい：チームに適用するには？
+
+EOF
+===
