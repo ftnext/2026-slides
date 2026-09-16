@@ -65,7 +65,9 @@
 
     <blockquote class="twitter-tweet" data-lang="ja" data-align="center" data-dnt="true"><p lang="en" dir="ltr">I talk to engineers at other companies every day and hear the same thing: one person is 10x&#39;ing their output with Claude but the rest of the org hasn&#39;t caught up.<br><br>Watching teams adopt AI, I keep seeing the same 4 steps.<br><br>I mapped them out here: Steps of AI Adoption…</p>&mdash; Boris Cherny (@bcherny) <a href="https://x.com/bcherny/status/2077929379661844559?ref_src=twsrc%5Etfw">2026年7月17日</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
-Steps of AI Adoption (boris-san [#claude-artifact-demo]_) 抜粋 [#ja-translation-by-oikon-san]_
+.. _Steps of AI Adoption: https://claude.ai/code/artifact/bfdfaef9-bc62-4dfe-ba9e-c58a26c9accf
+
+`Steps of AI Adoption`_ (boris-san [#claude-artifact-demo]_) 抜粋 [#ja-translation-by-oikon-san]_
 ----------------------------------------------------------------------------------------------------
 
 * Step 2：1人のエンジニアが一度に5-10のエージェント
