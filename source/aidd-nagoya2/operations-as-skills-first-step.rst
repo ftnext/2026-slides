@@ -2,6 +2,7 @@
 :ogp_event_name: aidd-nagoya2
 :ogp_slide_name: operations-as-skills-first-step
 :ogp_description: AI駆動開発勉強会 名古屋支部#2
+:ogp_image_name: aidd-nagoya2
 
 ============================================================
 小事例紹介：**運用** as Agent Skills
