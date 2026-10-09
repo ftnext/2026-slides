@@ -52,6 +52,54 @@ Follow nearby files in `source/**.rst` for section levels, metadata, code blocks
 
 Use `.. code-block:: console` for terminal commands. Keep code blocks short enough to read at presentation size.
 
+### Heading Hierarchy
+
+Use H3-level headings as well as H2 when a topic has concrete examples, steps, or follow-up slides. Do not flatten every slide into H2. Follow this repository's adornment order:
+
+- H1: deck title, `=` overline and underline.
+- H2: main topic, `=` underline.
+- H3: details within that topic, `-` underline.
+
+```rst
+==============================
+Deck title
+==============================
+
+Main topic
+==============================
+
+Overview of this topic.
+
+Concrete example
+------------------------------
+
+Details on their own slide.
+
+Next main topic
+==============================
+```
+
+reST determines heading levels by adornment order, not by the character alone. In sphinx-revealjs, H3 sections become vertical slides within the H2 topic. Verify both horizontal and vertical navigation; do not treat H3 as an inline label on the same slide.
+
+### Speaker Notes
+
+Write speaker notes as reST **comments**, not raw HTML `<aside>` blocks. Put timing and spoken explanation in one comment block per slide:
+
+```rst
+Concrete example
+------------------------------
+
+* Visible slide content
+
+.. 【30秒／累計2:00】
+   Explain this example verbally.
+   Keep additional spoken detail in this same comment block.
+```
+
+Check `source/conf.py`: comments are rendered as speaker notes only when `revealjs_notes_from_comments = True` (the default is `False`). Enable it when comments should appear in Speaker View. With this setting, ordinary reST comments also become notes; keep editing reminders out of speaker-note blocks when they are not meant to be spoken. Reveal.js uses only the first notes block per slide, so consolidate notes instead of mixing comments with `revealjs-notes` or raw HTML notes.
+
+See the official [comment-to-notes configuration](https://sphinx-revealjs.readthedocs.io/en/stable/configurations/#confval-revealjs_notes_from_comments) and [Speaker Views migration guide](https://sphinx-revealjs.readthedocs.io/en/stable/upgrade/2.x/#speaker-views). The docs also offer a `revealjs-notes` directive; this repository prefers comments.
+
 ## Build
 
 Run:
@@ -82,7 +130,7 @@ Open:
 http://127.0.0.1:8765/<event>/<slide>.html
 ```
 
-Use Chrome DevTools MCP to resize to a presentation-like viewport, commonly `1440x900`, then verify navigation with `ArrowRight`.
+Use Chrome DevTools MCP to resize to a presentation-like viewport, commonly `1440x900`, then verify navigation with `ArrowRight` and `ArrowDown` for H3 slides (or `Space` to traverse the whole deck).
 
 ## Overflow Check
 
@@ -92,17 +140,18 @@ Use Chrome DevTools MCP `evaluate_script` to scan all slides for elements outsid
 async () => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const results = [];
-  const total = Reveal.getTotalSlides();
+  const slides = Reveal.getSlides();
 
-  for (let i = 0; i < total; i++) {
-    Reveal.slide(i, 0, 0);
+  for (let i = 0; i < slides.length; i++) {
+    const indices = Reveal.getIndices(slides[i]);
+    Reveal.slide(indices.h, indices.v || 0, 0);
     await sleep(150);
 
     const slide = Reveal.getCurrentSlide();
     const slideRect = slide.getBoundingClientRect();
     const bad = [...slide.querySelectorAll("h1,h2,h3,p,li,pre,svg,.mermaid,table,dl")]
       .map((el) => {
-        if (el.closest("svg")) return null;
+        if (el.closest("svg, .notes")) return null;
         const rect = el.getBoundingClientRect();
         return {
           tag: el.tagName.toLowerCase(),
@@ -117,6 +166,8 @@ async () => {
     const svg = slide.querySelector("svg");
     results.push({
       index: i + 1,
+      h: indices.h,
+      v: indices.v || 0,
       title: slide.querySelector("h1,h2,h3")?.innerText?.trim() || "",
       bad,
       svg: svg
@@ -127,7 +178,10 @@ async () => {
             maxWidth: svg.style.maxWidth,
           }
         : null,
-      textLen: slide.innerText.replace(/\s+/g, " ").trim().length,
+      textLen: [...slide.children]
+        .filter((el) => !el.matches(".notes"))
+        .map((el) => el.innerText || "")
+        .join(" ").replace(/\s+/g, " ").trim().length,
     });
   }
 
