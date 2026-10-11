@@ -1,3 +1,9 @@
+:ogp_title: アニメ『これ描いて死ね』1話に見たエンジニアニメ
+:ogp_event_name: engineers-anime
+:ogp_slide_name: anime-draw-this-then-die-imply-engineers-anime
+:ogp_description: アニメから得た学びを発表会＠沼津
+:ogp_image_name: engineers-anime-numazu
+
 ============================================================
 アニメ『これ描いて死ね』1話に見たエンジニアニメ
 ============================================================
