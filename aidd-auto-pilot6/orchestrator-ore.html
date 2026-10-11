@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>オーケストレータ 俺</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-new-tab-link.css?v=d87cb1ac" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/aidd-auto-pilot6/orchestrator-ore.html">
+    <meta property="og:title" content="オーケストレータ 俺">
+    <meta property="og:description" content="【AI駆動開発】AI自走環境整備・運用スペシャル #6">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/aidd-auto-pilot6.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">オーケストレータ 俺</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>【AI駆動開発】AI自走環境整備・運用スペシャル #6</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/09/15 nikkie （スペース連打 or 矢印キーでめくります）</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">オーケストレータ 俺、とは <a class="footnote-reference brackets" href="#title-secret" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></h2>
+<ul class="simple">
+<li><p><strong>賢いモデル</strong> にサブエージェントを <strong>監督</strong> させている</p></li>
+<li><p><em>自分を複製できた感覚</em> を共有したい</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="title-secret" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>インスパイア「<a class="reference external" href="https://magicalgirl-ore.com/" rel="noreferrer" target="_blank">魔法少女 俺</a>」</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー） <a class="footnote-reference brackets" href="#nikkie-uuid" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> ・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a>・Devin Ambassador</p></li>
+<li><p>機械学習エンジニア・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260701/" rel="noreferrer" target="_blank">MCP</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260910/" rel="noreferrer" target="_blank">Slackbot</a> 提供）</p></li>
+<li><p>発表： <a class="reference external" href="https://ftnext.github.io/2026-slides/aidd-auto-pilot1/claude-codex-combined-loop.html#/1" rel="noreferrer" target="_blank">#1</a> &amp; <a class="reference external" href="https://ftnext.github.io/2026-slides/aidd-auto-pilot2/claude-codex-combined-loop.html#/1" rel="noreferrer" target="_blank">#2</a> （レビューのループ） <a class="reference external" href="https://ftnext.github.io/2026-slides/aidd-auto-pilot4/various-subagents.html" rel="noreferrer" target="_blank">#4</a> （サブエージェント）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-uuid" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>UUID <a class="reference external" href="https://x.com/ftnext/status/2041119610368602138" rel="noreferrer" target="_blank">28fb3f96-a221-462c-93bd-567b431715b9</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">関心は「夜のブルーオーシャン」</h2>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/6f8da4e8af70435693f4fdd940e956e4?slide=3" style="border: 0px; background: rgba(0, 0, 0, 0.1) padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="夜を制する者が “AI Agent 大民主化時代” を制する"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">今やコーディングエージェントに任せておける <a class="footnote-reference brackets" href="#blue-ocean-fyi" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p><strong>ランチ休憩</strong> の裏でタスクを振り、それができた状態で再開</p></li>
+<li><p><strong>家事</strong> の裏で個人開発進める</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="blue-ocean-fyi" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>「<a class="reference external" href="https://youtu.be/qUxjJywT1aw?si=MBy9NG1yVhW9eYmj" rel="noreferrer" target="_blank">生産システム</a>」・<em>ファクトリー</em> といった言葉が浮かんできます</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">エージェントがエージェントを呼ぶ</h2>
+<ul class="simple">
+<li><p>Fable 5以降で成立した <strong>自走の新たな選択肢</strong></p></li>
+<li><p>動的にサブエージェント呼び出し（<a class="reference external" href="https://claude.com/blog/introducing-dynamic-workflows-in-claude-code" rel="noreferrer" target="_blank">dynamic workflows</a>）</p></li>
+</ul>
+</section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-conversation="none" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">A second strategy: use Fable 5 as an orchestrator.<br/><br/>Fable 5 plans and delegates to workers (Sonnet 5).<br/><br/>Most tokens are billed at the lower worker rate. <a href="https://t.co/cwDZJSXekn">pic.twitter.com/cwDZJSXekn</a></p>— ClaudeDevs (@ClaudeDevs) <a href="https://x.com/ClaudeDevs/status/2074606061567574181?ref_src=twsrc%5Etfw">2026年7月7日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script></section>
+<section>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">I talk to engineers at other companies every day and hear the same thing: one person is 10x'ing their output with Claude but the rest of the org hasn't caught up.<br/><br/>Watching teams adopt AI, I keep seeing the same 4 steps.<br/><br/>I mapped them out here: Steps of AI Adoption…</p>— Boris Cherny (@bcherny) <a href="https://x.com/bcherny/status/2077929379661844559?ref_src=twsrc%5Etfw">2026年7月17日</a></blockquote> <script async="" charset="utf-8" src="https://platform.x.com/widgets.js"></script></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://claude.ai/code/artifact/bfdfaef9-bc62-4dfe-ba9e-c58a26c9accf" rel="noreferrer" target="_blank">Steps of AI Adoption</a> (boris-san <a class="footnote-reference brackets" href="#claude-artifact-demo" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>) 抜粋 <a class="footnote-reference brackets" href="#ja-translation-by-oikon-san" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>Step 2：1人のエンジニアが一度に5-10のエージェント</p></li>
+<li><p>Step 3へ：「ClaudeにClaudeを起動させる」</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="claude-artifact-demo" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id10" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://claude.com/blog/artifacts-in-claude-code" rel="noreferrer" target="_blank">Claude Codeのartifact機能</a> のデモも兼ねてだと思ってます</p>
+</aside>
+<aside class="footnote brackets" id="ja-translation-by-oikon-san" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id11" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>Oikonさんによる日本語訳：<a class="reference external" href="https://x.com/oikon48/status/2077932711411679404" rel="noreferrer" target="_blank">https://x.com/oikon48/status/2077932711411679404</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">skillをFableに与えた</h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.anthropic.com/claude/fable" rel="noreferrer" target="_blank">Fableはお高い</a> ので高額請求が怖い</p></li>
+<li><p>「Fable、あなたは <strong>監督に徹して</strong>」</p></li>
+<li><p>「調査はOpus、実装はSonnet」</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご参考にどうぞ</h3>
+<p><a class="reference external" href="https://github.com/ftnext/claude-code" rel="noreferrer" target="_blank">ftnext/claude-code</a></p>
+<pre data-id="id12"><code class="shell" data-noescape="" data-trim="">/plugin marketplace add https://github.com/ftnext/claude-code
+/plugin install supervised-delegation@nikkie-marketplace</code></pre>
+<pre data-id="id12"><code class="markdown" data-noescape="" data-trim="">Investigation → Opus
+Implementation → Sonnet
+PR babysitting → Opus
+Supervision → you</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">個人開発OSSのリポジトリを渡して</h3>
+<ul class="simple">
+<li><p>「まずこの作業の監督にあたって」</p></li>
+<li><p>「同時にこの実装も進めたい」</p></li>
+<li><p>git worktreeも使って <strong>同時進行</strong> してくれる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">やりたいことがごちゃごちゃしていても</h3>
+<ul class="simple">
+<li><p>「（Fableに）提案内容でお願いします。ちなみにここが気になるんだけど」</p></li>
+<li><p><strong>適切に分割</strong> して実装と調査を並列で進めてくれた</p></li>
+<li><p>調査を踏まえて提案してくれる</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><strong>自分を複製</strong> できた感覚 <a class="footnote-reference brackets" href="#fable-token-cost" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>Fableは相当賢く、私の代わりに判断を任せられる</p></li>
+<li><p>裏で動くサブエージェントを監督してるだけなので、<strong>即レス</strong> してくれる</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="fable-token-cost" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p>気になるトークンコストですが、監督を徹底させたことで、Fableがトークンをそれほど消費しない感覚</p>
+</aside>
+</aside>
+</section>
+<section>
+<a class="reference internal image-reference" href="../_images/orchestrator-before-after.drawio.png"><img alt="開発者が5つのエージェントを直接監督する状態から、賢いモデルに監督を任せる状態へ" src="../_images/orchestrator-before-after.drawio.png" style="width: 100%;"/>
+</a>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">オーケストレータ 俺、適用 <strong>可能性</strong></h2>
+<p>Fable以外でも</p>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">GPT-6 Astra</h3>
+<blockquote class="twitter-tweet" data-align="center" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Codex tip: Use Astra as an orchestrator of threads and create + send tasks over to Sol/ Luna<br/><br/>Once done, ask it to set up a heartbeat every 15 minutes to check in and course correct as needed<br/><br/>Particularly for long running tasks it’s useful to reduce usage &amp; add verifiability</p>— Vaibhav (VB) Srivastav (@reach_vb) <a href="https://x.com/reach_vb/status/2099630906772222068?ref_src=twsrc%5Etfw">2026年9月14日</a></blockquote></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">GPT-6 Astra <a class="footnote-reference brackets" href="#sunagaku-san-orchestrator-tips" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></h3>
+<ul class="simple">
+<li><p>GPT-5.6 Sol, Terra, Lunaもまだまだ現役（<a class="reference external" href="https://learn.chatgpt.com/docs/models?surface=app#app-recommended-models" rel="noreferrer" target="_blank">Recommended models</a>）</p></li>
+<li><p>Astraに呼び出させましょう</p></li>
+<li><p>⚠️AstraにAstraをサブエージェントに呼び出させるとPlusの枠はマッハで消える</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="sunagaku-san-orchestrator-tips" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id17" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p>スナガクさんも <a class="reference external" href="https://x.com/suna_gaku/status/2099378329204015597" rel="noreferrer" target="_blank">https://x.com/suna_gaku/status/2099378329204015597</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://cognition.com/blog/devin-can-now-manage-devins" rel="noreferrer" target="_blank">Devin can now Manage Devins</a> （いけるはず）</h3>
+<blockquote class="twitter-tweet" data-align="center" data-conversation="none" data-dnt="true" data-lang="ja"><p dir="ltr" lang="en">Devin sessions can spin up other managed subagents to orchestrate complex workflows. These child sessions have their own VMs, and can kick off their own subagents. Now, you can easily manage these nested agents from your sidebar. <a href="https://t.co/reWS2vpxMy">pic.twitter.com/reWS2vpxMy</a></p>— Cognition (@cognition) <a href="https://x.com/cognition/status/2092643323542442020?ref_src=twsrc%5Etfw">2026年8月26日</a></blockquote></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯 オーケストレータ 俺</h2>
+<ul class="simple">
+<li><p>自走の新たな選択肢：賢いモデルにサブエージェントを監督させる（プロンプトやskillで指示）</p></li>
+<li><p>優秀なマネージャの手が空いてる状態になって、いいぞ</p></li>
+<li><p>このマネージャを <em>複数使役</em> で100X？！</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Happy Development ❤️🤖（ステッカードゾー）</p>
+<p>話したい：チームに適用するには？</p>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">EOF</h2>
+</section>
+</section>
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
