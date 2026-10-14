@@ -21,9 +21,11 @@ Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書
 ============================================================
 
 * nikkie（にっきー）、 **Python** を書きます（小さなOSS公開、PyCon JP登壇）
-* 機械学習エンジニア・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A <https://jp.ub-speeda.com/news/20260319/>`__・`MCP <https://jp.ub-speeda.com/news/20260701/>`__・`Slackbot <https://jp.ub-speeda.com/news/20260910/>`__ 提供）
+* 機械学習エンジニア [#uzabase-message]_ ・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A <https://jp.ub-speeda.com/news/20260319/>`__・`MCP <https://jp.ub-speeda.com/news/20260701/>`__・`Slackbot <https://jp.ub-speeda.com/news/20260910/>`__ 提供）
 
 .. image:: ../_static/uzabase-white-logo.png
+
+.. [#uzabase-message] お詫び申し上げます。`【第二報】NewsPicksのお客様の個人情報漏洩の可能性に関するお詫びとお知らせ <https://corp.newspicks.com/info/20261009>`__
 
 モチベーション：Rust製ツールチェインの盛り上がり
 ---------------------------------------------------
@@ -33,13 +35,19 @@ Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書
 
 .. [#pnpm-v12-features] RustやPythonのパッケージ管理、Agent Skillsインストール
 
-自作Pythonパッケージ sampleproject-rs
+.. _sampleproject-rs: https://pypi.org/project/sampleproject-rs/
+
+自作Pythonパッケージ `sampleproject-rs`_
 ======================================================================
 
 * Pythonパッケージのサンプル `sampleproject <https://pypi.org/project/sampleproject/>`__ （チュートリアル例）
 * Rust版sampleproject-rsを自作（**maturin**、**PyO3**）
 
-.. printしているだけです
+.. code-block:: bash
+   :caption: ``println!`` だけです
+
+   $ uvx --from sampleproject-rs@0.2.3 sample
+   Call your main application code here
 
 .. revealjs-break::
    :notitle:
@@ -97,7 +105,7 @@ Rust core化したsampleproject-rs v0.3
    fn first_word(s: &str) -> &str {
 
 .. code-block:: rust
-   :caption: APIをより一般的で有益なものにできる
+   :caption: 「APIをより一般的で有益なものにできる」
 
    let word1 = first_word(&String::from("hello world"));  // Stringへの参照を渡す
 
@@ -135,7 +143,9 @@ Rust core化したsampleproject-rs v0.3
 
     (略)動作対象である ``result`` を **消費** してしまう（『プログラミングRust 第2版』7.2）
 
-``map_err()`` という選択
+.. _map_err(): https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
+
+`map_err()`_ という選択
 ---------------------------------------------------
 
     leaving an ``Ok`` value untouched.
@@ -144,8 +154,6 @@ Rust core化したsampleproject-rs v0.3
 
     let input = args.input.contents()
         .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
-
-.. https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
 
 まとめ🌯Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話
 ================================================================================
