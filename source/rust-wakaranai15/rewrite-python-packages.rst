@@ -1,7 +1,8 @@
 :ogp_title: Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話
-:ogp_event_name: Rust、何もわからない… #15
+:ogp_event_name: rust-wakaranai15
 :ogp_slide_name: rewrite-python-packages
 :ogp_description: Rust、何もわからない… #15 LT
+:ogp_image: rust-wakaranai15
 
 ================================================================================
 Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話
