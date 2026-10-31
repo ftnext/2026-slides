@@ -1,0 +1,190 @@
+Part3 2026年で考えたいトピック
+============================================================
+
+1. コーディングエージェント
+2. セキュリティ（サプライチェーン攻撃）
+
+1.コーディングエージェントとの相性
+============================================================
+
+* コーディングエージェントは **速い**
+* 速さは魔性：コーディングエージェントが使うツールも速くしたい
+
+.. revealjs-break::
+    :notitle:
+
+.. raw:: html
+
+    <iframe class="speakerdeck-iframe" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/1b717ecfee8a4833a8ac0999900753d5?slide=49" title="AI Coding Agent Enablement in TypeScript" allowfullscreen="true" allow="web-share" data-ratio="1.7777777777777777"></iframe>
+
+uvは速い [#how-uv-got-so-fast]_
+------------------------------------------------------------
+
+* Python処理系を介さない（Rust実装・バイナリ動作）だけでなく
+* PyCon US 2026にて開発者による「`Peeking under the hood of uv run <https://www.youtube.com/watch?v=gZiqURP5tbk>`__」
+
+    * 高速化のためのキャッシュの超積極活用（``uv cache dir`` ご覧あれ）
+
+.. [#how-uv-got-so-fast] 他に `How uv got so fast <https://nesbitt.io/2025/12/26/how-uv-got-so-fast.html>`__
+
+uvがコーディングエージェントにベスト？
+------------------------------------------------------------
+
+* 安全に使うため書き込めるディレクトリは制限されている [#gpt-5.6-sol-uv-cache]_
+* コーディングエージェントが ``uv run`` するとき、 **書き込めるディレクトリとは別** のキャッシュに書き込むことに
+
+.. [#gpt-5.6-sol-uv-cache] GPT-6.1 Solや6 Astraは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
+
+uvのキャッシュを考慮してコーディングエージェントを設定
+------------------------------------------------------------
+
+.. code-block:: toml
+    :caption: リポジトリの :file:`.codex/config.toml`
+
+    [sandbox_workspace_write]
+    writable_roots = [
+        "/Users/nikkie/.cache/uv",  # uvのキャッシュ自体への書き込み許可
+    #     "/Users/nikkie/.cache/codex/awesome-repo/uv",  # そのリポジトリ用のuvのキャッシュで運用
+    ]
+
+* 別案：コーディングエージェントには ``uv run pytest`` を渡さず、 **.venv/bin/pytest** [#adk-python-agents-md]_
+
+.. [#adk-python-agents-md] https://github.com/google/adk-python/blob/v1.39.0/AGENTS.md#setup-instructions
+
+.. https://github.com/google/adk-python/blob/v2.7.0/.agents/skills/adk-setup/SKILL.md
+
+2.セキュリティ
+============================================================
+
+1. サプライチェーン攻撃（2026年3月〜）
+2. 証明書の事故（2026年10月）
+
+2-1. 変わり始めたPythonの世界
+============================================================
+
+* 近年npmでサプライチェーン攻撃が展開されている（IMO：攻撃者を強く非難します）
+* PyPIでも **2026年3月**、LiteLLMで **サプライチェーン攻撃が発生**
+
+LiteLLM [#litellm-nikkie-article]_
+------------------------------------------------------------
+
+.. code-block:: python
+
+    from litellm import completion
+
+    for model in ["openai/gpt-6.1-luna", "gemini/gemini-3.8-flash"]:
+        response = completion(model=model, messages=messages)
+        print(response.choices[0].message.content)
+
+.. [#litellm-nikkie-article] 拙ブログ：`LiteLLMを使って、同じプロンプトを複数のLLMのWeb APIに送る（GPTとGeminiを例に） <https://nikkie-ftnext.hatenablog.com/entry/call-gpt-and-gemini-web-apis-with-litellm-awesome>`__
+
+LiteLLMへの攻撃で状況は大きく変わった
+------------------------------------------------------------
+
+* LiteLLM `1.82.7と1.82.8 <https://docs.litellm.ai/blog/security-update-march-2026>`__ （当時最新版）に悪意あるコードが仕込まれていた [#litellm-compromised-again]_
+* 最新版インストール後、importしただけで環境の秘密情報が抜かれる（uvxして踏みました）
+* **最新版のインストールがリスク**
+
+.. 邪悪なlitellm_init.pth https://nikkie-ftnext.hatenablog.com/entry/cope-with-compromised-litellm-1.82.8-with-gpt-5.4
+
+.. [#litellm-compromised-again] `2026年10月にも1.107.0で再度侵害 <https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain>`__ されてしまいました  
+
+「最新版には悪意あるコードが入っているかも」
+------------------------------------------------------------
+
+* ロックファイルがあるPythonプロジェクトなら最新版は取りに行かない（踏むリスク低）
+* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ といった使い方で *ロックファイルを作っていない*
+
+.. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
+
+ロックファイルがない状況で最新版インストールのリスクを減らす
+----------------------------------------------------------------------
+
+* cooldownの設定
+* セキュアなインデックスへの切り替え
+
+完璧な1つの対策はない。どの対策にも穴があるが重ね合わせて貫通しなくする🧀 [#swiss-cheese-model]_
+
+.. [#swiss-cheese-model] `スイスチーズモデル <https://ja.wikipedia.org/wiki/%E3%82%B9%E3%82%A4%E3%82%B9%E3%83%81%E3%83%BC%E3%82%BA%E3%83%A2%E3%83%87%E3%83%AB>`__
+
+cooldown
+------------------------------------------------------------
+
+最新版を一定期間避ける設定。コミュニティが攻撃を検出し、隔離・削除
+
+.. code-block:: toml
+   :caption: :file:`~/.config/uv/uv.toml` [#uv-exclude-newer]_
+
+   exclude-newer = "7 days"
+
+.. code-block:: toml
+   :caption: :file:`~/.config/pip/pip.conf` （ただしpip>=26.1）
+
+    [global]
+    uploaded-prior-to=P7D
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-package-installer-how-to-cooldown-after-compromised-litellm
+
+.. [#uv-exclude-newer] 出た直後のバグフィックスを当てるために `--exclude-newer-package=foobar=false <https://docs.astral.sh/uv/reference/cli/#uv-run--exclude-newer-package>`__
+
+セキュアなインデックス
+------------------------------------------------------------
+
+* 例：`Takumi Guard <https://shisho.dev/docs/ja/r/202603-takumi-guard-pypi/>`__ （無料）
+* 新規開発が止まっているようなPythonプロジェクトで採用
+* ロックファイルはなく、pipが古くてcooldownも効かないが、`PIP_INDEX_URL <https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-i>`__ 指定だけで済んで作業効果は高い
+
+サプライチェーン攻撃のリスクを認識しましょう
+------------------------------------------------------------
+
+* 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
+* 提言：Python書籍（特に入門書）で最新版を入れる記載をしているのも危ないですよね（**cooldown** を案内しては）
+
+.. TODO https://astral.sh/blog/uv-audit
+
+2-2. eMudhra証明書の事故
+============================================================
+
+* https://emudhra.we-have-a-problem.com/
+* 中間認証局eMudhraが管理する秘密鍵（8つ）が公開鍵から容易に復元できてしまった
+* 誰でもなりすませる！（中間者攻撃のリスク）
+
+マシンやツールがバンドルする証明書を更新しなければなりません
+------------------------------------------------------------
+
+* アップデート祭り！（OSSを対応いただいている皆さまに感謝）
+* Pythonの場合はcertifiのようなパッケージが該当 [#python-compromised-emudhra-information]_
+
+.. [#python-compromised-emudhra-information] `Information for Python users regarding eMudhra / emSign CA certificate security incident <https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576>`__
+
+Pythonでの対応
+------------------------------------------------------------
+
+* Python 3.15.2, 3.14.10, 3.13.18, 3.12.16, 3.11.18は、標準モジュールsslがeMudhraの証明書を含むチェーンをブロック
+* certifi 2026.10.19以上（仮想環境内、HTTPクライアントが依存）
+* pip 26.2.2以上（certifi 2026.10.19をバンドル）
+
+uvでの対応
+------------------------------------------------------------
+
+* uv 0.13.4以上（バンドルした証明書が更新されている。webpki-root-certs 1.0.10）
+* PythonのダウンロードやPyPIからパッケージのインストールの通信に使う証明書をバンドル
+* おすすめはuv 0.13.6にして ``uv python upgrade`` でPython 3.15.2に更新
+
+.. UV_SYSTEM_CERTS=true
+
+macOSとuvの組合せがややこしや
+------------------------------------------------------------
+
+* :file:`/etc/ssl/cert.pem` にeMudhraの証明書が残っている（Appleのアップデート待ち）
+* uvが使うpython-build-standaloneは :file:`/etc/ssl/cert.pem` を見る
+* Python 3.15.2以降でsslモジュールがブロックするのでだいぶ安全になった
+
+.. eMudhraの証明書は信頼できないという情報はマシンに配信されている
+
+Part3 まとめ🥟2026年で考えたいトピック
+============================================================
+
+* IMO：コーディングエージェントには ``uv run`` よりも ``.venv/bin/python`` を指示したい
+* 最新版のインストールがリスクに。cooldownはじめ複数の防御策を組み合わせましょう
+* eMudhraの証明書事故を受け、3.15.2など現在の最新が安全です（Appleアップデート頼む）
