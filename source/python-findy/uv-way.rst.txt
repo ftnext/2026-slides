@@ -13,12 +13,20 @@ uv（2024〜）
 * 最初はRustで実装された高速なpipとして登場。0.3.0でPythonプロジェクト管理に機能増強
 * Python環境構築を圧倒的に簡単にした
 
-uvのインストール
+uvのインストール [#uv-standalone-installer]_
 ------------------------------------------------------------
 
 .. code-block:: shell
+    :caption: macOS/Linux
 
     $ curl -LsSf https://astral.sh/uv/install.sh | sh  # 他miseで入れる。などなど
+
+.. code-block:: shell
+    :caption: Windows
+
+    > powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+.. [#uv-standalone-installer] https://docs.astral.sh/uv/getting-started/installation/#standalone-installer ``uv self update`` も裏でこのシェルを叩きます
 
 uvは **Pythonも管理** できる
 ------------------------------------------------------------
@@ -30,23 +38,36 @@ uvは **Pythonも管理** できる
 * 1つ1つダウンロードする代わりにuv
 * 複数のPythonを管理するツール（例：pyenv）とも共存しますし、uvに切り替えられます
 
-仮想環境はuvにお任せ
+新規プロジェクト作成
 ------------------------------------------------------------
-
-venvやpipを扱う必要なし
 
 .. code-block:: shell
 
     $ uv init my-project
     $ cd my-project
-    $ uv add 'httpx2>=2.12.0'  # uv.lock 作成
+
+TODO src-layoutの様子を示す
+
+仮想環境はuvにお任せ
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: venvやpipを扱う必要なし
+
+    $ uv add httpx2 --bounds major  # pyproject.tomlに書き、uv.lock作成
     $ uv run <command>  # 仮想環境を有効にして実行
 
-.. TODO upper bound指定したい
-
-uvで管理するPythonプロジェクトは簡単に立ち上がる
+uvで管理する既存Pythonプロジェクトは **簡単に立ち上がる**
 ------------------------------------------------------------
 
 .. code-block:: shell
 
-    $ uv sync  # uv.lockを元に環境再現。*爆速*
+    $ uv sync  # *爆速* 環境再現
+
+* 必要なPythonがマシンになければインストールされる
+* :file:`uv.lock` の通りに仮想環境も整う
+
+python-build-standalone
+------------------------------------------------------------
+
+裏の仕組み

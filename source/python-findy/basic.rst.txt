@@ -4,44 +4,126 @@ Part1 Python環境基礎
 * Python処理系のインストール
 * サードパーティパッケージを扱う際に、*仮想環境*
 
-公式ドキュメントのやり方
+Python処理系のインストール
+============================================================
+
+* 公式ドキュメントのやり方を紹介
+* Part2でuvで置き換えを案内するので、ここは雰囲気だけ掴んでいただければ
+
+Windows
 ------------------------------------------------------------
 
-* `macOS で Python を使う <https://docs.python.org/ja/3/using/mac.html>`__：python.orgからインストーラを使う
-* `Windows で Python を使う <https://docs.python.org/ja/3/using/windows.html>`__：Python install manager
-* （`CPythonのビルド <https://docs.python.org/ja/3/using/configure.html>`__）
+* `Windows で Python を使う <https://docs.python.org/ja/3/using/windows.html>`__
+* **Python インストールマネージャ**
 
-.. Homebrewという選択肢もあり
+.. code-block:: console
+
+    > py -V:3.15
+    > py -V:3.14
+
+macOS
+------------------------------------------------------------
+
+* `macOS で Python を使う <https://docs.python.org/ja/3/using/mac.html>`__
+* python.orgのインストーラ（+Install Certificates） [#homebrew-alternative]_
+
+.. code-block:: console
+
+    % python3.15
+    % python3.14
+
+.. [#homebrew-alternative] Homebrewという選択肢もあります
+
+Linux（例：Ubuntu）
+------------------------------------------------------------
+
+* 最新 + deadsnakes PPA [#deadsnakes-related-article]_
+
+.. code-block:: console
+
+    $ apt-get install python3.15-full python3.14-full
+
+.. code-block:: console
+
+    $ python3.15
+    $ python3.14
+
+.. [#deadsnakes-related-article] `add-apt-repositoryを使わずに最新でないPythonをインストールする 〜UbuntuのDockerイメージを例に〜 <https://nikkie-ftnext.hatenablog.com/entry/ubuntu-add-deadsnakes-ppa-without-add-apt-repository>`__
+
+.. 『ハイパーモダンPython』1章
 
 複数バージョンのPython処理系
 ------------------------------------------------------------
 
-* マイナーバージョンごとにインストールして取り揃える
-* macOSでは ``python3.15`` ・ ``python3.14`` とコマンドが生える
+* マイナーバージョンごとにインストールして取り揃える（3.15〜3.11）
 * バグフィックスが上がったら再度インストールして、コマンド自体を置き換え
+* 破壊的変更はバグフィックスにはない。マイナーバージョンアップで言語機能が追加されるが、古い書き方も有効 [#python-3.10-match]_
 
-.. 『ハイパーモダンPython』1章
+.. [#python-3.10-match] 2021年にPython 3.10で ``match`` が入りましたが、3.9以下のサポートが終了してようやく本格的に使えるようになりました
 
 .. TODO ``python3`` コマンドは後勝ち
 
-Pythonが入った後は *仮想環境*
+Pythonが入った後は *仮想環境* （重要）
+============================================================
+
+.. code-block:: console
+
+    > py -V:3.15 -m venv .venv
+
+.. code-block:: console
+
+    % python3.14 -m venv .venv
+
+`12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`__
+
+venvモジュール
+------------------------------------------------------------
+
+* Python処理系にバンドルされる標準ライブラリの1つ
+* https://docs.python.org/ja/3/library/venv.html
+* *仮想環境* を作る
+
+サードパーティパッケージ
+------------------------------------------------------------
+
+* **PyPI** （Python Package Index）がデフォルト
+
+    * https://pypi.org/
+
+* GitHub等で公開も可能
+
+サードパーティパッケージのインストール
 ------------------------------------------------------------
 
 .. code-block:: console
     :caption: `12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`__
 
-    $ python3.14 -m venv .venv
-    $ source .venv/bin/activate
+    $ source .venv/bin/activate  # 仮想環境の「有効化」
     (.venv) $ python -m pip install httpx2
 
-サードパーティパッケージを扱うためのツール
+pip
 ------------------------------------------------------------
 
-* pip：サードパーティだが、Python処理系にバンドルされている。パッケージをインストールする
-* venv：標準ライブラリの1つ。*仮想環境* を作る
+* パッケージマネージャのサードパーティパッケージ（ただし機能は *弱い*）
+* https://pip.pypa.io/en/stable/
+* Python処理系に **バンドル** されている（標準ライブラリのensurepip）
 
-仮想環境とは **ディレクトリ**
+例：既存のPythonプロジェクトの開発に合流
 ------------------------------------------------------------
+
+.. code-block:: console
+    :caption: 仮想環境を作って依存をインストールして始める
+
+    % git clone https://github.com/my-company/awesome-project.git
+    % cd awesome-project
+    % python3.15 -m venv .venv --upgrade-deps
+    % source .venv/bin/activate
+    (.venv) % pip install -e '.[dev]'
+
+仕組み：仮想環境とは **ディレクトリ**
+============================================================
+
+TODO 図などを3.15にする
 
 .. code-block:: shell
 
@@ -99,8 +181,6 @@ Pythonが入った後は *仮想環境*
     │   └── python3.14/
     └── pyvenv.cfg
 
-.. [#python314-easter-egg] easter eggです（拙ブログ `あなたが知らなくていい 𝜋thon の世界 <https://nikkie-ftnext.hatenablog.com/entry/python-3.14-pithon-maybe-you-dont-need-to-know>`__）
-
 :file:`.venv/bin/python`
 ------------------------------------------------------------
 
@@ -116,6 +196,13 @@ Pythonが入った後は *仮想環境*
 
 .. python -m site で標準ライブラリ + 仮想環境のサードバーティライブラリが確認できる
 
+**仮想環境は常に必要**
+------------------------------------------------------------
+
+* 新規のPythonプロジェクト
+* Pythonスクリプト
+* PyPIのパッケージをCLIツールとして使う
+
 ⚠️仮想環境の名前を変えられません
 ------------------------------------------------------------
 
@@ -124,7 +211,7 @@ Pythonが入った後は *仮想環境*
 * インストールされたパッケージ一覧を書き出す
 * 新しい名前の仮想環境に再度インストール
 
-人力仮想環境管理を指南 [#we-are-package-manager]_
+TODO 人力仮想環境管理 [#we-are-package-manager]_
 ------------------------------------------------------------
 
 .. code-block:: bash
@@ -135,6 +222,8 @@ Pythonが入った後は *仮想環境*
     (.venv) $ python -m pip install httpx2
     (.venv) $ python -m pip freeze > requirements.txt
     (.venv) $ python -m pip uninstall httpx2
+
+.. TODO ロックファイルが長きにわたってなかった
 
 .. [#we-are-package-manager] 拙ブログ `俺がPythonのパッケージマネージャなんだ <https://nikkie-ftnext.hatenablog.com/entry/pythonistas-are-part-of-python-package-manager-system>`__
 

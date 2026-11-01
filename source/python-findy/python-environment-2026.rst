@@ -14,12 +14,10 @@ Pythonの環境構築をすることになったあなたへ（2026年版）
 お前、誰よ
 ============================================================
 
-* nikkie（にっきー） [#nikkie-uuid]_ ・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__・`Devin Ambassador <https://x.com/ftnext/status/2069459222040105357>`__
+* nikkie（にっきー）・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__・`Devin Ambassador <https://x.com/ftnext/status/2069459222040105357>`__
 * 機械学習エンジニア [#uzabase-message]_ ・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A <https://jp.ub-speeda.com/news/20260319/>`__・`MCP <https://jp.ub-speeda.com/news/20260701/>`__・`Slackbot <https://jp.ub-speeda.com/news/20260910/>`__ 提供）
 
 .. image:: ../_static/uzabase-white-logo.png
-
-.. [#nikkie-uuid] UUID `28fb3f96-a221-462c-93bd-567b431715b9 <https://x.com/ftnext/status/2041119610368602138>`__
 
 .. [#uzabase-message] お詫び申し上げます。`【第二報】NewsPicksのお客様の個人情報漏洩の可能性に関するお詫びとお知らせ <https://corp.newspicks.com/info/20261009>`__
 
@@ -64,6 +62,7 @@ TODO お昼明けからすぐにuvだ！<-そこまで言ってない
 
 * 変えるのは新規プロジェクトからでいいと思っています
 * ツールの単なる置き換えは、ユーザへの価値をほとんど生み出さないですよね
+* uv-migrate
 
 .. include:: topics-2026.rst.txt
 
