@@ -1,10 +1,10 @@
 Part1 Python環境基礎
 ============================================================
 
-* Python処理系のインストール
-* サードパーティパッケージを扱う際に、*仮想環境*
+1. Python処理系のインストール
+2. サードパーティパッケージを扱う際に、*仮想環境*
 
-Python処理系のインストール
+(1) Python処理系のインストール
 ============================================================
 
 * 公式ドキュメントのやり方を紹介
@@ -37,7 +37,7 @@ macOS
 Linux（例：Ubuntu）
 ------------------------------------------------------------
 
-* 最新 + deadsnakes PPA [#deadsnakes-related-article]_
+* 最新 + `deadsnakes PPA <https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa>`__ [#deadsnakes-related-article]_
 
 .. code-block:: console
 
@@ -55,12 +55,14 @@ Linux（例：Ubuntu）
 Python処理系を取り揃える
 ------------------------------------------------------------
 
-* マイナーバージョンごとにインストール（3.15〜3.11で使うもの）
-* バグフィックスが上がったら再度インストールして、コマンド自体を置き換え（言語仕様に破壊的変更はない）
+`major.minor.micro <https://devguide.python.org/developer-workflow/development-cycle/index.html>`__
 
-.. TODO ``python3`` コマンドは後勝ち
+* minorごとにインストール（3.15〜3.11から使うものを）
+* microが上がっていたら再度インストールして、コマンド自体を置き換え（microがバグ修正） [#python3-command]_
 
-言語機能の追加：3.10の ``match``
+.. [#python3-command] ``python3`` コマンドは最後にインストールしたminorバージョンに向きます。区別のために ``python3.15`` とminorまで指定したい派です
+
+言語機能の追加例：3.10の ``match``
 ------------------------------------------------------------
 
 * マイナーバージョンアップで追加されるが、古い書き方も有効
@@ -80,20 +82,36 @@ Python処理系を取り揃える
 
 .. https://gihyo.jp/news/report/01/pyconjp2021/0002#sec1
 
-Pythonが入った後は *仮想環境* （重要）
+(2) Pythonが入った後は *仮想環境* （重要）
 ============================================================
 
-.. TODO pythonコマンドに揃う
-
 .. code-block:: console
+    :caption: Windows
 
     > py -V:3.15 -m venv .venv
 
 .. code-block:: console
+    :caption: macOS または Linux
 
-    % python3.14 -m venv .venv
+    % python3.15 -m venv .venv
 
-`12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`__
+`12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`_
+
+仮想環境を **有効化**
+------------------------------------------------------------
+
+.. code-block:: console
+    :caption: Windows
+
+    > .venv\Scripts\activate
+
+.. code-block:: console
+    :caption: macOS または Linux
+
+    % source .venv/bin/activate
+
+* :command:`python` コマンドに揃う
+* ``deactivate`` で抜けます
 
 venvモジュール
 ------------------------------------------------------------
@@ -102,7 +120,7 @@ venvモジュール
 * https://docs.python.org/ja/3/library/venv.html
 * *仮想環境* を作る
 
-サードパーティパッケージ
+Pythonのサードパーティパッケージ
 ------------------------------------------------------------
 
 * **PyPI** （Python Package Index）がデフォルト
@@ -111,23 +129,26 @@ venvモジュール
 
 * GitHub等で公開も可能
 
-サードパーティパッケージのインストール
+サードパーティパッケージのインストール [#why-httpx2]_
 ------------------------------------------------------------
 
-.. code-block:: console
-    :caption: `12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`__
+``(.venv)`` は仮想環境が有効なことを示します
 
-    $ source .venv/bin/activate  # 仮想環境の「有効化」
+.. code-block:: console
+    :caption: `12. 仮想環境とパッケージ`_
+
     (.venv) $ python -m pip install httpx2
+
+.. [#why-httpx2] インストールしているのは、注目のHTTPクライアントです。https://github.com/pydantic/httpx2
 
 pip
 ------------------------------------------------------------
 
-* **パッケージマネージャ**（ただし機能は *弱い*）
+* **パッケージマネージャ** （ただし機能は *弱い*）
 * https://pip.pypa.io/en/stable/
 * サードパーティパッケージだが、Python処理系に *バンドル* されている [#stdlib-ensurepip]_
 
-.. [#stdlib-ensurepip] 標準ライブラリのensurepipによります
+.. [#stdlib-ensurepip] 標準ライブラリの `ensurepip <https://docs.python.org/ja/3/library/ensurepip.html>`__ によります。拙ブログの `仕組み読み解き <https://nikkie-ftnext.hatenablog.com/entry/python-stdlib-ensurepip-run-pip-install-pip>`__
 
 例：既存のPythonプロジェクトの開発に合流
 ------------------------------------------------------------
@@ -163,7 +184,7 @@ pip
 なぜディレクトリを作るのか
 ------------------------------------------------------------
 
-* **サードパーティパッケージ** のインストール先にするため
+* **サードパーティパッケージのインストール先** にするため
 * あるパッケージのバージョン違いがマシンに共存可能になる（図解続く）
 
 仮想環境を使わないとしたら、インストール先は1箇所
@@ -184,7 +205,6 @@ pip
 
 .. code-block:: txt
     :caption: python.org からmacOSにインストール（3.15.2）
-    :emphasize-lines: 2,7,10-11
 
     .venv/
     ├── bin/
@@ -197,30 +217,69 @@ pip
     │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
     ├── lib/
     │   └── python3.15/
+    │       └── site-packages/
+    └── pyvenv.cfg
+
+マシンにインストールした処理系への **シンボリックリンク** [#stdlib-secret]_
+--------------------------------------------------------------------------------
+
+.. code-block:: txt
+    :emphasize-lines: 2,7
+
+    .venv/
+    ├── bin/
+    │   ├── activate
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.15
+    │   ├── python -> python3.15
+    │   ├── python3 -> python3.15
+    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
+    ├── lib/
+    │   └── python3.15/
+    │       └── site-packages/
+    └── pyvenv.cfg
+
+.. [#stdlib-secret] 標準ライブラリも処理系のものを参照して使う（サードパーティパッケージだけ仮想環境ごとに入る）
+
+.. python -m site で標準ライブラリ + 仮想環境のサードバーティライブラリが確認できる
+
+サードパーティパッケージのインストール先
+------------------------------------------------------------
+
+.. code-block:: txt
+    :emphasize-lines: 10-12
+
+    .venv/
+    ├── bin/
+    │   ├── activate
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.15
+    │   ├── python -> python3.15
+    │   ├── python3 -> python3.15
+    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
+    ├── lib/
+    │   └── python3.15/
+    │       └── site-packages/
     └── pyvenv.cfg
 
 :file:`.venv/bin/python`
 ------------------------------------------------------------
 
-* マシンにインストールしたPython処理系への **シンボリックリンク**
 * :file:`.venv/bin/activate` は環境変数 ``PATH`` を更新して、:file:`.venv/bin/python` が見つかるようにしている
-* 標準ライブラリも処理系のものを使う
-* （TODO）有効化せずに :file:`.venv/bin/python` を直接実行してもよい
+* 実は有効化せずに :file:`.venv/bin/python` を **直接実行** してもよい
 
-:file:`.venv/lib/python3.15/site-packages/`
-------------------------------------------------------------
-
-* サードパーティライブラリのインストール先のディレクトリ
-* 仮想環境ごとに分かれているので、**バージョン違いが共存** する
-
-.. python -m site で標準ライブラリ + 仮想環境のサードバーティライブラリが確認できる
-
-**仮想環境は常に必要**
+📌 **仮想環境は常に必要**
 ------------------------------------------------------------
 
 * 新規のPythonプロジェクト
-* Pythonスクリプト
 * PyPIのパッケージをCLIツールとして使う
+* ちょっとしたPythonスクリプト
+
+.. code-block:: console
+
+    % python3.15 -m venv .venv --upgrade-deps
 
 ⚠️仮想環境ってrenameすると壊れます
 ------------------------------------------------------------
@@ -233,7 +292,7 @@ pip
     % myenv/bin/kojo-day kokoro
     zsh: myenv/bin/kojo-day: bad interpreter: /.../.venv/bin/python: no such file or directory
 
-仮想環境は使い捨て（disposable）
+仮想環境は **使い捨て** （disposable）
 ------------------------------------------------------------
 
 * インストールされたパッケージ一覧を書き出す
@@ -242,17 +301,17 @@ pip
 .. code-block:: console
 
     % .venv/bin/python -m pip freeze > requirements.txt
-    % python3.15 -m venv .venv2
-    % .venv/bin/python -m pip install -r requirements.txt
+    % python3.15 -m venv myenv --upgrade-deps
+    % myenv/bin/python -m pip install -r requirements.txt
 
 Part1 Python環境基礎 まとめ
 ============================================================
 
 * Python処理系・pip・venv
-* Pythonは1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
+* 1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
 * 全てのPython使いが **仮想環境を理解して人力で管理** する時代が長かった（チュートリアルにも案内あり）
 
-人力仮想環境管理 [#we-are-package-manager]_
+仮想環境人力管理 [#we-are-package-manager]_
 ------------------------------------------------------------
 
 .. code-block:: bash
