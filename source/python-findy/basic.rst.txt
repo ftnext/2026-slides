@@ -203,42 +203,16 @@ pip
 
 .. tree -L 2 .venv を加工
 
-.. code-block:: txt
+.. literalinclude:: venv-tree.txt
+    :language: txt
     :caption: python.org からmacOSにインストール（3.15.2）
-
-    .venv/
-    ├── bin/
-    │   ├── activate
-    │   ├── pip
-    │   ├── pip3
-    │   ├── pip3.15
-    │   ├── python -> python3.15
-    │   ├── python3 -> python3.15
-    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
-    ├── lib/
-    │   └── python3.15/
-    │       └── site-packages/
-    └── pyvenv.cfg
 
 マシンにインストールした処理系への **シンボリックリンク** [#stdlib-secret]_
 --------------------------------------------------------------------------------
 
-.. code-block:: txt
+.. literalinclude:: venv-tree.txt
+    :language: txt
     :emphasize-lines: 2,7
-
-    .venv/
-    ├── bin/
-    │   ├── activate
-    │   ├── pip
-    │   ├── pip3
-    │   ├── pip3.15
-    │   ├── python -> python3.15
-    │   ├── python3 -> python3.15
-    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
-    ├── lib/
-    │   └── python3.15/
-    │       └── site-packages/
-    └── pyvenv.cfg
 
 .. [#stdlib-secret] 標準ライブラリも処理系のものを参照して使う（サードパーティパッケージだけ仮想環境ごとに入る）
 
@@ -247,22 +221,9 @@ pip
 サードパーティパッケージのインストール先
 ------------------------------------------------------------
 
-.. code-block:: txt
+.. literalinclude:: venv-tree.txt
+    :language: txt
     :emphasize-lines: 10-12
-
-    .venv/
-    ├── bin/
-    │   ├── activate
-    │   ├── pip
-    │   ├── pip3
-    │   ├── pip3.15
-    │   ├── python -> python3.15
-    │   ├── python3 -> python3.15
-    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
-    ├── lib/
-    │   └── python3.15/
-    │       └── site-packages/
-    └── pyvenv.cfg
 
 :file:`.venv/bin/python`
 ------------------------------------------------------------

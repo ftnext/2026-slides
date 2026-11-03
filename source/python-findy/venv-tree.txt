@@ -1,0 +1,13 @@
+.venv/
+├── bin/
+│   ├── activate
+│   ├── pip
+│   ├── pip3
+│   ├── pip3.15
+│   ├── python -> python3.15
+│   ├── python3 -> python3.15
+│   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
+├── lib/
+│   └── python3.15/
+│       └── site-packages/
+└── pyvenv.cfg
