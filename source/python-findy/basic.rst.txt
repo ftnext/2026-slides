@@ -25,7 +25,7 @@ macOS
 ------------------------------------------------------------
 
 * `macOS で Python を使う <https://docs.python.org/ja/3/using/mac.html>`__
-* python.orgのインストーラ（+Install Certificates） [#homebrew-alternative]_
+* python.orgのインストーラ（+ *Install Certificates*） [#homebrew-alternative]_
 
 .. code-block:: console
 
@@ -52,19 +52,38 @@ Linux（例：Ubuntu）
 
 .. 『ハイパーモダンPython』1章
 
-複数バージョンのPython処理系
+Python処理系を取り揃える
 ------------------------------------------------------------
 
-* マイナーバージョンごとにインストールして取り揃える（3.15〜3.11）
-* バグフィックスが上がったら再度インストールして、コマンド自体を置き換え
-* 破壊的変更はバグフィックスにはない。マイナーバージョンアップで言語機能が追加されるが、古い書き方も有効 [#python-3.10-match]_
-
-.. [#python-3.10-match] 2021年にPython 3.10で ``match`` が入りましたが、3.9以下のサポートが終了してようやく本格的に使えるようになりました
+* マイナーバージョンごとにインストール（3.15〜3.11で使うもの）
+* バグフィックスが上がったら再度インストールして、コマンド自体を置き換え（言語仕様に破壊的変更はない）
 
 .. TODO ``python3`` コマンドは後勝ち
 
+言語機能の追加：3.10の ``match``
+------------------------------------------------------------
+
+* マイナーバージョンアップで追加されるが、古い書き方も有効
+* `Structural Pattern Matching <https://docs.python.org/ja/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>`__ は3.9のサポートが終了した2025年10月以降本格的に使えるように
+
+.. https://peps.python.org/pep-0596/
+    As of 2025-10-31, 3.9 has reached the end-of-life phase of its release cycle.
+
+.. code-block:: python
+
+    def fizzbuzz(number):
+        match number % 3, number % 5:
+            case 0, 0: return "FizzBuzz"
+            case 0, _: return "Fizz"
+            case _, 0: return "Buzz"
+            case _, _: return str(number)
+
+.. https://gihyo.jp/news/report/01/pyconjp2021/0002#sec1
+
 Pythonが入った後は *仮想環境* （重要）
 ============================================================
+
+.. TODO pythonコマンドに揃う
 
 .. code-block:: console
 
@@ -104,9 +123,11 @@ venvモジュール
 pip
 ------------------------------------------------------------
 
-* パッケージマネージャのサードパーティパッケージ（ただし機能は *弱い*）
+* **パッケージマネージャ**（ただし機能は *弱い*）
 * https://pip.pypa.io/en/stable/
-* Python処理系に **バンドル** されている（標準ライブラリのensurepip）
+* サードパーティパッケージだが、Python処理系に *バンドル* されている [#stdlib-ensurepip]_
+
+.. [#stdlib-ensurepip] 標準ライブラリのensurepipによります
 
 例：既存のPythonプロジェクトの開発に合流
 ------------------------------------------------------------
@@ -123,19 +144,17 @@ pip
 仕組み：仮想環境とは **ディレクトリ**
 ============================================================
 
-TODO 図などを3.15にする
-
 .. code-block:: shell
 
-    % python3.14 -m venv --help
-    usage: python3.14 -m venv ENV_DIR [ENV_DIR ...]
+    % python3.15 -m venv --help
+    usage: python3.15 -m venv ENV_DIR [ENV_DIR ...]
 
 .. code-block:: shell
     :caption: :file:`.venv/` というディレクトリができている [#venv-upgrade-deps]_
 
-    % python3.14 -m venv .venv --upgrade-deps
+    % python3.15 -m venv .venv --upgrade-deps
     % ls -al
-    drwxr-xr-x@  7 nikkie  staff       224  8月 20 23:54 .venv
+    drwxr-xr-x    7 devin  staff   224 Nov  2 08:28 .venv
 
 .. oshimaさんスライド？
 
@@ -158,27 +177,26 @@ TODO 図などを3.15にする
 
 .. image:: ../_static/python-findy/virtual-environment-package-isolation.drawio.png
 
-:file:`.venv/` には何がある？ [#python314-easter-egg]_
+:file:`.venv/` には何がある？
 ------------------------------------------------------------
 
 .. tree -L 2 .venv を加工
 
 .. code-block:: txt
-    :caption: python.org からmacOSにインストール（3.14.7）
-    :emphasize-lines: 2,7,11-12
+    :caption: python.org からmacOSにインストール（3.15.2）
+    :emphasize-lines: 2,7,10-11
 
-    .venv
-    ├── bin
+    .venv/
+    ├── bin/
     │   ├── activate
     │   ├── pip
     │   ├── pip3
-    │   ├── pip3.14
-    │   ├── python -> python3.14
-    │   ├── python3 -> python3.14
-    │   ├── python3.14 -> /Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14
-    │   └── 𝜋thon -> python3.14
-    ├── lib
-    │   └── python3.14/
+    │   ├── pip3.15
+    │   ├── python -> python3.15
+    │   ├── python3 -> python3.15
+    │   └── python3.15 -> /Library/Frameworks/Python.framework/Versions/3.15/bin/python3.15
+    ├── lib/
+    │   └── python3.15/
     └── pyvenv.cfg
 
 :file:`.venv/bin/python`
@@ -187,8 +205,9 @@ TODO 図などを3.15にする
 * マシンにインストールしたPython処理系への **シンボリックリンク**
 * :file:`.venv/bin/activate` は環境変数 ``PATH`` を更新して、:file:`.venv/bin/python` が見つかるようにしている
 * 標準ライブラリも処理系のものを使う
+* （TODO）有効化せずに :file:`.venv/bin/python` を直接実行してもよい
 
-:file:`.venv/lib/python3.14/site-packages/`
+:file:`.venv/lib/python3.15/site-packages/`
 ------------------------------------------------------------
 
 * サードパーティライブラリのインストール先のディレクトリ
@@ -203,15 +222,37 @@ TODO 図などを3.15にする
 * Pythonスクリプト
 * PyPIのパッケージをCLIツールとして使う
 
-⚠️仮想環境の名前を変えられません
+⚠️仮想環境ってrenameすると壊れます
 ------------------------------------------------------------
 
-.. TODO エラーになる例
+.. code-block:: console
+
+    % .venv/bin/python -m pip install kojo-fan-art
+    % .venv/bin/kojo-day kokoro
+    % mv .venv myenv
+    % myenv/bin/kojo-day kokoro
+    zsh: myenv/bin/kojo-day: bad interpreter: /.../.venv/bin/python: no such file or directory
+
+仮想環境は使い捨て（disposable）
+------------------------------------------------------------
 
 * インストールされたパッケージ一覧を書き出す
 * 新しい名前の仮想環境に再度インストール
 
-TODO 人力仮想環境管理 [#we-are-package-manager]_
+.. code-block:: console
+
+    % .venv/bin/python -m pip freeze > requirements.txt
+    % python3.15 -m venv .venv2
+    % .venv/bin/python -m pip install -r requirements.txt
+
+Part1 Python環境基礎 まとめ
+============================================================
+
+* Python処理系・pip・venv
+* Pythonは1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
+* 全てのPython使いが **仮想環境を理解して人力で管理** する時代が長かった（チュートリアルにも案内あり）
+
+人力仮想環境管理 [#we-are-package-manager]_
 ------------------------------------------------------------
 
 .. code-block:: bash
@@ -223,17 +264,10 @@ TODO 人力仮想環境管理 [#we-are-package-manager]_
     (.venv) $ python -m pip freeze > requirements.txt
     (.venv) $ python -m pip uninstall httpx2
 
-.. TODO ロックファイルが長きにわたってなかった
+.. TODO ロックファイルが長きにわたって標準になかった
 
 .. [#we-are-package-manager] 拙ブログ `俺がPythonのパッケージマネージャなんだ <https://nikkie-ftnext.hatenablog.com/entry/pythonistas-are-part-of-python-package-manager-system>`__
 
 .. [#why-python-m] ``python -m``：「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
 
 .. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
-
-Part1 Python環境基礎 まとめ
-============================================================
-
-* Python処理系・pip・venv
-* Pythonは1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
-* 全てのPython使いが **仮想環境を理解して人力で管理** する時代が長かった（チュートリアルにも案内あり）
