@@ -1,40 +1,53 @@
 Part2（続）使い倒すぜ、uv
 ============================================================
 
-* 2026年のPython環境はこんなことができるんです！（2点紹介）
-* uv以外にも方法はあります。uvを使っているなら、型を増やしましょう！
+* 2026年のPython環境はこんなことができるんです！
+* uv以外にもツールはあるのですが、今回はuvの機能をmaxxingしましょう！
 
-1️⃣PyPIにあるCLIツールの使用
+常に必要な仮想環境を **人間が意識しなくてよくなった** としたら？
+----------------------------------------------------------------------
+
+1. PyPIのパッケージをCLIツールとして使う
+2. ちょっとしたPythonスクリプト
+
+1️⃣PyPIにあるCLIツール
 ============================================================
 
-* 一時的な仮想環境
-* 仮想環境+マシングローバルにインストール
+* 例として ``llm``
+* https://pypi.org/project/llm/
+* https://github.com/simonw/llm
 
-.. pipxというツールでもできます（``pipx run``・``pipx install``）
+.. code-block:: console
 
-``uvx`` （``uv tool run``） [#sakana-namazu]_
+    (.venv) % llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
+
+CLIツールを仮想環境を意識せずに使えます！ [#alternative-pipx]_
+----------------------------------------------------------------------
+
+A. 一時的な仮想環境
+B. 仮想環境+マシングローバルにインストール
+
+`Running and installing applications as tools <https://docs.astral.sh/uv/guides/tools/>`__
+
+.. [#alternative-pipx] pipxというツールでもできます（``pipx run``・``pipx install``）
+
+🅰️ ``uvx`` （``uv tool run``）
 ------------------------------------------------------------
-
-TODO simonw/llmで説明置き換え
 
 .. code-block:: shell
 
-    $ uvx openai@2.34.0 api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+    $ uvx llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
 
 1. uvが **一時的な仮想環境** を作成
 2. そこにCLIツールをインストールして実行
 
-.. [#sakana-namazu] 今回の例では環境変数 ``OPENAI_BASE_URL`` と ``OPENAI_API_KEY`` で `Sakana AIのNamazu <https://sakana.ai/namazu/>`__ に向けてます
-
-.. https://x.com/ftnext/status/2084262242980335677
-
-``uv tool install``
+🅱️ ``uv tool install``
 ------------------------------------------------------------
 
 .. code-block:: shell
 
-    $ uv tool install openai==2.34.0
-    $ openai api chat.completions.create -m sakana-namazu -g user '台風とコロッケの関係は？'
+    $ uv tool install llm
+    $ llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
 
 1. uvが仮想環境を作成
 2. そこにCLIツールをインストールし、**グローバルなパス** を通す
@@ -56,20 +69,25 @@ Pythonのインストールや仮想環境の管理を **uvが覆い隠して簡
 * サードパーティライブラリを使ったスクリプトを書く際に推し
 * シェルスクリプトの代わりに、 **サードパーティライブラリまで使えるPythonスクリプト**
 
+`Running scripts and declaring dependencies <https://docs.astral.sh/uv/guides/scripts/>`__
+
+スクリプトと別に仮想環境を用意していたが
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/inline-script-metadata/v2_example_like_pep723.py
+    :language: python
+    :lines: 8-20
+    :caption: 別途 ``.venv/bin/python -m pip install httpx2 rich``
+
 .. _PEP 723: https://peps.python.org/pep-0723/
 
 `PEP 723`_ - inline script metadata
 ------------------------------------------------------------
 
-.. code-block:: python
-    :caption: 特殊なコメント
-
-    # /// script
-    # requires-python = ">=3.12"
-    # dependencies = [
-    #   "httpx2",
-    # ]
-    # ///
+.. literalinclude:: ../../samplecode/inline-script-metadata/v2_example_like_pep723.py
+    :language: python
+    :lines: 1-7
+    :caption: 特殊な形式のコメントを加えるだけ
 
 inline script metadataをサポートしたツール（例：``uv run``）は [#other-pep723-tools]_
 ------------------------------------------------------------------------------------------
@@ -125,19 +143,34 @@ inline script metadataはいいぞ
 * 完成したPythonスクリプトの **持ち運び** に超便利（コーディングエージェントのフックスクリプト、stdioのMCPサーバ実装）
 * 実装中は ``PYTHONINSPECT=1 uv run awesome.py`` で **対話モードを立ち上げ** てデバッグも可能
 
-TODO uv-ty
+uv-ty連携はじまる [#blog-uv-ty-start]_
 ------------------------------------------------------------
+
+* `Bringing uv and ty together <https://astral.sh/blog/uv-ty-integration>`__
+* uv 0.12.3以上、ty 0.0.76以上
+* VS Code ty拡張がinline script metadataを踏まえて型を示してサポートをしてくれます
+
+.. [#blog-uv-ty-start] 拙ブログ `Astralがuvと型チェッカtyを実験的に連携。inline script metadata付きのPythonスクリプトをtyの恩恵を受けながら実装できます！ <https://nikkie-ftnext.hatenablog.com/entry/uv-ty-experimental-integration-better-inline-script-metadata-developer-experience>`__
 
 uv使うならこれらもお試しあれ！
 ============================================================
 
-* ``uvx`` や ``uv tool install``
-* inline script metadata
-* uvで知っている範囲を広げていくのはいかがでしょうか？
+* ``uvx`` や ``uv tool install`` でPyPIのパッケージをCLIツールとして使う
+* ちょっとしたPythonスクリプトにinline script metadataを書く
 
-uvはタスク管理ができない
+IMO：uvに任せる範囲をmaxxing
 ------------------------------------------------------------
 
-* 要望が上がっているが、未実装（要望放置はAstralあるある）
-* 私は ``mise`` と合わせる立場（miseでuv入れて、uvにないタスク管理をmiseで補う）
-* 方法は色々（make, taskipyなどなど）
+* Pythonの管理
+* 仮想環境の管理
+* CLIとして使えるサードパーティパッケージ管理
+* inline script metadataを書いたスクリプト実行
+
+uvにタスクランナー機能はない😢
+------------------------------------------------------------
+
+* Astralはコミュニティの要望放置しがち：`Using uv run as a task runner #5903 <https://github.com/astral-sh/uv/issues/5903>`__
+* 私は ``mise`` と合わせる立場（miseでuv入れて、uvにないタスクランナーをmiseで補う） [#task-runner-alternatives]_
+* https://mise.jdx.dev/tasks/
+
+.. [#task-runner-alternatives] 方法は色々（make, taskipyなどなど）。拙ブログ `皆さんに教えていただいた、uvで管理するPythonプロジェクトで使っているタスクランナーたち <https://nikkie-ftnext.hatenablog.com/entry/awesome-uv-task-runners-thanks-replies-202502>`__
