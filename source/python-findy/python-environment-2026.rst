@@ -5,7 +5,7 @@ Pythonの環境構築をすることになったあなたへ（2026年版）
 Pythonの環境構築をすることになったあなたへ（2026年版）
 ================================================================================
 
-:Event: Python環境構築を、もう一度考える
+:Event: Python環境構築を、もう一度考える ~uvに任せていいのはどこまで？~
 :Presented: 2026/11/4 nikkie （スペース連打 or 矢印キーでめくります）
 
 お集まりいただきありがとうございます
@@ -28,9 +28,9 @@ Python歴
 ------------------------------------------------------------
 
 * 2016〜 ソフトウェアエンジニア
-* 2017年11月 Pythonを独学開始
+* 2017年11月 Pythonを独学開始（はじめて画像処理）
 * 2019〜 仕事でもPython（ユーザベース 機械学習エンジニア）
-* LT、ブログ、PyCon JP 登壇
+* LT、`ブログ <https://nikkie-ftnext.hatenablog.com/>`__、PyCon JP 登壇、`小さなOSS <https://github.com/ftnext?tab=repositories>`__
 
 興味あれば後ほどどうぞ
 ------------------------------------------------------------
@@ -51,7 +51,7 @@ Python歴
 ================================================================================
 
 1. Pythonのドキュメントの方法（uv以前）
-2. uv以後
+2. uv以後（uvに任せていいのはどこまで？を考えましょう）
 3. 2026年の話題
 
 .. include:: basic.rst.txt
@@ -68,46 +68,45 @@ Python歴
 
 .. include:: uv-usecases.rst.txt
 
-TODO お昼明けからすぐにuvだ！<-そこまで言ってない
+お昼明けから試すなら
 ------------------------------------------------------------
 
-* 変えるのは新規プロジェクトからでいいと思っています
-* ツールの単なる置き換えは、ユーザへの価値をほとんど生み出さないですよね
-* uv-migrate
+* ``uv tool install`` やinline script metadataから始めることもできます
+* :file:`pyproject.toml` のあるプロジェクトなら ``uv sync`` で移行しやすい（ハマったら引き返そう）
+* `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__ というツールもあります。コーディングエージェントも頼れるでしょう
 
 .. include:: topics-2026.rst.txt
 
-TODO One more thing: pnpm
+One more thing: pnpm
 ------------------------------------------------------------
 
-.. 未来 PEP 831？
+* 12でRust実装となり、`12.4 <https://github.com/pnpm/pnpm/releases/tag/v12.4.0>`__ でPythonパッケージ管理もできるようになった [#greedy-pnpm-12]_
+* https://pnpm.io/python
+* uvの完成度は高いが、言語をまたいだパッケージ管理ツールの登場に注目しています
 
-.. チュートリアルにuvを推しますが、私はuvに満足していません。むしろAstralに伝えたいことは山ほどあります（インタビュー記事や廊下でどうぞ）
+.. https://nikkie-ftnext.hatenablog.com/entry/pnpm-12-4-ambitious-multi-language-package-manager-support-rust-and-python
+
+.. [#greedy-pnpm-12] 12.4ではRustのパッケージ管理もサポート https://pnpm.io/cargo また、`12.11 <https://github.com/pnpm/pnpm/releases/tag/v12.11.0>`__ でAgent Skillsもインストールできるようになりました https://pnpm.io/agent-skills
+
+.. 未来 PEP 831？
 
 まとめ🌯 Pythonの環境構築をすることになったあなたへ（2026年版）
 ================================================================================
 
-* uvを試してみてはいかがでしょうか？
-* Pythonの管理、仮想環境管理、``uv tool install``・inline script metadataととっても便利ですよ
+* Pythonの管理、仮想環境管理、``uv tool install``・inline script metadata、便利です
+* あなたはuvにどこまで任せてみますか？
 
 仮想環境の管理が簡単になっている
 ------------------------------------------------------------
 
 * uvは仮想環境を「`正しい使い方を簡単に、誤った使い方を困難に <https://yoshi389111.github.io/kinokobooks/prog_ja/prog053.htm>`__」した（+爆速 & ワンストップ）
-* **仮想環境の抽象化・カプセル化**：仕組みを詳しく知らなくても使える
 * メッセージ「仮想環境をツールに任せて楽してこーぜ」
-
-参考文献リスト 🏃‍♂️
-------------------------------------------------------------
-
-* 『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`__』
-* `PEP 405 – Python Virtual Environments <https://peps.python.org/pep-0405/>`__
-* ばんくしさん「`ゼロから作る自作 Python Package Manager 入門 <https://techbookfest.org/product/rpXewXTtekXgNPFBCWLrX4>`__」
-
-.. https://nikkie-ftnext.hatenablog.com/entry/vaaaaanquish-python-package-manager-diy-introduction-is-awesome
+* Pythonを深く知りたい方には仮想環境の理解をおすすめします
 
 ご清聴ありがとうございました
 ------------------------------------------------------------
+
+質問お気軽にどうぞ！
 
 EOF
 ===

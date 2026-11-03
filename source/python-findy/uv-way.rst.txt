@@ -19,8 +19,8 @@ Astral
 ------------------------------------------------------------
 
 * Rustのツールチェイン（``rustup`` や ``cargo``）を信奉
+* リンタ・フォーマッタ `Ruff <https://github.com/astral-sh/ruff>`__ や、型チェッカ `ty <https://github.com/astral-sh/ty>`__ もAstral製です
 * IMO：Python環境構築を圧倒的に簡単にしてくれてありがとう（ただ言いたいことはいっぱいあるけどね）
-* リンタ・フォーマッタ `Ruff <https://github.com/astral-sh/ruff>`__ や、型チェッカ `Ty <https://github.com/astral-sh/ty>`__ もAstral製です
 
 uvのインストール [#uv-standalone-installer]_
 ------------------------------------------------------------
@@ -46,12 +46,11 @@ uvは **Pythonも管理** できる [#uv-python-commands]_
 ------------------------------------------------------------
 
 .. code-block:: shell
+    :caption: `Installing Python versions <https://docs.astral.sh/uv/guides/install-python/>`__
 
-    $ uv python list
-    $ uv python install
-    $ uv python upgrade
+    $ uv python install 3.15 3.14
 
-* 1つ1つ手でダウンロードする代わりにuv
+* どの環境でも同じコマンド（後述するが省略もできる）
 * 複数のPythonを管理するツール（例：pyenv）とも共存しますし、uvに切り替えられます
 
 .. [#uv-python-commands] https://docs.astral.sh/uv/reference/cli/#uv-python
@@ -60,6 +59,7 @@ uvは **Pythonも管理** できる [#uv-python-commands]_
 ------------------------------------------------------------
 
 .. code-block:: shell
+    :caption: `Creating and working on projects <https://docs.astral.sh/uv/guides/projects/>`__ （後続例も）
 
     $ uv init my-project
     $ cd my-project
@@ -115,7 +115,7 @@ uvで管理する既存Pythonプロジェクトは **簡単に立ち上がる**
     $ uv sync  # *爆速* 環境再現
 
 * :file:`uv.lock` の通りに仮想環境も整う
-* 必要なPythonがマシンになければインストールされる
+* 必要なPythonがマシンになければインストールされる（:file:`.python-version` や :file:`pyproject.toml`）
 
 uvと仮想環境
 ------------------------------------------------------------

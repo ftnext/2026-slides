@@ -7,7 +7,7 @@ Part1 Python環境基礎
 (1) Python処理系のインストール
 ============================================================
 
-* 公式ドキュメントのやり方を紹介
+* **環境ごと** に公式ドキュメントに沿ったやり方を紹介
 * Part2でuvで置き換えを案内するので、ここは雰囲気だけ掴んでいただければ
 
 Windows
@@ -57,16 +57,16 @@ Python処理系を取り揃える
 
 `major.minor.micro <https://devguide.python.org/developer-workflow/development-cycle/index.html>`__
 
-* minorごとにインストール（3.15〜3.11から使うものを）
-* microが上がっていたら再度インストールして、コマンド自体を置き換え（microがバグ修正） [#python3-command]_
+* minorごとにインストール（`Active <https://www.python.org/downloads/>`__ な3.15〜3.11から使うものを）
+* micro（バグ修正）が上がっていたら再度インストールして、コマンド自体を置き換え [#python3-command]_
 
 .. [#python3-command] ``python3`` コマンドは最後にインストールしたminorバージョンに向きます。区別のために ``python3.15`` とminorまで指定したい派です
 
-言語機能の追加例：3.10の ``match``
+minorバージョンアップ例：3.10の ``match``
 ------------------------------------------------------------
 
-* マイナーバージョンアップで追加されるが、古い書き方も有効
-* `Structural Pattern Matching <https://docs.python.org/ja/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>`__ は3.9のサポートが終了した2025年10月以降本格的に使えるように
+* 言語機能が追加されるが、古い書き方も有効
+* `Structural Pattern Matching <https://docs.python.org/ja/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>`__ は3.9のサポートが終了した2025年10月以降本格的に使うように
 
 .. https://peps.python.org/pep-0596/
     As of 2025-10-31, 3.9 has reached the end-of-life phase of its release cycle.
@@ -97,6 +97,13 @@ Python処理系を取り揃える
 
 `12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`_
 
+venvモジュール
+------------------------------------------------------------
+
+* Python処理系にバンドルされる標準ライブラリの1つ
+* https://docs.python.org/ja/3/library/venv.html
+* *仮想環境* を作る
+
 仮想環境を **有効化**
 ------------------------------------------------------------
 
@@ -113,13 +120,6 @@ Python処理系を取り揃える
 * :command:`python` コマンドに揃う
 * ``deactivate`` で抜けます
 
-venvモジュール
-------------------------------------------------------------
-
-* Python処理系にバンドルされる標準ライブラリの1つ
-* https://docs.python.org/ja/3/library/venv.html
-* *仮想環境* を作る
-
 Pythonのサードパーティパッケージ
 ------------------------------------------------------------
 
@@ -132,7 +132,7 @@ Pythonのサードパーティパッケージ
 サードパーティパッケージのインストール [#why-httpx2]_
 ------------------------------------------------------------
 
-``(.venv)`` は仮想環境が有効なことを示します
+``(.venv)`` は仮想環境が有効（``PATH`` などが変更済み）なことを示します
 
 .. code-block:: console
     :caption: `12. 仮想環境とパッケージ`_
@@ -160,7 +160,17 @@ pip
     % cd awesome-project
     % python3.15 -m venv .venv --upgrade-deps
     % source .venv/bin/activate
-    (.venv) % pip install -e '.[dev]'
+    (.venv) % python -m pip install -e '.[dev]'
+
+``python -m``
+------------------------------------------------------------
+
+* モジュールをスクリプトとして実行（importせずにCLIとして使う） [#python-m]_
+* 「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
+
+.. [#python-m] https://docs.python.org/ja/3/using/cmdline.html#cmdoption-m
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
 
 仕組み：仮想環境とは **ディレクトリ**
 ============================================================
@@ -268,15 +278,16 @@ pip
 Part1 Python環境基礎 まとめ
 ============================================================
 
-* Python処理系・pip・venv
+* Python処理系・venv・pip
 * 1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
-* 全てのPython使いが **仮想環境を理解して人力で管理** する時代が長かった（チュートリアルにも案内あり）
 
-仮想環境人力管理 [#we-are-package-manager]_
+パッケージマネージャ、俺たち [#we-are-package-manager]_
 ------------------------------------------------------------
 
+* Python使いは皆 **仮想環境を理解して管理** する時代が長かった
+
 .. code-block:: bash
-    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__ [#why-python-m]_
+    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
 
     $ python -m venv .venv --upgrade-deps
     $ source .venv/bin/activate
@@ -287,7 +298,3 @@ Part1 Python環境基礎 まとめ
 .. TODO ロックファイルが長きにわたって標準になかった
 
 .. [#we-are-package-manager] 拙ブログ `俺がPythonのパッケージマネージャなんだ <https://nikkie-ftnext.hatenablog.com/entry/pythonistas-are-part-of-python-package-manager-system>`__
-
-.. [#why-python-m] ``python -m``：「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
-
-.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path

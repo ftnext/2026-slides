@@ -52,22 +52,11 @@ B. 仮想環境+マシングローバルにインストール
 1. uvが仮想環境を作成
 2. そこにCLIツールをインストールし、**グローバルなパス** を通す
 
-uv様々：自作CLIツールをエンジニアでない100人に配布
-------------------------------------------------------------
-
-.. code-block:: shell
-    :caption: macOSの手順（Windows手順は省略）
-
-    $ uv tool install cdcasasagi
-    $ cdcasasagi --help
-
-Pythonのインストールや仮想環境の管理を **uvが覆い隠して簡単に** してくれた
-
 2️⃣inline script metadata
 ============================================================
 
-* サードパーティライブラリを使ったスクリプトを書く際に推し
-* シェルスクリプトの代わりに、 **サードパーティライブラリまで使えるPythonスクリプト**
+* サードパーティパッケージを使ったスクリプトを書く際に推し
+* シェルスクリプトの代わりに、 **サードパーティパッケージまで使えるPythonスクリプト**
 
 `Running scripts and declaring dependencies <https://docs.astral.sh/uv/guides/scripts/>`__
 
@@ -158,7 +147,7 @@ uv使うならこれらもお試しあれ！
 * ``uvx`` や ``uv tool install`` でPyPIのパッケージをCLIツールとして使う
 * ちょっとしたPythonスクリプトにinline script metadataを書く
 
-IMO：uvに任せる範囲をmaxxing
+IMO：uvに任せる範囲を **maxxing**
 ------------------------------------------------------------
 
 * Pythonの管理
@@ -169,8 +158,9 @@ IMO：uvに任せる範囲をmaxxing
 uvにタスクランナー機能はない😢
 ------------------------------------------------------------
 
-* Astralはコミュニティの要望放置しがち：`Using uv run as a task runner #5903 <https://github.com/astral-sh/uv/issues/5903>`__
-* 私は ``mise`` と合わせる立場（miseでuv入れて、uvにないタスクランナーをmiseで補う） [#task-runner-alternatives]_
-* https://mise.jdx.dev/tasks/
+* Astralはコミュニティの要望放置しがち：`Using uv run as a task runner #5903 <https://github.com/astral-sh/uv/issues/5903>`__ (2024-)
+* 私は **miseと合わせる** 立場（miseでuv入れて、uvにないタスクランナーをmiseで補う） [#task-runner-alternatives]_
+
+    * https://mise.jdx.dev/tasks/
 
 .. [#task-runner-alternatives] 方法は色々（make, taskipyなどなど）。拙ブログ `皆さんに教えていただいた、uvで管理するPythonプロジェクトで使っているタスクランナーたち <https://nikkie-ftnext.hatenablog.com/entry/awesome-uv-task-runners-thanks-replies-202502>`__
