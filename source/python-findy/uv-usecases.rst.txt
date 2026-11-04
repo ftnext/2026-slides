@@ -55,8 +55,8 @@ B. 仮想環境+マシングローバルにインストール
 2️⃣inline script metadata
 ============================================================
 
-* サードパーティパッケージを使ったスクリプトを書く際に推し
-* シェルスクリプトの代わりに、 **サードパーティパッケージまで使えるPythonスクリプト**
+* **サードパーティパッケージの管理を意識せず** に使えるPythonスクリプト
+* 私はシェルスクリプト代わりに使っています
 
 `Running scripts and declaring dependencies <https://docs.astral.sh/uv/guides/scripts/>`__
 
@@ -126,11 +126,12 @@ uvはinline script metadataを書く
     # ]
     # ///
 
-inline script metadataはいいぞ
+持ち運びに超便利
 ------------------------------------------------------------
 
-* 完成したPythonスクリプトの **持ち運び** に超便利（コーディングエージェントのフックスクリプト、stdioのMCPサーバ実装）
-* 実装中は ``PYTHONINSPECT=1 uv run awesome.py`` で **対話モードを立ち上げ** てデバッグも可能
+* コーディングエージェントのフックスクリプトに
+* stdioのMCPサーバ実装に
+* `シバンとして書けます <https://docs.astral.sh/uv/guides/scripts/#using-a-shebang-to-create-an-executable-file>`__
 
 uv-ty連携はじまる [#blog-uv-ty-start]_
 ------------------------------------------------------------
@@ -152,8 +153,8 @@ IMO：uvに任せる範囲を **maxxing**
 
 * Pythonの管理
 * 仮想環境の管理
-* CLIとして使えるサードパーティパッケージ管理
-* inline script metadataを書いたスクリプト実行
+* ⭐️CLIとして使えるサードパーティパッケージ管理
+* ⭐️inline script metadataを書いたスクリプト実行
 
 uvにタスクランナー機能はない😢
 ------------------------------------------------------------

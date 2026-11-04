@@ -71,16 +71,17 @@ Python歴
 お昼明けから試すなら
 ------------------------------------------------------------
 
-* ``uv tool install`` やinline script metadataから始めることもできます
-* :file:`pyproject.toml` のあるプロジェクトなら ``uv sync`` で移行しやすい（ハマったら引き返そう）
-* `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__ というツールもあります。コーディングエージェントも頼れるでしょう
+* ``uv sync`` で入るかもしれないが、勝手にやらず採用するかチームで話しましょう [#migrate-to-uv]_
+* ``uv tool install`` やinline script metadataから個人で **小さく始める** こともできます
+
+.. [#migrate-to-uv] `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__ というツールもありますが、 ``uv sync`` で十分かも。他にコーディングエージェントも頼れるでしょう
 
 .. include:: topics-2026.rst.txt
 
 One more thing: pnpm
 ------------------------------------------------------------
 
-* 12でRust実装となり、`12.4 <https://github.com/pnpm/pnpm/releases/tag/v12.4.0>`__ でPythonパッケージ管理もできるようになった [#greedy-pnpm-12]_
+* 12でRust実装となり、`12.4 <https://github.com/pnpm/pnpm/releases/tag/v12.4.0>`__ で **Pythonパッケージ管理も** できるようになった [#greedy-pnpm-12]_
 * https://pnpm.io/python
 * uvの完成度は高いが、言語をまたいだパッケージ管理ツールの登場に注目しています
 
@@ -93,7 +94,7 @@ One more thing: pnpm
 まとめ🌯 Pythonの環境構築をすることになったあなたへ（2026年版）
 ================================================================================
 
-* Pythonの管理、仮想環境管理、``uv tool install``・inline script metadata、便利です
+* Pythonの管理、仮想環境管理、``uv tool install``・inline script metadata、便利なので任せてます
 * あなたはuvにどこまで任せてみますか？
 
 仮想環境の管理が簡単になっている
@@ -101,7 +102,7 @@ One more thing: pnpm
 
 * uvは仮想環境を「`正しい使い方を簡単に、誤った使い方を困難に <https://yoshi389111.github.io/kinokobooks/prog_ja/prog053.htm>`__」した（+爆速 & ワンストップ）
 * メッセージ「仮想環境をツールに任せて楽してこーぜ」
-* Pythonを深く知りたい方には仮想環境の理解をおすすめします
+* Pythonを深く知りたい方には仮想環境を理解していくのをおすすめします
 
 ご清聴ありがとうございました
 ------------------------------------------------------------

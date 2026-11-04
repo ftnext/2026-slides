@@ -1,9 +1,10 @@
-Part2 uv登場
+Part2 uv以後
 ============================================================
 
-煩雑な仮想環境管理をツールにやらせる流れが重なり [#tools-history-pyconjp]_ 、uvに至る
+* 煩雑な仮想環境管理をツールにやらせる流れが重なり [#tools-history-pyconjp]_ 、uvに至る
+* 任せていいのはどこまで？を考えて聞いてみてください
 
-.. [#tools-history-pyconjp] 登場した数々のツールについてはPyCon JPのスライドをどうぞ。コマンドの形はPoetryが先駆けです
+.. [#tools-history-pyconjp] 登場した数々のツールについてはインタビューやPyCon JPのスライドをどうぞ。コマンドの形はPoetryが先駆けです
 
 uv（2024〜）
 ------------------------------------------------------------
@@ -20,7 +21,9 @@ Astral
 
 * Rustのツールチェイン（``rustup`` や ``cargo``）を信奉
 * リンタ・フォーマッタ `Ruff <https://github.com/astral-sh/ruff>`__ や、型チェッカ `ty <https://github.com/astral-sh/ty>`__ もAstral製です
-* IMO：Python環境構築を圧倒的に簡単にしてくれてありがとう（ただ言いたいことはいっぱいあるけどね）
+* IMO：Python環境構築を圧倒的に簡単にしてくれてありがとう [#astral-my-opinion]_
+
+.. [#astral-my-opinion] ただ言いたいことはいっぱいあるけどね
 
 uvのインストール [#uv-standalone-installer]_
 ------------------------------------------------------------
@@ -40,7 +43,50 @@ uvのインストール [#uv-standalone-installer]_
 
     $ mise use -g uv
 
-.. [#uv-standalone-installer] https://docs.astral.sh/uv/getting-started/installation/#standalone-installer ``uv self update`` も裏でこのシェルを叩きます
+.. [#uv-standalone-installer] https://docs.astral.sh/uv/getting-started/installation/#standalone-installer ``uv self update`` も裏でインストーラシェルを叩きます
+
+:command:`uv sync` お試しあれ
+============================================================
+
+* :file:`pyproject.toml` があれば（:file:`uv.lock` なくとも）うまくいくことが多い
+* ツールによらず使える、Pythonプロジェクトのメタデータを書くファイルです（`PEP 518 <https://peps.python.org/pep-0518/>`__）
+
+.. https://packaging.python.org/ja/latest/glossary/#term-pyproject.toml
+
+``uv sync`` の裏で
+------------------------------------------------------------
+
+* Pythonを見つける（ない場合はダウンロード）
+* ロックファイル :file:`uv.lock` 作成
+* 仮想環境 :file:`.venv/` を作り、ロックファイルと同期
+
+**uvが仮想環境を有効にして** コマンド実行 [#uv-run-overview]_
+----------------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: 手動で有効化の必要なし
+
+    $ uv run <command>
+
+.. [#uv-run-overview] ``uv sync`` の上で仮想環境を有効化してコマンドを実行しています
+
+仮想環境はuvにお任せ：依存の追加
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: venvやpipを扱う必要なし
+
+    $ uv add httpx2 --bounds major
+
+.. code-block:: toml
+    :caption: :file:`pyproject.toml` に書かれる
+
+    [project]
+    dependencies = [
+        "httpx2>=2.16.0,<3.0.0",
+    ]
+
+:file:`.venv/` と :file:`uv.lock` も作成・更新される
 
 uvは **Pythonも管理** できる [#uv-python-commands]_
 ------------------------------------------------------------
@@ -50,16 +96,17 @@ uvは **Pythonも管理** できる [#uv-python-commands]_
 
     $ uv python install 3.15 3.14
 
-* どの環境でも同じコマンド（後述するが省略もできる）
-* 複数のPythonを管理するツール（例：pyenv）とも共存しますし、uvに切り替えられます
+* どの環境でも同じコマンド [#uv-python-versions]_
+* 既存のPython管理ツール（例：pyenv）とも共存します
 
 .. [#uv-python-commands] https://docs.astral.sh/uv/reference/cli/#uv-python
+.. [#uv-python-versions] ``3.15`` のような指定は ``uv run --python 3.15`` のように各コマンドにも指定できます（``UV_PYTHON`` も）
 
 新規プロジェクト作成 [#uv-init-command]_
 ------------------------------------------------------------
 
 .. code-block:: shell
-    :caption: `Creating and working on projects <https://docs.astral.sh/uv/guides/projects/>`__ （後続例も）
+    :caption: `Creating and working on projects <https://docs.astral.sh/uv/guides/projects/>`__
 
     $ uv init my-project
     $ cd my-project
@@ -79,52 +126,29 @@ uvは **Pythonも管理** できる [#uv-python-commands]_
 
 .. [#uv-init-command] https://docs.astral.sh/uv/reference/cli/#uv-init
 
-仮想環境はuvにお任せ：依存の追加
-------------------------------------------------------------
-
-.. code-block:: shell
-    :caption: venvやpipを扱う必要なし
-
-    $ uv add httpx2 --bounds major
-
-.. code-block:: toml
-    :caption: :file:`pyproject.toml` に書かれる
-
-    [project]
-    dependencies = [
-        "httpx2>=2.16.0,<3.0.0",
-    ]
-
-:file:`.venv/` と :file:`uv.lock` も作成される
-
-仮想環境はuvにお任せ：uv経由で有効化
-------------------------------------------------------------
-
-.. code-block:: shell
-    :caption: 手動で有効化の必要なし
-
-    $ uv run <command>
-
-**uvが仮想環境を有効にして** コマンド実行
-
-uvで管理する既存Pythonプロジェクトは **簡単に立ち上がる**
-------------------------------------------------------------
-
-.. code-block:: shell
-
-    $ uv sync  # *爆速* 環境再現
-
-* :file:`uv.lock` の通りに仮想環境も整う
-* 必要なPythonがマシンになければインストールされる（:file:`.python-version` や :file:`pyproject.toml`）
-
-uvと仮想環境
-------------------------------------------------------------
+落ち穂拾い：uvと仮想環境
+============================================================
 
 * venvは使わずに仮想環境（ディレクトリ）を作る [#pep-405]_
 * pipはない（uvが担えるので）
 * uvコマンドを使う限りは **仮想環境は意識しなくてよくなっている**
 
 .. [#pep-405] `PEP 405 – Python Virtual Environments <https://peps.python.org/pep-0405/>`__
+
+uvと仮想環境 続き
+------------------------------------------------------------
+
+* 使う中で仮想環境をおかしくしてしまったら :file:`.venv/` を消してみる（``uv sync`` ですぐ復活。disposable）
+* uvの作った仮想環境を直接触りたくなったら `uv venv <https://docs.astral.sh/uv/reference/cli/#uv-venv>`__ や `uv pip <https://docs.astral.sh/uv/reference/cli/#uv-pip>`__ コマンド
+
+仮想環境との同期
+------------------------------------------------------------
+
+* ロックファイルと仮想環境を最新化できる（`Locking and syncing <https://docs.astral.sh/uv/concepts/projects/sync/>`__） [#locked-option]_
+* `--frozen`: ロックファイルが最新でなくてもそのまま使って同期（CIで指定）
+* `--no-sync`: 仮想環境を最新化せず
+
+.. [#locked-option] `--locked`: ロックファイルが最新でないならエラー
 
 裏の仕組み：python-build-standalone
 ------------------------------------------------------------

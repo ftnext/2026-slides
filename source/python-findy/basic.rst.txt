@@ -1,14 +1,18 @@
-Part1 Python環境基礎
+Part1 Python環境基礎（uv以前）
 ============================================================
 
 1. Python処理系のインストール
 2. サードパーティパッケージを扱う際に、*仮想環境*
 
-(1) Python処理系のインストール
+(1) Python処理系のインストール [#devin-examples]_
 ============================================================
 
-* **環境ごと** に公式ドキュメントに沿ったやり方を紹介
+* **環境ごと** に公式ドキュメントに沿ったやり方を紹介 [#hypermodern-python-chapter1]_
 * Part2でuvで置き換えを案内するので、ここは雰囲気だけ掴んでいただければ
+
+.. [#devin-examples] 動作確認にDevin使いました。Ubuntu、`Windows <https://docs.devin.ai/ja/onboard-devin/environment/windows-support>`__、`macOS <https://docs.devin.ai/ja/onboard-devin/environment/macos-support>`__ のVMが使えます
+
+.. [#hypermodern-python-chapter1] 『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`__』1章
 
 Windows
 ------------------------------------------------------------
@@ -48,16 +52,14 @@ Linux（例：Ubuntu）
     $ python3.15
     $ python3.14
 
-.. [#deadsnakes-related-article] `add-apt-repositoryを使わずに最新でないPythonをインストールする 〜UbuntuのDockerイメージを例に〜 <https://nikkie-ftnext.hatenablog.com/entry/ubuntu-add-deadsnakes-ppa-without-add-apt-repository>`__
-
-.. 『ハイパーモダンPython』1章
+.. [#deadsnakes-related-article] 拙ブログ `add-apt-repositoryを使わずに最新でないPythonをインストールする 〜UbuntuのDockerイメージを例に〜 <https://nikkie-ftnext.hatenablog.com/entry/ubuntu-add-deadsnakes-ppa-without-add-apt-repository>`__
 
 Python処理系を取り揃える
 ------------------------------------------------------------
 
-`major.minor.micro <https://devguide.python.org/developer-workflow/development-cycle/index.html>`__
+`major(3).minor(15).micro(2) <https://devguide.python.org/developer-workflow/development-cycle/index.html>`__
 
-* minorごとにインストール（`Active <https://www.python.org/downloads/>`__ な3.15〜3.11から使うものを）
+* minorごとにインストール（現在 `Active <https://www.python.org/downloads/>`__ な3.15〜3.11から使うものを）
 * micro（バグ修正）が上がっていたら再度インストールして、コマンド自体を置き換え [#python3-command]_
 
 .. [#python3-command] ``python3`` コマンドは最後にインストールしたminorバージョンに向きます。区別のために ``python3.15`` とminorまで指定したい派です
@@ -102,7 +104,7 @@ venvモジュール
 
 * Python処理系にバンドルされる標準ライブラリの1つ
 * https://docs.python.org/ja/3/library/venv.html
-* *仮想環境* を作る
+* *仮想環境* を作る（主にCLIで使う）
 
 仮想環境を **有効化**
 ------------------------------------------------------------
@@ -144,9 +146,10 @@ Pythonのサードパーティパッケージ
 pip
 ------------------------------------------------------------
 
-* **パッケージマネージャ** （ただし機能は *弱い*）
+* **パッケージマネージャ** のCLI（ただし機能は *弱い*）
 * https://pip.pypa.io/en/stable/
 * サードパーティパッケージだが、Python処理系に *バンドル* されている [#stdlib-ensurepip]_
+* venvはpipをインストールした仮想環境を作る
 
 .. [#stdlib-ensurepip] 標準ライブラリの `ensurepip <https://docs.python.org/ja/3/library/ensurepip.html>`__ によります。拙ブログの `仕組み読み解き <https://nikkie-ftnext.hatenablog.com/entry/python-stdlib-ensurepip-run-pip-install-pip>`__
 
@@ -244,9 +247,11 @@ pip
 📌 **仮想環境は常に必要**
 ------------------------------------------------------------
 
-* 新規のPythonプロジェクト
+* Pythonプロジェクト [#term-python-project]_ 、だけでなく
 * PyPIのパッケージをCLIツールとして使う
 * ちょっとしたPythonスクリプト
+
+.. [#term-python-project] https://packaging.python.org/ja/latest/glossary/#term-Project
 
 .. code-block:: console
 
@@ -289,7 +294,7 @@ Part1 Python環境基礎 まとめ
 .. code-block:: bash
     :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
 
-    $ python -m venv .venv --upgrade-deps
+    $ python3.15 -m venv .venv --upgrade-deps
     $ source .venv/bin/activate
     (.venv) $ python -m pip install httpx2
     (.venv) $ python -m pip freeze > requirements.txt

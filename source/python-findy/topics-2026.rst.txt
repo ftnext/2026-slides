@@ -100,13 +100,13 @@ LiteLLMへの攻撃で状況は大きく変わった
 
 .. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
 
-ロックファイルがない状況で最新版インストールのリスクを減らす
+ロックファイルがない状況で最新版のリスクを減らす
 ----------------------------------------------------------------------
 
 * cooldownの設定
 * セキュアなインデックスへの切り替え
 
-完璧な1つの対策はない。どの対策にも穴があるが重ね合わせて貫通しなくする🧀 [#swiss-cheese-model]_
+完璧な1つの対策はない。どの対策にも穴があるが **重ね合わせて** 貫通しなくする🧀 [#swiss-cheese-model]_
 
 .. [#swiss-cheese-model] `スイスチーズモデル <https://ja.wikipedia.org/wiki/%E3%82%B9%E3%82%A4%E3%82%B9%E3%83%81%E3%83%BC%E3%82%BA%E3%83%A2%E3%83%87%E3%83%AB>`__
 
@@ -134,15 +134,14 @@ cooldown
 ------------------------------------------------------------
 
 * 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
-
-.. TODO https://astral.sh/blog/uv-audit
+* （紹介しきれなかったものとして `uv audit <https://astral.sh/blog/uv-audit>`__）
 
 2-2. eMudhra証明書の事故
 ============================================================
 
 * https://emudhra.we-have-a-problem.com/
 * 中間認証局eMudhraが管理する秘密鍵（8つ）が公開鍵から容易に復元できてしまった
-* 誰でもなりすませる！（HTTPS通信にリスク😱）
+* 誰でもなりすませる！（HTTP **S** 通信にリスク😱）
 
 対応いただいているOSS各位に深く感謝申し上げます
 
@@ -158,7 +157,7 @@ eMudhra証明書を含むチェーンを信頼してはいけません
 uvでの対応
 ------------------------------------------------------------
 
-* uv 0.13.4でバンドルした証明書を更新（webpki-root-certs 1.0.10）
+* uv **0.13.4** でバンドルした証明書を更新（webpki-root-certs 1.0.10）
 * Pythonのダウンロードや、PyPIからパッケージのインストールの通信に使う
 
 .. UV_SYSTEM_CERTS=true
@@ -170,14 +169,16 @@ Pythonでの対応
 * 標準モジュール **ssl** がeMudhraの証明書を含むチェーンを **ブロック** するようにCVE対応した
 * :command:`uv python upgrade` (uv 0.13.6以上)
 
-macOSはeMudhraの証明書が残っている
-------------------------------------------------------------
+macOSはeMudhraの証明書が残っている [#apple-support-emduhra]_
+----------------------------------------------------------------------
 
 * eMudhraの証明書は信頼できないという情報はマシンに配信されている（Safariやメールに適用）
 * しかし :file:`/etc/ssl/cert.pem` に残る（Appleのアップデート待ち）
 * 一般ユーザは安全、 **開発者は注意が必要**
 
-macOSとuvの組合せがややこしや
+.. [#apple-support-emduhra] Apple Support `About the compromised eMudhra intermediate CAs <https://support.apple.com/en-us/149555>`__
+
+**macOSとuvの組合せ** がややこしや
 ------------------------------------------------------------
 
 * uvが使うpython-build-standaloneは :file:`/etc/ssl/cert.pem` を見てしまう挙動 [#blog-macos-cert-experiments]_
