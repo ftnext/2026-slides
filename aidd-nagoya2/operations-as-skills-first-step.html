@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>小事例紹介：運用 as Agent Skills</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-new-tab-link.css?v=d87cb1ac" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/aidd-nagoya2/operations-as-skills-first-step.html">
+    <meta property="og:title" content="小事例紹介：運用 as Agent Skills">
+    <meta property="og:description" content="AI駆動開発勉強会 名古屋支部#2">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/aidd-nagoya2.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">小事例紹介：<strong>運用</strong> as Agent Skills</h1>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>AI駆動開発勉強会 名古屋支部#2</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/10/09 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー） <a class="footnote-reference brackets" href="#nikkie-uuid" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ・<a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo" rel="noreferrer" target="_blank">Codex Ambassador (Tokyo)</a>・Devin Ambassador</p></li>
+<li><p>機械学習エンジニア・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260701/" rel="noreferrer" target="_blank">MCP</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260910/" rel="noreferrer" target="_blank">Slackbot</a> 提供）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nikkie-uuid" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>UUID <a class="reference external" href="https://x.com/ftnext/status/2041119610368602138" rel="noreferrer" target="_blank">28fb3f96-a221-462c-93bd-567b431715b9</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">個人「全部使えばええんや！」（マインド）</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/openai-docs-whats-new-devday-2026-reading-notes" rel="noreferrer" target="_blank">OpenAI DevDay 2026</a> で個人的イチオシは <strong>Sign in with ChatGPT</strong></p></li>
+<li><p><a class="reference external" href="https://devin.ai/blog/sign-in-with-chatgpt" rel="noreferrer" target="_blank">Devin</a> で、ChatGPTのサブスクからGPTモデルが使えます（<a class="reference external" href="https://learn.chatgpt.com/docs/sign-in-with-chatgpt#partners" rel="noreferrer" target="_blank">他にNotionなど</a>）</p></li>
+<li><p>Try <a class="reference external" href="https://x.com/ftnext/status/2107987551567102426" rel="noreferrer" target="_blank">llm-chatgpt-plan</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://aid.connpass.com/event/404553/" rel="noreferrer" target="_blank">connpass</a> 「チームでAIを扱う」</h3>
+<ul class="simple">
+<li><p>私はAIで増幅されているが、チームの増幅率はもっと小さい感覚。わからん殺しされている</p></li>
+<li><p>暗中模索🤯の中、<strong>運用の知識を共有できた</strong> 小さな事例を話します <a class="footnote-reference brackets" href="#theme-respect" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="theme-respect" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>DevDayの話かで迷いましたが、封印して私目線で「チームでAIを扱う」話をします！</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">運用 as Agent Skills</h2>
+<ul class="simple">
+<li><p>開発チーム（4人）で抱えていた小さな <strong>運用の手順をAgent Skillに</strong> した</p></li>
+<li><p><strong>皆</strong> お気にのコーディングエージェントと <strong>運用できる</strong> ように</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">小さな運用</h3>
+<ul class="simple">
+<li><p>毎日未明にKubernetesのジョブが動き、失敗すると勤務開始前にSlack通知が届いている</p></li>
+<li><p>PDFを元にLLMでデータ生成を何件もする。<strong>1件でも生成失敗</strong> したら、ジョブは <strong>エラー終了</strong> する</p></li>
+<li><p>有志が生成失敗を特定し、ローカル環境でリトライして復旧（機会は均等）</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">私は初回、Codexとタッグで</h2>
+<ul class="simple">
+<li><p>ソースコードとエラーメッセージをCodex（デスクトップアプリ）に渡して「復旧したいからサポートして」と質問しまくる</p></li>
+<li><p>起きた事象を把握し、生成失敗の特定・復旧を実施</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">思い出した：LayerXさんの事例</h3>
+<ul class="simple">
+<li><p>入社した <a class="reference external" href="https://x.com/chan_san_jp" rel="noreferrer" target="_blank">ちゃんさん</a>、「<em>教わったオペレーションを片っ端からSkillにしていく</em>」</p></li>
+<li><p>ref: Podcast #あらたまいくお <a class="reference external" href="https://open.spotify.com/episode/0cRDd2qbUTGr5yySC5Hp4p?si=bvNXEr9ISmqRatGIuiPUcQ" rel="noreferrer" target="_blank">いくお、会社やめるってよ</a> 21:00過ぎ</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">初回運用のセッションをスキルに</h3>
+<ul class="simple">
+<li><p>Codexなら <a class="reference external" href="https://github.com/openai/skills/blob/main/skills/.system/skill-creator/SKILL.md" rel="noreferrer" target="_blank">$skill-creator</a></p></li>
+<li><p>セッションから、確定した <strong>手順を取り出し</strong> た</p></li>
+<li><p>未来の私は全て忘れているので、コーディングエージェントと一緒なら思い出せるように</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">今回の運用手順のスキル（概略）</h3>
+<ol class="arabic simple">
+<li><p>エラーメッセージに記載された失敗の行を確認</p></li>
+<li><p>生成失敗した入力を特定（エージェント用に <code class="file docutils literal notranslate"><span class="pre">scripts/</span></code>）</p></li>
+<li><p>ローカルから生成リトライ（LLMでの生成に時間がかかる時もエージェントが見ててくれる）</p></li>
+</ol>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">ひろがる使用者</h2>
+<ul class="simple">
+<li><p>「試しにAgent Skillにしてみた」と共有</p></li>
+<li><p>チームメイトが対応時に使ってくれた</p></li>
+<li><p><a class="reference external" href="https://agentskills.io/specification" rel="noreferrer" target="_blank">Agent Skillsの規格</a> で、ツールの違いは吸収（Codexデスクトップ・Cursor）</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">使うことで、手順も育つ</h3>
+<ul class="simple">
+<li><p>使い手が増える中で「今回の運用ではこれも追加で調べた」</p></li>
+<li><p>今回は私が <strong>スキルを更新</strong></p></li>
+<li><p>チーム共通スキルを、皆で育てる可能性</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯小事例紹介：運用 as Agent Skills</h2>
+<ul class="simple">
+<li><p>人とAIで行った <strong>運用セッションをAgent Skillとして残した</strong></p></li>
+<li><p>皆 <strong>詳しいAgentと作業</strong> でき、運用知識共有に繋がった</p></li>
+<li><p>Skillを装備したエージェントが <em>自動で復旧</em> する可能性も拓いている</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました</h3>
+<p>Happy Development ❤️🤖（ステッカードゾー）</p>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>

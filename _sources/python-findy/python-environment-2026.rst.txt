@@ -1,0 +1,935 @@
+:ogp_title: Pythonの環境構築をすることになったあなたへ（2026年版）
+:ogp_event_name: python-findy
+:ogp_slide_name: python-environment-2026
+:ogp_description: Python環境構築を、もう一度考える ~uvに任せていいのはどこまで？~
+:ogp_image_name: python-findy
+
+================================================================================
+Pythonの環境構築をすることになったあなたへ（2026年版）
+================================================================================
+
+Pythonの環境構築をすることになったあなたへ（2026年版）
+================================================================================
+
+:Event: Python環境構築を、もう一度考える ~uvに任せていいのはどこまで？~
+:Presented: 2026/11/4 nikkie （スペース連打 or 矢印キーでめくります）
+
+お集まりいただきありがとうございます
+==================================================
+
+* ゴール：今（2026年）の **Python環境構築がつかめる** （入口までお連れします）
+* Pythonの経験がない方も踏まえて前提知識補いながらお伝えします📻
+
+お前、誰よ
+============================================================
+
+* nikkie（にっきー）・`Codex Ambassador (Tokyo) <https://nikkie-ftnext.hatenablog.com/entry/announcement-one-of-codex-ambassadors-tokyo>`__・`Devin Ambassador <https://x.com/ftnext/status/2069459222040105357>`__
+* 機械学習エンジニア [#uzabase-message]_ ・`Speeda AI Agent <https://www.uzabase.com/jp/info/20250901/>`__ 開発（`A2A <https://jp.ub-speeda.com/news/20260319/>`__・`MCP <https://jp.ub-speeda.com/news/20260701/>`__・`Slackbot <https://jp.ub-speeda.com/news/20260910/>`__ 提供）
+
+.. image:: ../_static/uzabase-white-logo.png
+
+.. [#uzabase-message] お詫び申し上げます。`【第二報】NewsPicksのお客様の個人情報漏洩の可能性に関するお詫びとお知らせ <https://corp.newspicks.com/info/20261009>`__
+
+Python歴
+------------------------------------------------------------
+
+* 2016〜 ソフトウェアエンジニア
+* 2017年11月 Pythonを独学開始（はじめて画像処理）
+* 2019〜 仕事でもPython（ユーザベース 機械学習エンジニア）
+* LT、`ブログ <https://nikkie-ftnext.hatenablog.com/>`__、PyCon JP 登壇、`小さなOSS <https://github.com/ftnext?tab=repositories>`__
+
+興味あれば後ほどどうぞ
+------------------------------------------------------------
+
+.. image:: ../_static/findy-ogp-chottowakaru-python.png
+    :target: https://findy-code.io/media/articles/chotto-wakaru-python
+    :alt: 最近、なぜみんなuvを使っているんですか？ Pythonパッケージ管理の変遷と現在地
+
+興味あれば後ほどどうぞ その2
+------------------------------------------------------------
+
+.. raw:: html
+
+    <iframe width="800" height="480" src="https://ftnext.github.io/2026-slides/pyconjp/teach-venv-pip-install-alternatives.html#/1"
+        title="Pythonチュートリアル、venv を作って pip install と2026年も教え続けますか？"></iframe>
+
+目次：Pythonの環境構築をすることになったあなたへ
+================================================================================
+
+1. Pythonのドキュメントの方法（uv以前）
+2. uv以後（uvに任せていいのはどこまで？を考えましょう）
+3. 2026年の話題
+
+Part1 Python環境基礎（uv以前）
+============================================================
+
+1. Python処理系のインストール
+2. サードパーティパッケージを扱う際に、*仮想環境*
+
+(1) Python処理系のインストール [#devin-examples]_
+============================================================
+
+* **環境ごと** に公式ドキュメントに沿ったやり方を紹介 [#hypermodern-python-chapter1]_
+* Part2でuvで置き換えを案内するので、ここは雰囲気だけ掴んでいただければ
+
+.. [#devin-examples] 動作確認にDevin使いました。Ubuntu、`Windows <https://docs.devin.ai/ja/onboard-devin/environment/windows-support>`__、`macOS <https://docs.devin.ai/ja/onboard-devin/environment/macos-support>`__ のVMが使えます
+
+.. [#hypermodern-python-chapter1] 『`ハイパーモダンPython <https://www.oreilly.co.jp/books/9784814400928/>`__』1章
+
+Windows
+------------------------------------------------------------
+
+* `Windows で Python を使う <https://docs.python.org/ja/3/using/windows.html>`__
+* **Python インストールマネージャ**
+
+.. code-block:: console
+
+    > py -V:3.15
+    > py -V:3.14
+
+macOS
+------------------------------------------------------------
+
+* `macOS で Python を使う <https://docs.python.org/ja/3/using/mac.html>`__
+* python.orgのインストーラ（+ *Install Certificates*） [#homebrew-alternative]_
+
+.. code-block:: console
+
+    % python3.15
+    % python3.14
+
+.. [#homebrew-alternative] Homebrewという選択肢もあります
+
+Linux（例：Ubuntu）
+------------------------------------------------------------
+
+* 最新 + `deadsnakes PPA <https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa>`__ [#deadsnakes-related-article]_
+
+.. code-block:: console
+
+    $ apt-get install python3.15-full python3.14-full
+
+.. code-block:: console
+
+    $ python3.15
+    $ python3.14
+
+.. [#deadsnakes-related-article] 拙ブログ `add-apt-repositoryを使わずに最新でないPythonをインストールする 〜UbuntuのDockerイメージを例に〜 <https://nikkie-ftnext.hatenablog.com/entry/ubuntu-add-deadsnakes-ppa-without-add-apt-repository>`__
+
+Python処理系を取り揃える
+------------------------------------------------------------
+
+`major(3).minor(15).micro(2) <https://devguide.python.org/developer-workflow/development-cycle/index.html>`__
+
+* minorごとにインストール（現在 `Active <https://www.python.org/downloads/>`__ な3.15〜3.11から使うものを）
+* micro（バグ修正）が上がっていたら再度インストールして、コマンド自体を置き換え [#python3-command]_
+
+.. [#python3-command] ``python3`` コマンドは最後にインストールしたminorバージョンに向きます。区別のために ``python3.15`` とminorまで指定したい派です
+
+minorバージョンアップ例：3.10の ``match``
+------------------------------------------------------------
+
+* 言語機能が追加されるが、古い書き方も有効
+* `Structural Pattern Matching <https://docs.python.org/ja/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>`__ は3.9のサポートが終了した2025年10月以降本格的に使うように
+
+.. https://peps.python.org/pep-0596/
+    As of 2025-10-31, 3.9 has reached the end-of-life phase of its release cycle.
+
+.. code-block:: python
+
+    def fizzbuzz(number):
+        match number % 3, number % 5:
+            case 0, 0: return "FizzBuzz"
+            case 0, _: return "Fizz"
+            case _, 0: return "Buzz"
+            case _, _: return str(number)
+
+.. https://gihyo.jp/news/report/01/pyconjp2021/0002#sec1
+
+(2) Pythonが入った後は *仮想環境* （重要）
+============================================================
+
+.. code-block:: console
+    :caption: Windows
+
+    > py -V:3.15 -m venv .venv
+
+.. code-block:: console
+    :caption: macOS または Linux
+
+    % python3.15 -m venv .venv
+
+`12. 仮想環境とパッケージ <https://docs.python.org/ja/3/tutorial/venv.html>`_
+
+venvモジュール
+------------------------------------------------------------
+
+* Python処理系にバンドルされる標準ライブラリの1つ
+* https://docs.python.org/ja/3/library/venv.html
+* *仮想環境* を作る（主にCLIで使う）
+
+仮想環境を **有効化**
+------------------------------------------------------------
+
+.. code-block:: console
+    :caption: Windows
+
+    > .venv\Scripts\activate
+
+.. code-block:: console
+    :caption: macOS または Linux
+
+    % source .venv/bin/activate
+
+* :command:`python` コマンドに揃う
+* ``deactivate`` で抜けます
+
+Pythonのサードパーティパッケージ
+------------------------------------------------------------
+
+* **PyPI** （Python Package Index）がデフォルト
+
+    * https://pypi.org/
+
+* GitHub等で公開も可能
+
+サードパーティパッケージのインストール [#why-httpx2]_
+------------------------------------------------------------
+
+``(.venv)`` は仮想環境が有効（``PATH`` などが変更済み）なことを示します
+
+.. code-block:: console
+    :caption: `12. 仮想環境とパッケージ`_
+
+    (.venv) $ python -m pip install httpx2
+
+.. [#why-httpx2] インストールしているのは、注目のHTTPクライアントです。https://github.com/pydantic/httpx2
+
+pip
+------------------------------------------------------------
+
+* **パッケージマネージャ** のCLI（ただし機能は *弱い*）
+* https://pip.pypa.io/en/stable/
+* サードパーティパッケージだが、Python処理系に *バンドル* されている [#stdlib-ensurepip]_
+* venvはpipをインストールした仮想環境を作る
+
+.. [#stdlib-ensurepip] 標準ライブラリの `ensurepip <https://docs.python.org/ja/3/library/ensurepip.html>`__ によります。拙ブログの `仕組み読み解き <https://nikkie-ftnext.hatenablog.com/entry/python-stdlib-ensurepip-run-pip-install-pip>`__
+
+例：既存のPythonプロジェクトの開発に合流
+------------------------------------------------------------
+
+.. code-block:: console
+    :caption: 仮想環境を作って依存をインストールして始める
+
+    % git clone https://github.com/my-company/awesome-project.git
+    % cd awesome-project
+    % python3.15 -m venv .venv --upgrade-deps
+    % source .venv/bin/activate
+    (.venv) % python -m pip install -e '.[dev]'
+
+``python -m``
+------------------------------------------------------------
+
+* モジュールをスクリプトとして実行（importせずにCLIとして使う） [#python-m]_
+* 「*pythonコマンドを介してpipモジュールを使う方法が推奨される*」（`第77回 ゼロからはじめるPython <https://news.mynavi.jp/techplus/article/zeropython-77/>`__）
+
+.. [#python-m] https://docs.python.org/ja/3/using/cmdline.html#cmdoption-m
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-m-option-prepend-current-directory-to-sys-path
+
+仕組み：仮想環境とは **ディレクトリ**
+============================================================
+
+.. code-block:: shell
+
+    % python3.15 -m venv --help
+    usage: python3.15 -m venv ENV_DIR [ENV_DIR ...]
+
+.. code-block:: shell
+    :caption: :file:`.venv/` というディレクトリができている [#venv-upgrade-deps]_
+
+    % python3.15 -m venv .venv --upgrade-deps
+    % ls -al
+    drwxr-xr-x    7 devin  staff   224 Nov  2 08:28 .venv
+
+.. oshimaさんスライド？
+
+.. [#venv-upgrade-deps] 拙ブログ `Pythonのvenvの--upgrade-depsオプションは、どこから来てどこへ行くのか <https://nikkie-ftnext.hatenablog.com/entry/python-venv-upgrade-deps-option>`__
+
+なぜディレクトリを作るのか
+------------------------------------------------------------
+
+* **サードパーティパッケージのインストール先** にするため
+* あるパッケージのバージョン違いがマシンに共存可能になる（図解続く）
+
+仮想環境を使わないとしたら、インストール先は1箇所
+------------------------------------------------------------
+
+.. image:: ../_static/python-findy/system-site-packages-version-conflict.drawio.png
+    :alt: 仮に仮想環境を使わない場合、インストール先はマシンの中に処理系ごとに1箇所
+
+仮想環境で共存可能に
+------------------------------------------------------------
+
+.. image:: ../_static/python-findy/virtual-environment-package-isolation.drawio.png
+
+:file:`.venv/` には何がある？
+------------------------------------------------------------
+
+.. tree -L 2 .venv を加工
+
+.. literalinclude:: venv-tree.txt
+    :language: txt
+    :caption: python.org からmacOSにインストール（3.15.2）
+
+マシンにインストールした処理系への **シンボリックリンク** [#stdlib-secret]_
+--------------------------------------------------------------------------------
+
+.. literalinclude:: venv-tree.txt
+    :language: txt
+    :emphasize-lines: 2,7
+
+.. [#stdlib-secret] 標準ライブラリも処理系のものを参照して使う（サードパーティパッケージだけ仮想環境ごとに入る）
+
+.. python -m site で標準ライブラリ + 仮想環境のサードバーティライブラリが確認できる
+
+サードパーティパッケージのインストール先
+------------------------------------------------------------
+
+.. literalinclude:: venv-tree.txt
+    :language: txt
+    :emphasize-lines: 10-12
+
+:file:`.venv/bin/python`
+------------------------------------------------------------
+
+* :file:`.venv/bin/activate` は環境変数 ``PATH`` を更新して、:file:`.venv/bin/python` が見つかるようにしている
+* 実は有効化せずに :file:`.venv/bin/python` を **直接実行** してもよい
+
+📌 **仮想環境は常に必要**
+------------------------------------------------------------
+
+* Pythonプロジェクト [#term-python-project]_ 、だけでなく
+* PyPIのパッケージをCLIツールとして使う
+* ちょっとしたPythonスクリプト
+
+.. [#term-python-project] https://packaging.python.org/ja/latest/glossary/#term-Project
+
+.. code-block:: console
+
+    % python3.15 -m venv .venv --upgrade-deps
+
+⚠️仮想環境ってrenameすると壊れます
+------------------------------------------------------------
+
+.. code-block:: console
+
+    % .venv/bin/python -m pip install kojo-fan-art
+    % .venv/bin/kojo-day kokoro
+    % mv .venv myenv
+    % myenv/bin/kojo-day kokoro
+    zsh: myenv/bin/kojo-day: bad interpreter: /.../.venv/bin/python: no such file or directory
+
+仮想環境は **使い捨て** （disposable）
+------------------------------------------------------------
+
+* インストールされたパッケージ一覧を書き出す
+* 新しい名前の仮想環境に再度インストール
+
+.. code-block:: console
+
+    % .venv/bin/python -m pip freeze > requirements.txt
+    % python3.15 -m venv myenv --upgrade-deps
+    % myenv/bin/python -m pip install -r requirements.txt
+
+Part1 Python環境基礎 まとめ
+============================================================
+
+* Python処理系・venv・pip
+* 1つのマシンにサードパーティパッケージのバージョン違いを共存させるために、仮想環境という仕組みを使っている
+
+パッケージマネージャ、俺たち [#we-are-package-manager]_
+------------------------------------------------------------
+
+* Python使いは皆 **仮想環境を理解して管理** する時代が長かった
+
+.. code-block:: bash
+    :caption: `12.3. pip を使ったパッケージ管理 <https://docs.python.org/ja/3/tutorial/venv.html#managing-packages-with-pip>`__
+
+    $ python3.15 -m venv .venv --upgrade-deps
+    $ source .venv/bin/activate
+    (.venv) $ python -m pip install httpx2
+    (.venv) $ python -m pip freeze > requirements.txt
+    (.venv) $ python -m pip uninstall httpx2
+
+.. TODO ロックファイルが長きにわたって標準になかった
+
+.. [#we-are-package-manager] 拙ブログ `俺がPythonのパッケージマネージャなんだ <https://nikkie-ftnext.hatenablog.com/entry/pythonistas-are-part-of-python-package-manager-system>`__
+Part2 uv以後
+============================================================
+
+* 煩雑な仮想環境管理をツールにやらせる流れが重なり [#tools-history-pyconjp]_ 、uvに至る
+* 任せていいのはどこまで？を考えて聞いてみてください
+
+.. [#tools-history-pyconjp] 登場した数々のツールについてはインタビューやPyCon JPのスライドをどうぞ。コマンドの形はPoetryが先駆けです
+
+uv（2024〜）
+------------------------------------------------------------
+
+* Astralという会社が提案（`3月にOpenAIが買収 <https://x.com/OpenAINewsroom/status/2034616934671724639>`__）
+* 最初はRustで実装された高速なpipとして登場 [#uv-2024-feburary]_
+* 0.3.0でPythonプロジェクト管理に機能増強 [#uv-2024-august]_
+
+.. [#uv-2024-feburary] `uv: Python packaging in Rust <https://astral.sh/blog/uv>`__
+.. [#uv-2024-august] `uv: Unified Python packaging <https://astral.sh/blog/uv-unified-python-packaging>`__
+
+Astral
+------------------------------------------------------------
+
+* Rustのツールチェイン（``rustup`` や ``cargo``）を信奉
+* リンタ・フォーマッタ `Ruff <https://github.com/astral-sh/ruff>`__ や、型チェッカ `ty <https://github.com/astral-sh/ty>`__ もAstral製です
+* IMO：Python環境構築を圧倒的に簡単にしてくれてありがとう [#astral-my-opinion]_
+
+.. [#astral-my-opinion] ただ言いたいことはいっぱいあるけどね
+
+uvのインストール [#uv-standalone-installer]_
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: macOS/Linux
+
+    $ curl -LsSf https://astral.sh/uv/install.sh | sh
+
+.. code-block:: shell
+    :caption: Windows
+
+    > powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+.. code-block:: shell
+    :caption: バイナリなので色んなインストール方法
+
+    $ mise use -g uv
+
+.. [#uv-standalone-installer] https://docs.astral.sh/uv/getting-started/installation/#standalone-installer ``uv self update`` も裏でインストーラシェルを叩きます
+
+:command:`uv sync` お試しあれ
+============================================================
+
+* :file:`pyproject.toml` があれば（:file:`uv.lock` なくとも）うまくいくことが多い
+* ツールによらず使える、Pythonプロジェクトのメタデータを書くファイルです（`PEP 518 <https://peps.python.org/pep-0518/>`__）
+
+.. https://packaging.python.org/ja/latest/glossary/#term-pyproject.toml
+
+``uv sync`` の裏で
+------------------------------------------------------------
+
+* Pythonを見つける（ない場合はダウンロード）
+* ロックファイル :file:`uv.lock` 作成
+* 仮想環境 :file:`.venv/` を作り、ロックファイルと同期
+
+**uvが仮想環境を有効にして** コマンド実行 [#uv-run-overview]_
+----------------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: 手動で有効化の必要なし
+
+    $ uv run <command>
+
+.. [#uv-run-overview] ``uv sync`` の上で仮想環境を有効化してコマンドを実行しています
+
+仮想環境はuvにお任せ：依存の追加
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: venvやpipを扱う必要なし
+
+    $ uv add httpx2 --bounds major
+
+.. code-block:: toml
+    :caption: :file:`pyproject.toml` に書かれる
+
+    [project]
+    dependencies = [
+        "httpx2>=2.16.0,<3.0.0",
+    ]
+
+:file:`.venv/` と :file:`uv.lock` も作成・更新される
+
+uvは **Pythonも管理** できる [#uv-python-commands]_
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: `Installing Python versions <https://docs.astral.sh/uv/guides/install-python/>`__
+
+    $ uv python install 3.15 3.14
+
+* どの環境でも同じコマンド [#uv-python-versions]_
+* 既存のPython管理ツール（例：pyenv）とも共存します
+
+.. [#uv-python-commands] https://docs.astral.sh/uv/reference/cli/#uv-python
+.. [#uv-python-versions] ``3.15`` のような指定は ``uv run --python 3.15`` のように各コマンドにも指定できます（``UV_PYTHON`` も）
+
+新規プロジェクト作成 [#uv-init-command]_
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: `Creating and working on projects <https://docs.astral.sh/uv/guides/projects/>`__
+
+    $ uv init my-project
+    $ cd my-project
+
+.. code-block:: txt
+    :caption: src-layout
+
+    .
+    ├── .git/
+    ├── .gitignore
+    ├── .python-version
+    ├── pyproject.toml
+    ├── README.md
+    └── src/
+        └── my_project/
+            └── __init__.py
+
+.. [#uv-init-command] https://docs.astral.sh/uv/reference/cli/#uv-init
+
+落ち穂拾い：uvと仮想環境
+============================================================
+
+* venvは使わずに仮想環境（ディレクトリ）を作る [#pep-405]_
+* pipはない（uvが担えるので）
+* uvコマンドを使う限りは **仮想環境は意識しなくてよくなっている**
+
+.. [#pep-405] `PEP 405 – Python Virtual Environments <https://peps.python.org/pep-0405/>`__
+
+uvと仮想環境 続き
+------------------------------------------------------------
+
+* 使う中で仮想環境をおかしくしてしまったら :file:`.venv/` を消してみる（``uv sync`` ですぐ復活。disposable）
+* uvの作った仮想環境を直接触りたくなったら `uv venv <https://docs.astral.sh/uv/reference/cli/#uv-venv>`__ や `uv pip <https://docs.astral.sh/uv/reference/cli/#uv-pip>`__ コマンド
+
+仮想環境との同期
+------------------------------------------------------------
+
+* ロックファイルと仮想環境を最新化できる（`Locking and syncing <https://docs.astral.sh/uv/concepts/projects/sync/>`__） [#locked-option]_
+* `--frozen`: ロックファイルが最新でなくてもそのまま使って同期（CIで指定）
+* `--no-sync`: 仮想環境を最新化せず
+
+.. [#locked-option] `--locked`: ロックファイルが最新でないならエラー
+
+裏の仕組み：python-build-standalone
+------------------------------------------------------------
+
+* `CPythonはビルドが必要 <https://docs.python.org/ja/3/using/configure.html>`__ だったが
+* https://github.com/astral-sh/python-build-standalone
+* **Python処理系をダウンロードしたら動かせる** ようになっている！uvはこれを使っている
+小まとめ🥟 uvに任せられること
+==================================================
+
+* Pythonの管理
+* 仮想環境の管理（サードパーティパッケージ管理）
+
+簡単なので任せていっています
+
+Part2（続）使い倒すぜ、uv
+============================================================
+
+* 2026年のPython環境はこんなことができるんです！
+* uv以外にもツールはあるのですが、今回はuvの機能をmaxxingしましょう！
+
+常に必要な仮想環境を **人間が意識しなくてよくなった** としたら？
+----------------------------------------------------------------------
+
+1. PyPIのパッケージをCLIツールとして使う
+2. ちょっとしたPythonスクリプト
+
+1️⃣PyPIにあるCLIツール
+============================================================
+
+* 例として ``llm``
+* https://pypi.org/project/llm/
+* https://github.com/simonw/llm
+
+.. code-block:: console
+
+    (.venv) % llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
+
+CLIツールを仮想環境を意識せずに使えます！ [#alternative-pipx]_
+----------------------------------------------------------------------
+
+A. 一時的な仮想環境
+B. 仮想環境+マシングローバルにインストール
+
+`Running and installing applications as tools <https://docs.astral.sh/uv/guides/tools/>`__
+
+.. [#alternative-pipx] pipxというツールでもできます（``pipx run``・``pipx install``）
+
+🅰️ ``uvx`` （``uv tool run``）
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ uvx llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
+
+1. uvが **一時的な仮想環境** を作成
+2. そこにCLIツールをインストールして実行
+
+🅱️ ``uv tool install``
+------------------------------------------------------------
+
+.. code-block:: shell
+
+    $ uv tool install llm
+    $ llm -m gpt-6-luna -f https://nikkie-ftnext.hatenablog.com/entry/2025/04/11/224643 'SNSでシェアする際のキャッチーなまとめを考えてください'
+
+1. uvが仮想環境を作成
+2. そこにCLIツールをインストールし、**グローバルなパス** を通す
+
+2️⃣inline script metadata
+============================================================
+
+* **サードパーティパッケージの管理を意識せず** に使えるPythonスクリプト
+* 私はシェルスクリプト代わりに使っています
+
+`Running scripts and declaring dependencies <https://docs.astral.sh/uv/guides/scripts/>`__
+
+スクリプトと別に仮想環境を用意していたが
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/inline-script-metadata/v2_example_like_pep723.py
+    :language: python
+    :lines: 8-20
+    :caption: 別途 ``.venv/bin/python -m pip install httpx2 rich``
+
+.. _PEP 723: https://peps.python.org/pep-0723/
+
+`PEP 723`_ - inline script metadata
+------------------------------------------------------------
+
+.. literalinclude:: ../../samplecode/inline-script-metadata/v2_example_like_pep723.py
+    :language: python
+    :lines: 1-7
+    :caption: 特殊な形式のコメントを加えるだけ
+
+inline script metadataをサポートしたツール（例：``uv run``）は [#other-pep723-tools]_
+------------------------------------------------------------------------------------------
+
+1. ``requires-python`` を満たすバージョンで仮想環境を作成
+2. ``dependencies`` を仮想環境にインストール
+3. **その仮想環境でスクリプトを実行**
+
+.. [#other-pep723-tools] ``hatch run``, ``pipx run``, ``pdm run`` （など）
+
+詳しくはPyCon JP 2024
+------------------------------------------------------------
+
+* 「`PEP 723（Inline script metadata）が拓く世界。Pythonスクリプトに必要な仮想環境をツールにおまかせできるんです！ <https://2024.pycon.jp/en/talk/89F3RQ>`__」
+* `アーカイブ動画 <https://www.youtube.com/watch?v=Xdmr14cCq2g>`__
+
+uvはinline script metadataを書く
+------------------------------------------------------------
+
+.. code-block:: shell
+    :caption: `uv init --script <https://docs.astral.sh/uv/reference/cli/#uv-init--script>`__
+
+    $ uv init --script awesome.py
+
+.. code-block:: python
+    :caption: :file:`awesome.py`
+
+    # /// script
+    # requires-python = ">=3.14"
+    # dependencies = []
+    # ///
+
+.. revealjs-break::
+
+.. code-block:: shell
+    :caption: `uv add --script <https://docs.astral.sh/uv/reference/cli/#uv-add--script>`__
+
+    $ uv add httpx2 --script awesome.py
+
+.. code-block:: python
+    :caption: :file:`awesome.py`
+
+    # /// script
+    # requires-python = ">=3.14"
+    # dependencies = [
+    #     "httpx2>=2.10.0",
+    # ]
+    # ///
+
+持ち運びに超便利
+------------------------------------------------------------
+
+* コーディングエージェントのフックスクリプトに
+* stdioのMCPサーバ実装に
+* `シバンとして書けます <https://docs.astral.sh/uv/guides/scripts/#using-a-shebang-to-create-an-executable-file>`__
+
+uv-ty連携はじまる [#blog-uv-ty-start]_
+------------------------------------------------------------
+
+* `Bringing uv and ty together <https://astral.sh/blog/uv-ty-integration>`__
+* uv 0.12.3以上、ty 0.0.76以上
+* VS Code ty拡張がinline script metadataを踏まえて型を示してサポートをしてくれます
+
+.. [#blog-uv-ty-start] 拙ブログ `Astralがuvと型チェッカtyを実験的に連携。inline script metadata付きのPythonスクリプトをtyの恩恵を受けながら実装できます！ <https://nikkie-ftnext.hatenablog.com/entry/uv-ty-experimental-integration-better-inline-script-metadata-developer-experience>`__
+
+uv使うならこれらもお試しあれ！
+============================================================
+
+* ``uvx`` や ``uv tool install`` でPyPIのパッケージをCLIツールとして使う
+* ちょっとしたPythonスクリプトにinline script metadataを書く
+
+IMO：uvに任せる範囲を **maxxing**
+------------------------------------------------------------
+
+* Pythonの管理
+* 仮想環境の管理
+* ⭐️CLIとして使えるサードパーティパッケージ管理
+* ⭐️inline script metadataを書いたスクリプト実行
+
+uvにタスクランナー機能はない😢
+------------------------------------------------------------
+
+* Astralはコミュニティの要望放置しがち：`Using uv run as a task runner #5903 <https://github.com/astral-sh/uv/issues/5903>`__ (2024-)
+* 私は **miseと合わせる** 立場（miseでuv入れて、uvにないタスクランナーをmiseで補う） [#task-runner-alternatives]_
+
+    * https://mise.jdx.dev/tasks/
+
+.. [#task-runner-alternatives] 方法は色々（make, taskipyなどなど）。拙ブログ `皆さんに教えていただいた、uvで管理するPythonプロジェクトで使っているタスクランナーたち <https://nikkie-ftnext.hatenablog.com/entry/awesome-uv-task-runners-thanks-replies-202502>`__
+お昼明けから試すなら
+------------------------------------------------------------
+
+* ``uv sync`` で入るかもしれないが、勝手にやらず採用するかチームで話しましょう [#migrate-to-uv]_
+* ``uv tool install`` やinline script metadataから個人で **小さく始める** こともできます
+
+.. [#migrate-to-uv] `migrate-to-uv <https://github.com/osprey-oss/migrate-to-uv>`__ というツールもありますが、 ``uv sync`` で十分かも。他にコーディングエージェントも頼れるでしょう
+
+Part3 2026年で考えたいトピック
+============================================================
+
+1. コーディングエージェント
+2. セキュリティ
+
+1.コーディングエージェントとの相性
+============================================================
+
+* コーディングエージェントは **速い**
+* 速さは魔性：コーディングエージェントが使うツールも速くしたい
+
+.. revealjs-break::
+    :notitle:
+
+.. raw:: html
+
+    <iframe class="speakerdeck-iframe" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" frameborder="0" src="https://speakerdeck.com/player/1b717ecfee8a4833a8ac0999900753d5?slide=49" title="AI Coding Agent Enablement in TypeScript" allowfullscreen="true" allow="web-share" data-ratio="1.7777777777777777"></iframe>
+
+uvは速い [#how-uv-got-so-fast]_
+------------------------------------------------------------
+
+* Python処理系を介さない（Rust実装・バイナリ動作）だけでなく
+* 高速化のための **キャッシュ** の超積極活用（``uv cache dir`` ご覧あれ）
+
+.. [#how-uv-got-so-fast] 他に `How uv got so fast <https://nesbitt.io/2025/12/26/how-uv-got-so-fast.html>`__
+
+開発者による「`Peeking under the hood of uv run <https://youtu.be/gZiqURP5tbk?si=vqlijlOcgUdZY5Co&t=250>`__」
+------------------------------------------------------------------------------------------------------------------------
+
+.. image:: ../_static/python-findy/pyconus-2026-peeking-under-the-hood-of-uv-run.png
+
+uvがコーディングエージェントにベスト？
+------------------------------------------------------------
+
+* 安全に使うため書き込めるディレクトリは制限されている [#gpt-6.1-sol-uv-cache]_
+* コーディングエージェントが ``uv run`` するとき、 **書き込めるディレクトリとは別** のキャッシュに書き込むことに
+
+.. [#gpt-6.1-sol-uv-cache] GPT-6.1 Solや6 Astraは ``uv run`` でキャッシュに書き込めないとき、``UV_CACHE_DIR`` 指定で :file:`/tmp` 下に回避している様子を見る
+
+uvのキャッシュを考慮してコーディングエージェントを設定
+------------------------------------------------------------
+
+.. code-block:: toml
+    :caption: リポジトリの :file:`.codex/config.toml`
+
+    [sandbox_workspace_write]
+    writable_roots = [
+        "/Users/nikkie/.cache/uv",  # uvのキャッシュ自体への書き込み許可
+    #     "/Users/nikkie/.cache/codex/awesome-repo/uv",  # そのリポジトリ用のuvのキャッシュで運用
+    ]
+
+* 別案：コーディングエージェントには ``uv run pytest`` を渡さず、 **.venv/bin/pytest** [#adk-python-agents-md]_
+
+.. [#adk-python-agents-md] https://github.com/google/adk-python/blob/v1.39.0/AGENTS.md#setup-instructions
+
+.. https://github.com/google/adk-python/blob/v2.7.0/.agents/skills/adk-setup/SKILL.md
+
+2.セキュリティ
+============================================================
+
+1. サプライチェーン攻撃（2026年3月〜）
+2. 証明書の事故（2026年10月）
+
+2-1. 変わり始めたPythonの世界
+============================================================
+
+* 近年npmでサプライチェーン攻撃が展開されている（IMO：攻撃者を強く非難します）
+* PyPIでも **2026年3月**、LiteLLMで **サプライチェーン攻撃が発生**
+
+LiteLLM [#litellm-nikkie-article]_
+------------------------------------------------------------
+
+.. code-block:: python
+
+    from litellm import completion
+
+    for model in ["openai/gpt-6.1-luna", "gemini/gemini-3.8-flash"]:
+        response = completion(model=model, messages=messages)
+        print(response.choices[0].message.content)
+
+.. [#litellm-nikkie-article] 拙ブログ：`LiteLLMを使って、同じプロンプトを複数のLLMのWeb APIに送る（GPTとGeminiを例に） <https://nikkie-ftnext.hatenablog.com/entry/call-gpt-and-gemini-web-apis-with-litellm-awesome>`__
+
+LiteLLMへの攻撃で状況は大きく変わった
+------------------------------------------------------------
+
+* LiteLLM `1.82.7と1.82.8 <https://docs.litellm.ai/blog/security-update-march-2026>`__ （当時最新版）に悪意あるコードが仕込まれていた [#litellm-compromised-again]_
+* 最新版インストール後、importしただけで環境の秘密情報が抜かれる（uvxして踏みました）
+* **最新版のインストールがリスク**
+
+.. 邪悪なlitellm_init.pth https://nikkie-ftnext.hatenablog.com/entry/cope-with-compromised-litellm-1.82.8-with-gpt-5.4
+
+.. [#litellm-compromised-again] `2026年10月にも1.107.0で再度侵害 <https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain>`__ されてしまいました  
+
+「最新版には悪意あるコードが入っているかも」
+------------------------------------------------------------
+
+* ロックファイルがあるPythonプロジェクトなら最新版は取りに行かない（踏むリスク低）
+* 古いプロジェクトや、``uvx`` ・inline script metadata [#uv-lock-inline-script-metadata]_ といった使い方で *ロックファイルを作っていない*
+
+.. [#uv-lock-inline-script-metadata] `uv lock --script <https://docs.astral.sh/uv/reference/cli/#uv-lock--script>`__ はあります
+
+ロックファイルがない状況で最新版のリスクを減らす
+----------------------------------------------------------------------
+
+* cooldownの設定
+* セキュアなインデックスへの切り替え
+
+完璧な1つの対策はない。どの対策にも穴があるが **重ね合わせて** 貫通しなくする🧀 [#swiss-cheese-model]_
+
+.. [#swiss-cheese-model] `スイスチーズモデル <https://ja.wikipedia.org/wiki/%E3%82%B9%E3%82%A4%E3%82%B9%E3%83%81%E3%83%BC%E3%82%BA%E3%83%A2%E3%83%87%E3%83%AB>`__
+
+cooldown
+------------------------------------------------------------
+
+最新版を一定期間避ける設定。コミュニティが攻撃を検出し、隔離・削除
+
+.. code-block:: toml
+   :caption: :file:`~/.config/uv/uv.toml` [#uv-exclude-newer]_
+
+   exclude-newer = "7 days"
+
+.. https://nikkie-ftnext.hatenablog.com/entry/python-package-installer-how-to-cooldown-after-compromised-litellm
+
+.. [#uv-exclude-newer] 出た直後のバグフィックスを当てるために `--exclude-newer-package=foobar=false <https://docs.astral.sh/uv/reference/cli/#uv-run--exclude-newer-package>`__
+
+セキュアなインデックス
+------------------------------------------------------------
+
+* 例：`Takumi Guard <https://shisho.dev/docs/ja/r/202603-takumi-guard-pypi/>`__ （無料）
+* `UV_DEFAULT_INDEX <https://docs.astral.sh/uv/reference/environment/#uv_default_index>`__ または `[[tool.uv.index]]のurl <https://docs.astral.sh/uv/concepts/indexes/#defining-an-index>`__
+
+サプライチェーン攻撃のリスクを認識しましょう
+------------------------------------------------------------
+
+* 私は、``uvx`` から ``uv tool install`` に切り替えました（最新版にアクセスする回数を減らす）
+* （紹介しきれなかったものとして `uv audit <https://astral.sh/blog/uv-audit>`__）
+
+2-2. eMudhra証明書の事故
+============================================================
+
+* https://emudhra.we-have-a-problem.com/
+* 中間認証局eMudhraが管理する秘密鍵（8つ）が公開鍵から容易に復元できてしまった
+* 誰でもなりすませる！（HTTP **S** 通信にリスク😱）
+
+対応いただいているOSS各位に深く感謝申し上げます
+
+eMudhra証明書を含むチェーンを信頼してはいけません
+------------------------------------------------------------
+
+* パッケージがバンドルする証明書から各所で削除が進む
+* Pythonまとめ `Information for Python users regarding eMudhra / emSign CA certificate security incident <https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576>`__
+* `certifi <https://github.com/certifi/python-certifi>`__ を **2026.10.19** 以上へ [#pip-certifi-update]_
+
+.. [#pip-certifi-update] certifiをvendorする **pipは26.2.2以上** へ
+
+uvでの対応
+------------------------------------------------------------
+
+* uv **0.13.4** でバンドルした証明書を更新（webpki-root-certs 1.0.10）
+* Pythonのダウンロードや、PyPIからパッケージのインストールの通信に使う
+
+.. UV_SYSTEM_CERTS=true
+
+Pythonでの対応
+------------------------------------------------------------
+
+* Python 3.15.2, 3.14.10, 3.13.18, 3.12.16, 3.11.18
+* 標準モジュール **ssl** がeMudhraの証明書を含むチェーンを **ブロック** するようにCVE対応した
+* :command:`uv python upgrade` (uv 0.13.6以上)
+
+macOSはeMudhraの証明書が残っている [#apple-support-emduhra]_
+----------------------------------------------------------------------
+
+* eMudhraの証明書は信頼できないという情報はマシンに配信されている（Safariやメールに適用）
+* しかし :file:`/etc/ssl/cert.pem` に残る（Appleのアップデート待ち）
+* 一般ユーザは安全、 **開発者は注意が必要**
+
+.. [#apple-support-emduhra] Apple Support `About the compromised eMudhra intermediate CAs <https://support.apple.com/en-us/149555>`__
+
+**macOSとuvの組合せ** がややこしや
+------------------------------------------------------------
+
+* uvが使うpython-build-standaloneは :file:`/etc/ssl/cert.pem` を見てしまう挙動 [#blog-macos-cert-experiments]_
+* Python 3.15.2以降でsslモジュールがブロックするのでだいぶ安全になった
+
+.. [#blog-macos-cert-experiments] 拙ブログ `uvが管理するPythonを3.14.10に更新することで、macOSでurllib・urllib3・aiohttp・niquestsはeMudhraの問題の証明書チェーンを受け入れなくなる！ <https://nikkie-ftnext.hatenablog.com/entry/we-wait-macos-cacert-update-uv-python-build-standalone-but-python-fix-ssl-cve>`__
+
+Part3 まとめ🥟2026年で考えたいトピック
+============================================================
+
+* IMO：コーディングエージェントには ``uv run`` よりも ``.venv/bin/python`` を指示したい
+* 最新版のインストールがリスクに。cooldownはじめ複数の防御策を組み合わせましょう
+* eMudhraの証明書事故を受け、3.15.2など現在の最新が安全です（🍎🙏）
+One more thing: pnpm
+------------------------------------------------------------
+
+* 12でRust実装となり、`12.4 <https://github.com/pnpm/pnpm/releases/tag/v12.4.0>`__ で **Pythonパッケージ管理も** できるようになった [#greedy-pnpm-12]_
+* https://pnpm.io/python
+* uvの完成度は高いが、言語をまたいだパッケージ管理ツールの登場に注目しています
+
+.. https://nikkie-ftnext.hatenablog.com/entry/pnpm-12-4-ambitious-multi-language-package-manager-support-rust-and-python
+
+.. [#greedy-pnpm-12] 12.4ではRustのパッケージ管理もサポート https://pnpm.io/cargo また、`12.11 <https://github.com/pnpm/pnpm/releases/tag/v12.11.0>`__ でAgent Skillsもインストールできるようになりました https://pnpm.io/agent-skills
+
+.. 未来 PEP 831？
+
+まとめ🌯 Pythonの環境構築をすることになったあなたへ（2026年版）
+================================================================================
+
+* Pythonの管理、仮想環境管理、``uv tool install``・inline script metadata、便利なので任せてます
+* あなたはuvにどこまで任せてみますか？
+
+仮想環境の管理が簡単になっている
+------------------------------------------------------------
+
+* uvは仮想環境を「`正しい使い方を簡単に、誤った使い方を困難に <https://yoshi389111.github.io/kinokobooks/prog_ja/prog053.htm>`__」した（+爆速 & ワンストップ）
+* メッセージ「仮想環境をツールに任せて楽してこーぜ」
+* Pythonを深く知りたい方には仮想環境を理解していくのをおすすめします
+
+ご清聴ありがとうございました
+------------------------------------------------------------
+
+質問お気軽にどうぞ！
+
+EOF
+===

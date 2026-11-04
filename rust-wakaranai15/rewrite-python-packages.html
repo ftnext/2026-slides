@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="ja" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話</title>
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/dist/reveal.css?v=d4488b42" />
+    <link rel="stylesheet" href="../_static/revealjs/dist/theme/black.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/revealjs/plugin/highlight/zenburn.css?v=83d5745d" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/common.css?v=e74015e6" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/experimental/ogp-card.css?v=bccb2b47" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-revealjs/css/footnotes.css?v=c46a0db2" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-new-tab-link.css?v=d87cb1ac" />
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ftnext">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://ftnext.github.io/2026-slides/rust-wakaranai15/rewrite-python-packages.html">
+    <meta property="og:title" content="Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話">
+    <meta property="og:description" content="Rust、何もわからない… #15 LT">
+    <meta property="og:image" content="https://ftnext.github.io/2026-slides/_static/ogps/rust-wakaranai15.png">
+
+  </head><body>
+    <div class="reveal">
+        <div class="slides" role="main">
+            <section>
+<section>
+<h1 style="word-break: keep-all; overflow-wrap: break-word;">Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話</h1>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話</h2>
+<dl class="field-list simple">
+<dt class="field-odd">Event<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Rust、何もわからない… #15</p>
+</dd>
+<dt class="field-even">Presented<span class="colon">:</span></dt>
+<dd class="field-even"><p>2026/10/14 nikkie</p>
+</dd>
+</dl>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">お前、誰よ</h2>
+<ul class="simple">
+<li><p>nikkie（にっきー）、 <strong>Python</strong> を書きます（小さなOSS公開、PyCon JP登壇）</p></li>
+<li><p>機械学習エンジニア <a class="footnote-reference brackets" href="#uzabase-message" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ・<a class="reference external" href="https://www.uzabase.com/jp/info/20250901/" rel="noreferrer" target="_blank">Speeda AI Agent</a> 開発（<a class="reference external" href="https://jp.ub-speeda.com/news/20260319/" rel="noreferrer" target="_blank">A2A</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260701/" rel="noreferrer" target="_blank">MCP</a>・<a class="reference external" href="https://jp.ub-speeda.com/news/20260910/" rel="noreferrer" target="_blank">Slackbot</a> 提供）</p></li>
+</ul>
+<img alt="../_images/uzabase-white-logo.png" src="../_images/uzabase-white-logo.png"/>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="uzabase-message" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>お詫び申し上げます。<a class="reference external" href="https://corp.newspicks.com/info/20261009" rel="noreferrer" target="_blank">【第二報】NewsPicksのお客様の個人情報漏洩の可能性に関するお詫びとお知らせ</a></p>
+</aside>
+</aside>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">モチベーション：Rust製ツールチェインの盛り上がり</h3>
+<ul class="simple">
+<li><p>Astralによる <a class="reference external" href="https://github.com/astral-sh/uv" rel="noreferrer" target="_blank">uv</a>・<a class="reference external" href="https://github.com/astral-sh/ruff" rel="noreferrer" target="_blank">Ruff</a>・<a class="reference external" href="https://github.com/astral-sh/ty" rel="noreferrer" target="_blank">ty</a> に <em>物申したい</em></p></li>
+<li><p>pnpm（v12からRust実装）が面白い <a class="footnote-reference brackets" href="#pnpm-v12-features" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="pnpm-v12-features" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>RustやPythonのパッケージ管理、Agent Skillsインストール</p>
+</aside>
+</aside>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">自作Pythonパッケージ <a class="reference external" href="https://pypi.org/project/sampleproject-rs/" rel="noreferrer" target="_blank">sampleproject-rs</a></h2>
+<ul class="simple">
+<li><p>Pythonパッケージのサンプル <a class="reference external" href="https://pypi.org/project/sampleproject/" rel="noreferrer" target="_blank">sampleproject</a> （チュートリアル例）</p></li>
+<li><p>Rust版sampleproject-rsを自作（<strong>maturin</strong>、<strong>PyO3</strong>）</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">println!</span></code> だけです</span></div>
+<pre><code class="bash" data-noescape="" data-trim="">$ uvx --from sampleproject-rs@0.2.3 sample
+Call your main application code here</code></pre>
+</div>
+</section>
+<section>
+<iframe height="480" src="https://ftnext.github.io/2025-slides/findy-techbaton/sampleproject-rs.html#/7/2" title="Rustで作るPythonパッケージの例 sampleproject-rs の紹介" width="800"></iframe></section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">8月のPyCon JP 2026より</h2>
+<iframe allow="web-share" allowfullscreen="true" class="speakerdeck-iframe" data-ratio="1.7777777777777777" frameborder="0" src="https://speakerdeck.com/player/3290bcc244f1413b95de881166ee86f6" style="border: 0px; background: padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" title="PyO3 で既存 Python 評価器を Rust core 化する ー wasm-bindgen でブラウザにも配るための設計"></iframe></section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">Rust core化したsampleproject-rs v0.3</h3>
+<pre data-id="rust-coresampleproject-rs-v0-3"><code class="text" data-noescape="" data-trim="">.
+├── Cargo.toml  # workspace設定
+├── pyproject.toml  # bindings-pyを見てPythonパッケージにする（maturin）
+├── sample-core/  # Rust core
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs
+├── bindings-py/  # sample-coreに依存 + PyO3
+└── bindings-wasm/  # sample-core + wasm-bindgen</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">自作の小さなPythonパッケージをRust core化！</h3>
+<ul class="simple">
+<li><p>賢いAI（6 Solや6.1 Sol）に書き換えてもらい、私専用教材として参照</p></li>
+<li><p>補完を切り、質問しまくって <strong>写経</strong> している</p></li>
+<li><p>GitHub ActionsはAIに任せた</p></li>
+</ul>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">学び1： <code class="docutils literal notranslate"><span class="pre">String</span></code> と <code class="docutils literal notranslate"><span class="pre">&amp;str</span></code> の使い分け</h2>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">返り値の <code class="docutils literal notranslate"><span class="pre">String</span></code> と <code class="docutils literal notranslate"><span class="pre">&amp;str</span></code> は何が違う？</span></div>
+<pre><code class="rust" data-noescape="" data-trim="">pub fn extract_json(markdown: &amp;str) -&gt; Option&lt;String&gt; { }
+
+pub fn extract_json(markdown: &amp;str) -&gt; Option&lt;&amp;str&gt; { }</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">引数の型は <code class="docutils literal notranslate"><span class="pre">&amp;str</span></code></h3>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text"><a class="reference external" href="https://doc.rust-jp.rs/book-ja/ch04-03-slices.html#%E5%BC%95%E6%95%B0%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E6%96%87%E5%AD%97%E5%88%97%E3%82%B9%E3%83%A9%E3%82%A4%E3%82%B9" rel="noreferrer" target="_blank">引数としての文字列スライス</a></span></div>
+<pre><code class="rust" data-noescape="" data-trim="">fn first_word(s: &amp;str) -&gt; &amp;str {</code></pre>
+</div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">「APIをより一般的で有益なものにできる」</span></div>
+<pre><code class="rust" data-noescape="" data-trim="">let word1 = first_word(&amp;String::from("hello world"));  // Stringへの参照を渡す
+
+let word2 = first_word("hello world");   // 文字列リテラル（&amp;str）を渡す</code></pre>
+</div>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">返り値： <code class="docutils literal notranslate"><span class="pre">String</span></code> も <code class="docutils literal notranslate"><span class="pre">&amp;str</span></code> もある</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">String</span></code>：新しい文字列を <strong>作って返す</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&amp;str</span></code>：入力の <strong>部分文字列</strong> （参照して返す）</p></li>
+</ul>
+<pre data-id="id5"><code class="rust" data-noescape="" data-trim="">pub fn to_snake_case(camel_case_str: &amp;str) -&gt; String { }
+
+pub fn extract_json(markdown: &amp;str) -&gt; Option&lt;&amp;str&gt; { }</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">学び2： <code class="docutils literal notranslate"><span class="pre">Result</span></code> の扱い</h2>
+<pre data-id="result"><code class="rust" data-noescape="" data-trim="">let input = args
+    .input  // clap_stdin::FileOrStdin
+    .contents()  // Result&lt;T, StdinError&gt;
+    .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;</code></pre>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><code class="docutils literal notranslate"><span class="pre">Result</span></code> は <strong>消費</strong> される</h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Result</span></code> の概念は発表を見聞きして理解していた（つもり）</p></li>
+<li><p>Rustで書いてみて消費に気づいた</p>
+<blockquote>
+<div><p>(略)動作対象である <code class="docutils literal notranslate"><span class="pre">result</span></code> を <strong>消費</strong> してしまう（『プログラミングRust 第2版』7.2）</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;"><a class="reference external" href="https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err" rel="noreferrer" target="_blank">map_err()</a> という選択</h3>
+<blockquote>
+<div><p>leaving an <code class="docutils literal notranslate"><span class="pre">Ok</span></code> value untouched.</p>
+</div></blockquote>
+<pre data-id="id7"><code class="rust" data-noescape="" data-trim="">let input = args.input.contents()
+    .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;</code></pre>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">まとめ🌯Rustの練習を兼ねて、自作の小さなPythonパッケージをRustで書き直している話</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">String</span></code> は <strong>新しい文字列</strong> を作る、 <code class="docutils literal notranslate"><span class="pre">&amp;str</span></code> は <strong>部分文字列</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Result</span></code> はメソッド選択によっては <strong>消費</strong> されることに注意</p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">ご清聴ありがとうございました！</h3>
+</section>
+</section>
+<section>
+<section>
+<h2 style="word-break: keep-all; overflow-wrap: break-word;">参考：配布の経験とRust core化</h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://ftnext.github.io/2025-slides/python-fukuoka/why-we-can-run-rust-package-cli#/1" rel="noreferrer" target="_blank">2025年のLT：Rust製パッケージのCLIが動く理由</a></p></li>
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/maturin-generateci-github-support-macos-and-other-platform-build" rel="noreferrer" target="_blank">maturin generate-ciを参考にmacOS対応</a></p></li>
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/pyconjp-2026-talk-rust-core-distribute-python-packge-and-wasm-apply-sampleproject-rs" rel="noreferrer" target="_blank">PyCon JP 2026のRust core化をsampleproject-rsへ</a></p></li>
+</ul>
+</section>
+<section>
+<h3 style="word-break: keep-all; overflow-wrap: break-word;">参考：文字列とResult</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/which-choose-string-slice-or-string-in-rust-function-signature" rel="noreferrer" target="_blank">文字列処理のシグネチャ：&amp;strかStringか</a></p></li>
+<li><p><a class="reference external" href="https://nikkie-ftnext.hatenablog.com/entry/python-argparse-filetype-rust-clap-stdin-fileorstdin" rel="noreferrer" target="_blank">argparse FileTypeからclap-stdin FileOrStdinへ</a></p></li>
+<li><p><a class="reference external" href="https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err" rel="noreferrer" target="_blank">Rust公式：Resultのmap_err</a></p></li>
+</ul>
+</section>
+</section>
+
+        </div>
+    </div>
+    
+    <script src="../_static/revealjs/dist/reveal.js"></script>
+    
+    
+      <script src="../_static/revealjs/plugin/highlight/highlight.js"></script>
+      <script src="../_static/revealjs/plugin/notes/notes.js"></script>
+      <script src="../_static/revealjs/plugin/copycode/copycode.js"></script>
+      
+    
+    <script>
+        var revealjsConfig = new Object();
+        Object.assign(revealjsConfig, {"controls": true, "progress": true, "history": true, "center": true, "transition": "none", "slideNumber": "c/t", "scrollActivationWidth": null});
+        
+        
+        
+          revealjsConfig.plugins = [
+            RevealHighlight,RevealNotes,CopyCode,
+          ];
+        
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize(revealjsConfig);
+    </script>
+
+  </body>
+</html>
