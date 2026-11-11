@@ -30,11 +30,15 @@ vs eMudhra🏐
 
 .. [#secret-apollo] GrEarl氏「`このセリフはアポロⅩⅢの通信"Houston, we've had a problem"ともつながってる <https://x.com/Iamwonderingif/status/2113999139487060138>`__」
 
-Pythonパッケージインデックス（PyPI）
+.. _PyPI: https://pypi.org/
+
+ある日 `PyPI`_ [#term-pypi]_ にて
 ---------------------------------------------------
 
 .. image:: ../_static/jiyugaoka-any1/pypi-emudhra-banner.png
    :alt: Security notice: Upgrade certifi, pip, and uv in response to CA certificate incident
+
+.. [#term-pypi] `Pythonパッケージインデックス <https://packaging.python.org/ja/latest/glossary/#term-Python-Package-Index-PyPI>`__
 
 .. https://nikkie-ftnext.hatenablog.com/entry/emudhra-we-have-a-problem-python-tools-update-log
 
@@ -42,47 +46,40 @@ noticeに沿ってバージョンアップ
 ---------------------------------------------------
 
 * `Information for Python users regarding eMudhra / emSign CA certificate security incident <https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576>`__
-* pipを26.2.2へ
-* uvを0.13.4へ
+* pip（パッケージマネージャ）を26.2.2へ
+* uv（Python&パッケージマネージャ）を0.13.4へ
+
+何をしたんだろう？
 
 .. 【30秒／累計0:40】
    pipやuvは、パッケージをダウンロードしてインストールするツールです。
    いつも見るサイトにバナーが出ていて、危なそうだったのでまず更新しました。
    それから、そもそも何が起きたのかを調べ始めました。
 
-認証局の事故で、なぜパッケージ管理ツールを更新する？
+TLS (HTTP **S**)に問題
 ================================================================================
 
-* ルート証明書バンドルの更新
-* 中間認証局eMudhraの証明書からつながる **ルート証明書を削除**
+* eMudhraは中間認証局
+* eMudhraが管理する秘密鍵（8つ）が **公開鍵から容易に復元** できてしまった🙈 [#emudhra-key-brute-force]_
+* 誰でもなりすませる！
 
-秘密鍵を復元できた🙈
-------------------------------------------------------------
+.. [#emudhra-key-brute-force] 総当たりで解けちゃったことを示す「`eMudhraの中間CA証明書の秘密鍵を求めてみる <https://zenn.dev/herumi/articles/search_bad_emudhra_key>`__」 [#secret-key-4]_
 
-* 2026年10月、eMudhraの中間認証局の公開鍵から秘密鍵を復元できると判明（*秘密鍵が4*）
-* 攻撃者はeMudhraの秘密鍵で好きに署名（偽装）できる
-
-.. 総当たりで解けちゃったことを示す https://zenn.dev/herumi/articles/search_bad_emudhra_key
+.. [#secret-key-4] 秘密鍵の1つは、4（Cloudflare `4 real? Tracking exploitation and patching of eMudhra’s weak keys <https://blog.cloudflare.com/emudhra-patching/>`__）
 
 .. 【30秒／累計1:40】
    事故の仕組みを調べる手がかりになったのは We Have a Problem の解説です。
    もし攻撃者が通信経路上でその証明書を提示したら、問題の中間認証局を
    まだ信頼するクライアントは、偽のサイトを本物として受け入れかねません。
 
-HTTP **S** (=TLS)：証明書チェーン
+証明書チェーン
 ------------------------------------------------------------
 
-.. https://tls13-book.doteyaki.dev/06_pki/ca
+.. https://github.com/yishida0/tls13-book/blob/6b484b6de39835efe9999f27b9cc2e712ff67c7e/docs/06_pki/img/7.svg
 
-.. container:: emudhra-chain
+.. image:: ../_static/jiyugaoka-any1/tls13-book-06-pki-ca-7.png
 
-    .. mermaid::
-
-        flowchart LR
-            Site["サイトの証明書"] --> Intermediate["中間認証局"]
-            Intermediate --> Root["信頼済みのルート認証局"]
-
-署名をたどり、手元の信頼済みルートにつながるかを確認
+`認証局と証明書チェーン（作って学ぶTLS 1.3） <https://tls13-book.doteyaki.dev/06_pki/ca>`__
 
 .. 【30秒／累計1:10】
    クライアントは接続先の名前などとあわせて、証明書の署名を確認します。
@@ -90,12 +87,23 @@ HTTP **S** (=TLS)：証明書チェーン
    ルートまでの署名のつながりがあります。図の矢印は検証でたどる向きです。
    ここでは間にある認証局を一つに簡略化しています。
 
-対応1 バンドルしたルート証明書から削除
+証明書たち
+------------------------------------------------------------
+
+* サーバ証明書
+* **中間証明書** （eMudhraはここ）
+* ルート証明書：OS、アプリ、ソフトウェアにバンドル（trust store）
+
+ルート証明書のバンドル
 ------------------------------------------------------------
 
 * **certifi** 2026.10.19で削除
-* pip 26.2.2はcertifi 2026.10.19に依存
-* uvも0.13.4でバンドルしている証明書（**webpki-root-certs**）を更新
+
+    * pip 26.2.2はcertifi 2026.10.19を同梱
+
+* **webpki-root-certs** 1.0.10で削除
+
+    * uvは0.13.4で更新
 
 .. 【60秒／累計2:40】
    certifiは信頼するルート証明書の一覧を配布するPythonパッケージです。
@@ -105,28 +113,30 @@ HTTP **S** (=TLS)：証明書チェーン
    並んでいたんですね。これで一件落着かと思ったら、Python本体にも
    修正が入りました。
 
-Python自体もCVE対応
+さらに、Python自体もCVE対応
 ================================================================================
 
 * Python 3.15.2, 3.14.10, 3.13.18, 3.12.16 and 3.11.18
 * `gh-160040: Distrust compromised eMudhra intermediate CA keys (CVE-2026-115557) <https://github.com/python/cpython/pull/160042>`__
 
-対応2 検証時に中間認証局の鍵を拒否
+検証時に問題の公開鍵を **拒否**
 ------------------------------------------------------------
 
-標準ライブラリ **ssl** でチェーンに問題の公開鍵があれば接続を拒否するように
+* 標準ライブラリ **ssl** の証明書検証に拒否リストを追加
+* 検証するチェーンに、問題の公開鍵を含む証明書があれば接続を拒否
+* macOS + uvで問題に気づいていたため大助かり
 
 .. 【30秒／累計3:10】
    チェーンを検証するとき、問題の中間認証局の公開鍵が含まれていれば、
    その時点で接続を拒否するようになりました。信頼するルート一覧の更新が
    環境に届くまでの最後の防御です。なぜここまで必要だったのでしょうか。
 
-macOSとuvの組合せでも安全に
+macOSとuvの組合せがピンチ（でした） [#thanks-apple]_
 ------------------------------------------------------------
 
 * uv (python-build-standalone)で入れたPythonは :file:`/etc/ssl/cert.pem` を参照
-* eMudhraの侵害された証明書も含まれる
-* 修正前は、標準ライブラリ ``urllib`` で問題のチェーンを使う検証サイトへ接続できてしまった
+* 問題の中間証明書につながるルート証明書が含まれていた
+* Appleの拒否情報がこの検証経路では適用されず ``urllib`` で検証サイトに接続できてしまった
 
 .. 【45秒／累計4:30】
    当時のmacOSでは、Appleのブロックと、一部のCLIなどが読む
@@ -135,6 +145,8 @@ macOSとuvの組合せでも安全に
    uvを0.13.6に上げて uv python upgrade を実行し、3.14.10に更新。
    ルート一覧の参照先が同じでも、今度は証明書が拒否されました。
    参照する一覧はPythonの配布元や設定によって変わります。
+
+.. [#thanks-apple] macOS 27.2.1, 26.7.3, 15.8.3 で対応されました！ `About the compromised eMudhra intermediate CAs (Apple Support) <https://support.apple.com/en-us/149555>`__
 
 まとめ🌯 vs eMudhra🏐
 ================================================================================
