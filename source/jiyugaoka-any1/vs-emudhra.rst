@@ -2,6 +2,7 @@
 :ogp_event_name: jiyugaoka-any1
 :ogp_slide_name: vs-emudhra
 :ogp_description: 第1回 自由が丘.any
+:ogp_image_name: jiyugaoka-any1
 
 ================================================================================
 vs eMudhra🏐
